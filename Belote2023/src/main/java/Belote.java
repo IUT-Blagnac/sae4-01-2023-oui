@@ -40,14 +40,14 @@ public class Belote {
 		try {
             Class.forName("org.hsqldb.jdbcDriver").newInstance();
 
-            String dos = System.getProperty("user.dir") + "/Belote2023";
-            String beloteFile = dos + "/jBelote";
-            String createFile = dos + "/create.sql";
+            String dos = System.getProperty("user.dir") + "\\Belote2023";
+            String beloteFile = dos + "\\jBelote";
+            String createFile = "create.sql";
             System.out.println("Dossier de stockage:" + beloteFile);
             if (!new File(beloteFile).isDirectory()) {
                 new File(beloteFile).mkdir();
             }
-            connection = DriverManager.getConnection("jdbc:hsqldb:file:" + beloteFile + "/belote", "sa", "");
+            connection = DriverManager.getConnection("jdbc:hsqldb:file:" + beloteFile + "\\belote", "sa", "");
             statement = connection.createStatement();
 
             importSQL(connection, new File(createFile));
@@ -58,9 +58,9 @@ public class Belote {
 			System.out.println(e.getMessage());
 			System.exit(0);
 		} catch (Exception e) {
+			System.out.println("ERREUR :\n" + e.getStackTrace());
 			JOptionPane.showMessageDialog(null,
 					"Erreur lors de l'initialisation du logiciel. Vérifiez votre installation Java et vos droits d'acc�s sur le dossier AppData.");
-			System.out.println(e.getMessage());
 			System.exit(0);
 		}
 
