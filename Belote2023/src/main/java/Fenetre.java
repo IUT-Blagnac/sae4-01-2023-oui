@@ -218,7 +218,7 @@ public class Fenetre extends JFrame {
 				noms_tournois.add(rs.getString("nom_tournoi"));
 			}
 			
-			if( nbdeLignes == 0){
+			if( nbdeLignes == 0){ // Utilité ?
 				//System.out.println("Pas de résultats");
 				//t.add(new JLabel("Aucun tournoi n'a �t� cr��"));
 			}else{
@@ -337,7 +337,8 @@ public class Fenetre extends JFrame {
 		
 		
 	}
-    
+
+	// WTF ?
 	JLabel                     detailt_nom;
 	JLabel                     detailt_statut;
 	JLabel                     detailt_nbtours;
@@ -639,7 +640,7 @@ public class Fenetre extends JFrame {
 			
 			tours_supprimer.setEnabled( t.getNbTours() > 1);
 			
-			if(!peutajouter || t.getNbTours()  >= t.getNbEquipes()-1 ){
+			if(!peutajouter || t.getNbTours()  >= t.getNbEquipes()-1 ){ // peut être simplifié
 				tours_ajouter.setEnabled(false);
 			}else
 				tours_ajouter.setEnabled(true);
@@ -704,7 +705,7 @@ public class Fenetre extends JFrame {
 		
 				}
 				public String getColumnName(int col) {
-				        if(col == 0){
+				        if(col == 0){ // Mettre un switch nom de dieu
 				        	return "Tour";
 				        }else if(col == 1){
 				        	return "Équipe 1";

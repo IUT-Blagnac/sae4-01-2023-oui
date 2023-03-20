@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 public class Belote {
 
+	// Redondance
 	static class Match {
 		public int eq1, eq2;
 
@@ -74,13 +75,14 @@ public class Belote {
 		// connection.close();
 	}
 
+	// Mettre dans une autre classe ?
 	public static void importSQL(Connection conn, File in) throws SQLException, FileNotFoundException {
 		Scanner s = new Scanner(in);
 		s.useDelimiter("(;(\r)?\n)|(--\n)");
 		Statement st = null;
 		try {
 			st = conn.createStatement();
-			while (s.hasNext()) {
+			while (s.hasNext()) { // for interator ?
 				String line = s.next();
 				if (line.startsWith("/*!") && line.endsWith("*/")) {
 					int i = line.indexOf(' ');

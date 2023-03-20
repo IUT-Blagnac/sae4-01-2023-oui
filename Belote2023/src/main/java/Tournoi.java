@@ -65,14 +65,14 @@ public class Tournoi {
 		ideqs = new Vector<Integer>();
 		try {
 			ResultSet rs = st.executeQuery("SELECT * FROM equipes WHERE id_tournoi = " + id_tournoi + " ORDER BY num_equipe;");
-			while(rs.next()){
+			while(rs.next()){ // for ?
 				dataeq.add(new Equipe(rs.getInt("id_equipe"),rs.getInt("num_equipe"), rs.getString("nom_j1"), rs.getString("nom_j2")));
 				ideqs.add(rs.getInt("num_equipe"));
 			}
 			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage()); // popup erreur ?
 		}
 	}
 	public void majMatch(){
@@ -84,7 +84,7 @@ public class Tournoi {
 			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage()); // popup d'erreur ?
 		}
 	}
 	public MatchM getMatch(int index){
@@ -123,7 +123,7 @@ public class Tournoi {
 			return rs.getInt(1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage()); // popup erreur ?
 			return -1;
 		}
 	}
@@ -151,7 +151,7 @@ public class Tournoi {
 			st.executeUpdate("UPDATE tournois SET statut=2 WHERE id_tournoi=" + id_tournoi + ";");
 			this.statut = 2;
 		}catch(SQLException e){
-			System.out.println("Erreur validation �quipes : " + e.getMessage());
+			System.out.println("Erreur validation �quipes : " + e.getMessage()); // popup ?
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class Tournoi {
 			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage()); // popup ?
 			return false;
 		}
 		System.out.println("Nombre de tours avant:" + nbtoursav);
@@ -190,7 +190,7 @@ public class Tournoi {
 			try{
 				st.executeUpdate(req);
 			}catch(SQLException e){
-				System.out.println("Erreur ajout tour : " + e.getMessage());
+				System.out.println("Erreur ajout tour : " + e.getMessage()); // popup ?
 			}		
 		}else{
 			try {
@@ -240,7 +240,7 @@ public class Tournoi {
 				st.executeUpdate(req);
 			} catch (SQLException e) {
 				
-				e.printStackTrace();
+				e.printStackTrace(); // popup ?
 			}
 		}
 		return true;
@@ -254,7 +254,7 @@ public class Tournoi {
 			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage()); // popup ?
 			return ;
 		}
 		//if(tour != nbtoursav) return ;
@@ -263,7 +263,7 @@ public class Tournoi {
 			st.executeUpdate("DELETE FROM matchs WHERE id_tournoi="+ id_tournoi+" AND num_tour=" + nbtoursav);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Erreur del tour : " + e.getMessage());
+			System.out.println("Erreur del tour : " + e.getMessage()); // popup ?
 		}
 	}
 		
@@ -280,11 +280,11 @@ public class Tournoi {
 			s2.executeUpdate("DELETE FROM tournois WHERE id_tournoi = " + idt);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Erreur suppression" + e.getMessage());
+			System.out.println("Erreur suppression" + e.getMessage()); // popup ?
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println("Erreur inconnue");
+			System.out.println("Erreur inconnue"); // popup ?
 		} 
 		return 0;
 	}
@@ -307,7 +307,7 @@ public class Tournoi {
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e.printStackTrace(); // popup ?
 			}
 			if(s == ""){
 				JOptionPane.showMessageDialog(null, "Le tournoi n'a pas �t� cr��. Ne pas mettre de caract�res sp�ciaux ou accents dans le nom");
@@ -327,7 +327,7 @@ public class Tournoi {
 				s2.executeUpdate("INSERT INTO tournois (id_tournoi, nb_matchs, nom_tournoi, statut) VALUES (NULL, 10, '"+s+"', 0)");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					System.out.println("Erreur requete insertion nouveau tournoi:" + e.getMessage());
+					System.out.println("Erreur requete insertion nouveau tournoi:" + e.getMessage()); // popup ?
 					
 					//e.printStackTrace();
 					
@@ -353,7 +353,7 @@ public class Tournoi {
 		    majEquipes();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); // popup ?
 		}
 	}
 	public void majEquipe(int index){
@@ -364,10 +364,10 @@ public class Tournoi {
 		    majEquipes();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); // popup ?
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); // popup ?
 		}
 
 	}
@@ -379,7 +379,7 @@ public class Tournoi {
 			st.executeUpdate(req);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); // popup ?
 		}
 		majMatch();
 	}
@@ -395,10 +395,10 @@ public class Tournoi {
 		    majEquipes();
 		    
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace(); // popup ?
 		}		
 	}
-    public static String mysql_real_escape_string( String str) 
+    public static String mysql_real_escape_string( String str) // Mettre dans une classe tool appart
             throws Exception
       {
           if (str == null) {
@@ -488,6 +488,7 @@ public class Tournoi {
 		return retour;
 	}  
 
+	// Redondant
 	static class Match{
 		public int eq1,eq2;
 		public Match(int e1,int e2){
