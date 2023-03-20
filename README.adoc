@@ -35,7 +35,7 @@ ifdef::env-github[]
 endif::[]
 
 // /!\ A MODIFIER !!!
-:baseURL: https://github.com/IUT-Blagnac/sae4-01-template
+:baseURL: https://github.com/IUT-Blagnac/sae4-01-oui
 
 // Tags
 image:{baseURL}/actions/workflows/build.yml/badge.svg[Build] 
@@ -44,6 +44,8 @@ image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg[License: MP
 //---------------------------------------------------------------
 
 TIP: Pensez à mettre à jour les infos dans ce fichier pour que les badges pointent sur les résultats effectifs de vos intégrations continue ou sur la bonne licence logicielle.
+
+<<livrables, *LISTE ET DÉTAILS DES LIVRABLES*>>
 
 == _Refactoring_ d'un code existant
 
@@ -142,6 +144,11 @@ Les principaux critères qui guideront la notation seront :
 - extras (modèles, build, ci, ...)
 
 TIP: En cas de besoin, n'hésitez pas à me contacter (jean-michel.bruel@univ-tlse2.fr) ou à poser des questions sur le channel `#sae-s4-fi-refactoring` du Discord de l'IUT.
+
+== Livrables [[livrables]]
+=== Analyse de l'application
+[.text-justify]
+L'analyse du code source existant de l'application est retrouvable https://github.com/IUT-Blagnac/sae4-01-2023-oui/Documentation/Analyse_application.adoc[ici].
 
 **********************************************************************
 Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`).
