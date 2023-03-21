@@ -104,6 +104,15 @@
           </execution>
         </executions>
       </plugin>
-      </plugins>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <includes>
+          <!-- include create.sql file -->
+          <include>create.sql</include>
+        </includes>
+      </resource>
+    </resources>
   </build>
 </project>
