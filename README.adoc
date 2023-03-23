@@ -56,12 +56,27 @@ WARNING: Ce dépôt présente le projet à développer dans le cadre de la SAÉ 
 Ce fichier `README.adoc` (dont vous lisez sûrement le rendu HTML automatiquement effectué par GitHUb), fait partie du dépôt initial cloné à partir du lien GitHub classroom qui vous a été donné par ailleurs.
 Vous trouverez le dépôt "template" qui a servi de base ici : https://github.com/IUT-Blagnac/sae4-01-template. 
 
-== Équipe
+== Équipe et répartition
 
+=== Équipe
 Projet est réalisé par::
 
 - https://github.com/Furiza31[Hugo WENDJANEH]
 - https://github.com/Tilian-HURE[Tilian HURÉ]
+
+=== Répartition du code à refactorer
+La répartition suivante attribue les parties du code à tester et à refactorer pour chaque membre.
+
+Hugo :
+
+* Classe `Equipe.java`
+* Classe `MatchM.java`
+* Classe `Tournoi.java` (première partie)
+
+Tilian :
+
+* Classe `Belote.java`
+* Classe `Tournoi.java` (deuxième partie)
 
 
 == Contexte général
