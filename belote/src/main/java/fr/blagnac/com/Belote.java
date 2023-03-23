@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 
 public class Belote {
 
-
+// --PAS A TESTER-----------------------------------------
 	static class Match{
 		public int eq1,eq2;
 		public Match(int e1,int e2){
@@ -28,7 +28,7 @@ public class Belote {
 				return "  " + eq2 + " contre " + eq1;
 			}
 		}
-	}	
+	}
 	
 
 

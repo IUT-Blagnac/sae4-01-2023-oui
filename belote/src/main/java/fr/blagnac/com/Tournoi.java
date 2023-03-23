@@ -17,7 +17,8 @@ public class Tournoi {
 	private Vector<MatchM> datam  = null;
 	private Vector<Integer>ideqs  = null; 
 	Statement st;
-		
+
+// --TESTS HUGO-------------------------------------------------------------------------------------------------------------------------------------------
 	public Tournoi(String nt, Statement s){
 		st = s;
 
@@ -156,7 +157,8 @@ public class Tournoi {
 			System.out.println("Erreur validation �quipes : " + e.getMessage());
 		}
 	}
-	
+
+// --TESTS TILIAN-------------------------------------------------------------------------------------------------------------------------------------------
 	public boolean ajouterTour(){
 		// Recherche du nombre de tours actuel
 		int nbtoursav;
@@ -488,8 +490,9 @@ public class Tournoi {
 			retour.add(vm);
 		}
 		return retour;
-	}  
+	}
 
+// -- PAS A TESTER------------------------------------
 	static class Match{
 		public int eq1,eq2;
 		public Match(int e1,int e2){
@@ -504,8 +507,5 @@ public class Tournoi {
 			}
 		}
 	}
-
-
-	
 
 }
