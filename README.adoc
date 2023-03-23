@@ -148,7 +148,7 @@ TIP: En cas de besoin, n'hésitez pas à me contacter (jean-michel.bruel@univ-tl
 == Livrables [[livrables]]
 === Analyse de l'application
 [.text-justify]
-L'analyse du code source existant de l'application est retrouvable https://github.com/IUT-Blagnac/sae4-01-2023-oui/Documentation/Analyse_application.adoc[ici].
+L'analyse du code source existant de l'application est retrouvable https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Analyse_application.adoc[ici].
 
 **********************************************************************
 Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`).
