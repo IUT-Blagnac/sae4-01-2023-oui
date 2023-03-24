@@ -14,24 +14,6 @@ import javax.swing.JOptionPane;
 
 public class Belote {
 
-	// --PAS A TESTER-----------------------------------------
-	static class Match {
-		public int eq1, eq2;
-
-		public Match(int e1, int e2) {
-			eq1 = e1;
-			eq2 = e2;
-		}
-
-		public String toString() {
-			if (eq1 < eq2) {
-				return "  " + eq1 + " contre " + eq2;
-			} else {
-				return "  " + eq2 + " contre " + eq1;
-			}
-		}
-	}
-
 	public static void main(String[] args) throws SQLException {
 
 		// Connection and statement creation
@@ -89,13 +71,15 @@ public class Belote {
 				if (line.startsWith("/*!") && line.endsWith("*/")) {
 					line = line.substring(line.indexOf(' ') + 1, line.length() - " */".length());
 				}
-				if (line.trim().length() > 0)
+				if (line.trim().length() > 0) {
 					st.execute(line);
+				}
 			}
 		} finally {
 			// release resources
-			if (st != null)
+			if (st != null) {
 				st.close();
+			}
 			scaner.close();
 		}
 	}
