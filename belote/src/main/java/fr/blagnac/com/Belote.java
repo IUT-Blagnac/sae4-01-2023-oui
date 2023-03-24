@@ -73,9 +73,9 @@ public class Belote {
 		Fenetre f = new Fenetre(statement);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		//statement.execute("SHUTDOWN;");
-		//statement.close();  
-        //connection.close();  		
+		statement.execute("SHUTDOWN;");
+		statement.close();
+        connection.close();
 	}
 
 	
