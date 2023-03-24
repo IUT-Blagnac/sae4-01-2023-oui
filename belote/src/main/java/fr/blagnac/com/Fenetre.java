@@ -431,13 +431,13 @@ public class Fenetre extends JFrame {
 					Object r=null;
 					switch(arg1){
 					case 0:
-						r= t.getEquipe(arg0).num;
+						r= t.getEquipe(arg0).getNumero();
 					break;
 					case 1:
-						r= t.getEquipe(arg0).eq1;
+						r= t.getEquipe(arg0).getEquipe1();
 					break;
 					case 2:
-						r= t.getEquipe(arg0).eq2;
+						r= t.getEquipe(arg0).getEquipe2();
 					break;
 					}
 					return r;
@@ -473,9 +473,9 @@ public class Fenetre extends JFrame {
 					if( columnIndex == 0){
 						
 					}else if( columnIndex == 1){
-						e.eq1 = (String)aValue;
+						e.setEquipe1((String)aValue);
 					}else if( columnIndex == 2){
-						e.eq2 = (String)aValue;
+						e.setEquipe2((String)aValue);
 					}
 					t.majEquipe(rowIndex);
 					fireTableDataChanged();
