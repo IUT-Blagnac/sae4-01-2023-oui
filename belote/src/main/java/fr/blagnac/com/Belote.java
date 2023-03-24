@@ -53,12 +53,18 @@ public class Belote {
 			InputStream createFileInputStream = Belote.class.getResourceAsStream(createFile);
 			importSQL(connection, createFileInputStream);
 
+			// Graphical interface
+			Fenetre fenetre = new Fenetre(statement);
+			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Impossible de se connecter à la base de donnée. Vérifier qu'une autre instance du logiciel n'est pas déjà ouverte.");
+			JOptionPane.showMessageDialog(null,
+					"Impossible de se connecter à la base de donnée. Vérifier qu'une autre instance du logiciel n'est pas déjà ouverte.");
 			System.out.println(e.getMessage());
 			System.exit(0);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Erreur lors de l'initialisation du logiciel. Vérifiez votre installation Java et vos droits d'acc�s sur le dossier AppData.");
+			JOptionPane.showMessageDialog(null,
+					"Erreur lors de l'initialisation du logiciel. Vérifiez votre installation Java et vos droits d'acc�s sur le dossier AppData.");
 			System.out.println(e.getMessage());
 			System.exit(0);
 		} finally {
@@ -67,10 +73,6 @@ public class Belote {
 			statement.close();
 			connection.close();
 		}
-
-		// Graphical interface
-		Fenetre fenetre = new Fenetre(statement);
-		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public static void importSQL(Connection conn, InputStream in) throws SQLException, FileNotFoundException {
@@ -87,11 +89,13 @@ public class Belote {
 				if (line.startsWith("/*!") && line.endsWith("*/")) {
 					line = line.substring(line.indexOf(' ') + 1, line.length() - " */".length());
 				}
-				if (line.trim().length() > 0) st.execute(line);
+				if (line.trim().length() > 0)
+					st.execute(line);
 			}
 		} finally {
 			// release resources
-			if (st != null) st.close();
+			if (st != null)
+				st.close();
 			scaner.close();
 		}
 	}
