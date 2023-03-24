@@ -61,16 +61,16 @@ public class Belote {
 			JOptionPane.showMessageDialog(null, "Erreur lors de l'initialisation du logiciel. Vérifiez votre installation Java et vos droits d'acc�s sur le dossier AppData.");
 			System.out.println(e.getMessage());
 			System.exit(0);
+		} finally {
+			// Close the connection to the database
+			statement.execute("SHUTDOWN;");
+			statement.close();
+			connection.close();
 		}
 
 		// Graphical interface
 		Fenetre fenetre = new Fenetre(statement);
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// Close the connection to the database
-		statement.execute("SHUTDOWN;");
-		statement.close();
-		connection.close();
 	}
 
 	public static void importSQL(Connection conn, InputStream in) throws SQLException, FileNotFoundException {
