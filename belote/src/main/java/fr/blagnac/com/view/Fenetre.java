@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,7 +25,9 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-import fr.blagnac.com.Tournoi;
+
+import fr.blagnac.com.control.DialogDataBase;
+import fr.blagnac.com.model.Tournoi;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
 
@@ -36,7 +37,8 @@ public class Fenetre extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public JPanel c;
-	Statement s;
+	//Statement s;
+	private DialogDataBase ddb;
 	
 	private JTextArea gt;
 	private JPanel ListeTournois;
@@ -119,9 +121,13 @@ public class Fenetre extends JFrame {
     private JLabel statut_slect = null;
     private final String statut_deft = "Gestion de tournois de Belote v1.0 - ";
 
-	public Fenetre(Statement st){
-		
-		s = st;
+	public Fenetre(){
+
+		try {
+			this.ddb = DialogDataBase.getDialogDataBaseInstance();
+		} catch (Exception e) {
+			System.out.println(e.getMessage()); // TODO : à enlever
+		}
 		this.setTitle("Gestion de tournoi de Belote");
 		setSize(800,400);
 		this.setVisible(true);
@@ -233,7 +239,7 @@ public class Fenetre extends JFrame {
 				btours.setEnabled(true);
 				int total=-1, termines=-1;
 				try {
-					ResultSet rs = s.executeQuery("Select count(*) as total, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.termine='oui' ) as termines from matchs m  WHERE m.id_tournoi=" + this.t.getIdTournoi() +" GROUP by id_tournoi ;");
+					ResultSet rs = this.ddb.getNbTournoiFinishedMatchs(this.t.getIdTournoi());
 					rs.next();
 					total = rs.getInt(1);
 					termines = rs.getInt(2);
@@ -257,8 +263,7 @@ public class Fenetre extends JFrame {
        this.setStatutSelect("sélection d'un tournoi");
 		ResultSet rs;
 		try {
-			rs = s.executeQuery("SELECT * FROM tournois;");
-
+			rs = this.ddb.getAllTournois();
 			while( rs.next() ){
 				nbdeLignes++;
 				noms_tournois.add(rs.getString("nom_tournoi"));
@@ -344,7 +349,7 @@ public class Fenetre extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				Tournoi.creerTournoi(Fenetre.this.s);
+				Tournoi.creerTournoi(Fenetre.this.ddb.getStatement());
 				Fenetre.this.tracer_select_tournoi();
 				//String nt = JOptionPane.showInputDialog("Nom du tournoi ?");
 				//ResultSet rs = Fenetre.this.s.executeQuery("SELECT)
@@ -356,7 +361,7 @@ public class Fenetre extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				Tournoi.deleteTournoi(Fenetre.this.s, Fenetre.this.list.getSelectedValue());
+				Tournoi.deleteTournoi(Fenetre.this.ddb.getStatement(), Fenetre.this.list.getSelectedValue());
 				Fenetre.this.tracer_select_tournoi();
 				}
 			});
@@ -365,7 +370,7 @@ public class Fenetre extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 				String nt = Fenetre.this.list.getSelectedValue();
-				Fenetre.this.t = new Tournoi(nt, Fenetre.this.s);
+				Fenetre.this.t = new Tournoi(nt, Fenetre.this.ddb.getStatement());
 				//Fenetre.this.detracer_select_tournoi();
 				Fenetre.this.tracer_details_tournoi();
 				Fenetre.this.setStatutSelect("Tournoi \" " + nt + " \"");
@@ -574,7 +579,7 @@ public class Fenetre extends JFrame {
 		Vector<Object> v;
 		boolean peutajouter = true;
 		try {
-			ResultSet rs = s.executeQuery("Select num_tour,count(*) as tmatchs, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.num_tour=m.num_tour  AND m2.termine='oui' ) as termines from matchs m  WHERE m.id_tournoi=" + this.t.getIdTournoi() + " GROUP BY m.num_tour,m.id_tournoi;");
+			ResultSet rs = this.ddb.getNbTournoiFinishedMatchs(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<Object>();
 				v.add(rs.getInt("num_tour"));
@@ -776,7 +781,7 @@ public class Fenetre extends JFrame {
 		Vector< Vector<Object>> to =new Vector<Vector<Object>>();
 		Vector<Object> v;		
 		try {
-			ResultSet rs = s.executeQuery("SELECT equipe,(SELECT nom_j1 FROM equipes e WHERE e.id_equipe = equipe AND e.id_tournoi = " + this.t.getIdTournoi() + ") as joueur1,(SELECT nom_j2 FROM equipes e WHERE e.id_equipe = equipe AND e.id_tournoi = " + this.t.getIdTournoi() + ") as joueur2, SUM(score) as score, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2  AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 )) as matchs_gagnes, (SELECT COUNT(*) FROM matchs m WHERE m.equipe1 = equipe OR m.equipe2=equipe) as matchs_joues FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + this.t.getIdTournoi() + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + this.t.getIdTournoi() + ") GROUP BY equipe ORDER BY matchs_gagnes DESC;");
+			ResultSet rs = this.ddb.getMatchsData(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<Object>();
 				v.add(rs.getInt("equipe"));
@@ -828,9 +833,9 @@ public class Fenetre extends JFrame {
 	private void majStatutM(){
 		int total=-1, termines=-1;
 		try {
-			ResultSet rs = s.executeQuery("Select count(*) as total, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.termine='oui' ) as termines from matchs m  WHERE m.id_tournoi=" + this.t.getIdTournoi() +" GROUP by id_tournoi ;");
+			ResultSet rs = this.ddb.getNbTournoiFinishedMatchs(this.t.getIdTournoi());
 			rs.next();
-			total    = rs.getInt(1);
+			total = rs.getInt(1);
 			termines = rs.getInt(2);
 		} catch (SQLException e) {
 			e.printStackTrace();
