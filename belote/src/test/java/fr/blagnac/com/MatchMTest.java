@@ -3,6 +3,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import fr.blagnac.com.model.MatchM;
+
 public class MatchMTest {
     @Test
     public void constructorId() {

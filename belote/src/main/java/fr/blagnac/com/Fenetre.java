@@ -28,6 +28,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
 import fr.blagnac.com.model.Equipe;
+import fr.blagnac.com.model.MatchM;
 
 
 
@@ -511,7 +512,7 @@ public class Fenetre extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(Fenetre.this.eq_jt.getSelectedRow() != -1){
-						t.supprimerEquipe(t.getEquipe(Fenetre.this.eq_jt.getSelectedRow()).id);
+						t.supprimerEquipe(t.getEquipe(Fenetre.this.eq_jt.getSelectedRow()).getId());
 					}
 					eq_valider.setEnabled(t.getNbEquipes() > 0 && t.getNbEquipes() % 2 == 0) ;
 					eq_modele.fireTableDataChanged();
@@ -689,19 +690,19 @@ public class Fenetre extends JFrame {
 					Object r=null;
 					switch(arg1){
 					case 0:
-						r= t.getMatch(arg0).num_tour;
+						r= t.getMatch(arg0).getNumeroTour();
 					break;
 					case 1:
-						r= t.getMatch(arg0).eq1;
+						r= t.getMatch(arg0).getEquipe1();
 					break;
 					case 2:
-						r= t.getMatch(arg0).eq2;
+						r= t.getMatch(arg0).getEquipe2();
 					break;
 					case 3:
-						r= t.getMatch(arg0).score1;
+						r= t.getMatch(arg0).getScore1();
 					break;
 					case 4:
-						r= t.getMatch(arg0).score2;
+						r= t.getMatch(arg0).getScore2();
 					break;
 					}
 					return r;
@@ -735,7 +736,7 @@ public class Fenetre extends JFrame {
 					return 5;
 				}
 				public boolean isCellEditable(int x, int y){
-					return y > 2 && t.getMatch(x).num_tour == t.getNbTours();
+					return y > 2 && t.getMatch(x).getNumeroTour() == t.getNbTours();
 				}
 				public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 					MatchM m = t.getMatch(rowIndex);
@@ -744,7 +745,7 @@ public class Fenetre extends JFrame {
 					}else if( columnIndex == 3){
 						try{
 							int sco = Integer.parseInt((String)aValue);
-							m.score1 = sco;
+							m.setScore1(sco);
 							t.majMatch(rowIndex);
 							
 						}catch(Exception e){
@@ -754,7 +755,7 @@ public class Fenetre extends JFrame {
 					}else if( columnIndex == 4){
 						try{
 							int sco = Integer.parseInt((String)aValue);
-							m.score2 = sco;
+							m.setScore2(sco);
 							t.majMatch(rowIndex);
 							
 						}catch(Exception e){
