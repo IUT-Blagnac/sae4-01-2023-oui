@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
+import fr.blagnac.com.model.Equipe;
+
 public class Tournoi {
 	String statuttnom;
 	String nt;

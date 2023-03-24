@@ -27,6 +27,8 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
+import fr.blagnac.com.model.Equipe;
+
 
 
 public class Fenetre extends JFrame {
