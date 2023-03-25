@@ -25,8 +25,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-
 import fr.blagnac.com.control.DialogDataBase;
+import fr.blagnac.com.control.DialogTournoi;
 import fr.blagnac.com.model.Tournoi;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
@@ -37,8 +37,8 @@ public class Fenetre extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public JPanel c;
-	//Statement s;
 	private DialogDataBase ddb;
+	private DialogTournoi dt;
 	
 	private JTextArea gt;
 	private JPanel ListeTournois;
@@ -124,9 +124,10 @@ public class Fenetre extends JFrame {
 	public Fenetre(){
 
 		try {
-			this.ddb = DialogDataBase.getDialogDataBaseInstance();
+			this.ddb = DialogDataBase.getInstance();
+			this.dt = DialogTournoi.getInstance();
 		} catch (Exception e) {
-			System.out.println(e.getMessage()); // TODO : à enlever
+			System.out.println(e.getMessage()); // TODO : à enlever ou popup ?
 		}
 		this.setTitle("Gestion de tournoi de Belote");
 		setSize(800,400);
@@ -239,7 +240,7 @@ public class Fenetre extends JFrame {
 				btours.setEnabled(true);
 				int total=-1, termines=-1;
 				try {
-					ResultSet rs = this.ddb.getNbTournoiFinishedMatchs(this.t.getIdTournoi());
+					ResultSet rs = this.ddb.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
 					rs.next();
 					total = rs.getInt(1);
 					termines = rs.getInt(2);
@@ -263,21 +264,20 @@ public class Fenetre extends JFrame {
        this.setStatutSelect("sélection d'un tournoi");
 		ResultSet rs;
 		try {
-			rs = this.ddb.getAllTournois();
+			rs = this.ddb.getTousLesTournois();
 			while( rs.next() ){
 				nbdeLignes++;
 				noms_tournois.add(rs.getString("nom_tournoi"));
 			}
 			
-			if( nbdeLignes == 0){
+			if( nbdeLignes == 0){ // TODO : enlever ?
 				//System.out.println("Pas de résultats");
 				//t.add(new JLabel("Aucun tournoi n'a �t� cr��"));
 			}else{
 				//System.out.println(nbdeLignes + " r�sultats");
-				
 			}
 			rs.close();
-		} catch (SQLException e) {
+		} catch (SQLException e) { // TODO : popup
 			System.out.println("Erreur lors de la requète :" + e.getMessage());
 			e.printStackTrace();
 		}
@@ -346,31 +346,27 @@ public class Fenetre extends JFrame {
 	        }
 	        
 	        creerTournoi.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				Tournoi.creerTournoi(Fenetre.this.ddb.getStatement());
+				dt.creerTournoi();
 				Fenetre.this.tracer_select_tournoi();
 				//String nt = JOptionPane.showInputDialog("Nom du tournoi ?");
 				//ResultSet rs = Fenetre.this.s.executeQuery("SELECT)
 				//Fenetre.this.s.execute("INSERT INTO TOURNOI (id_tournoi)
 				}
 			});
-	        
 	        deleteTournoi.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				Tournoi.deleteTournoi(Fenetre.this.ddb.getStatement(), Fenetre.this.list.getSelectedValue());
+				dt.deleteTournoi(Fenetre.this.list.getSelectedValue());
 				Fenetre.this.tracer_select_tournoi();
 				}
 			});
 	        selectTournoi.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 				String nt = Fenetre.this.list.getSelectedValue();
-				Fenetre.this.t = new Tournoi(nt, Fenetre.this.ddb.getStatement());
+				Fenetre.this.t = new Tournoi(nt);
 				//Fenetre.this.detracer_select_tournoi();
 				Fenetre.this.tracer_details_tournoi();
 				Fenetre.this.setStatutSelect("Tournoi \" " + nt + " \"");
@@ -433,7 +429,7 @@ public class Fenetre extends JFrame {
 			eq_modele.fireTableDataChanged();
 		}else{
 			equipes_trace = true;
-			eq_p      = new JPanel();
+			eq_p = new JPanel();
 			eq_layout = new BoxLayout(eq_p, BoxLayout.Y_AXIS);
 			eq_p.setLayout(eq_layout);
 			eq_desc = new JLabel("Equipes du tournoi");
@@ -514,7 +510,6 @@ public class Fenetre extends JFrame {
 			eq_valider = new JButton("Valider les équipes");
 			
 			eq_ajouter.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 				t.ajouterEquipe();
@@ -526,7 +521,6 @@ public class Fenetre extends JFrame {
 				}
 			});
 			eq_supprimer.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 				if(Fenetre.this.eq_jt.getSelectedRow() != -1){
@@ -540,7 +534,6 @@ public class Fenetre extends JFrame {
 				}
 			});
 			eq_valider.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 				t.genererMatchs();
@@ -579,7 +572,7 @@ public class Fenetre extends JFrame {
 		Vector<Object> v;
 		boolean peutajouter = true;
 		try {
-			ResultSet rs = this.ddb.getNbTournoiFinishedMatchs(this.t.getIdTournoi());
+			ResultSet rs = this.ddb.getNbToursParMatchParTournoi(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<Object>();
 				v.add(rs.getInt("num_tour"));
@@ -589,7 +582,7 @@ public class Fenetre extends JFrame {
 				peutajouter = peutajouter && rs.getInt("tmatchs") == rs.getInt("termines");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace(); // TODO : popup
 		}
 		Vector<String> columnNames = new Vector<String>();
 		columnNames.add("Numéro du tour");
@@ -623,7 +616,6 @@ public class Fenetre extends JFrame {
 			tours_p.add(new JLabel("Pour pouvoir ajouter un tour, terminez tous les matchs du précédent."));
 			tours_p.add(new JLabel("Le nombre maximum de tours est \"le nombre total d'équipes - 1\""));
 			tours_ajouter.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 				t.ajouterTour();
@@ -631,7 +623,6 @@ public class Fenetre extends JFrame {
 				}
 			});
 			tours_supprimer.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 				t.supprimerTour();
@@ -781,7 +772,7 @@ public class Fenetre extends JFrame {
 		Vector< Vector<Object>> to =new Vector<Vector<Object>>();
 		Vector<Object> v;		
 		try {
-			ResultSet rs = this.ddb.getMatchsData(this.t.getIdTournoi());
+			ResultSet rs = this.ddb.getResultatsMatch(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<Object>();
 				v.add(rs.getInt("equipe"));
@@ -793,7 +784,7 @@ public class Fenetre extends JFrame {
 				to.add(v);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage()); // TODO : popup
 		}
 		Vector<String> columnNames = new Vector<String>();
 		columnNames.add("Numéro d'équipe");
@@ -833,12 +824,12 @@ public class Fenetre extends JFrame {
 	private void majStatutM(){
 		int total=-1, termines=-1;
 		try {
-			ResultSet rs = this.ddb.getNbTournoiFinishedMatchs(this.t.getIdTournoi());
+			ResultSet rs = this.ddb.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
 			rs.next();
 			total = rs.getInt(1);
 			termines = rs.getInt(2);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace(); // TODO : popup
 			return ;
 		}
 		match_statut.setText(termines + "/" + total + " matchs terminés");

@@ -4,11 +4,7 @@ package fr.blagnac.com;
 import fr.blagnac.com.control.DialogDataBase;
 import fr.blagnac.com.view.Fenetre;
 import java.io.File;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -27,7 +23,7 @@ public class BeloteApp {
 			}
 
 			// Get the DB dialog
-			ddb = DialogDataBase.getDialogDataBaseInstance(beloteDir);
+			ddb = DialogDataBase.getInstance(beloteDir, "/create.sql");
 
 			// Graphical interface
 			Fenetre fenetre = new Fenetre(); //new Fenetre(statement);
