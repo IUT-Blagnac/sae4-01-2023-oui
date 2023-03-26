@@ -93,7 +93,7 @@ public class DialogDataBase {
     }
 
     public ResultSet getMatchsDataCount(int idTournoi) throws SQLException { // TODO : renommer correctement
-        return this.statement.executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2  AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=\" + this.id_tournoi + \" UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=\" + this.id_tournoi + \") GROUP BY equipe  ORDER BY matchs_gagnes DESC;");
+        return this.statement.executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2  AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + idTournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + idTournoi + ") GROUP BY equipe  ORDER BY matchs_gagnes DESC;");
     }
 
     public ResultSet getEquipesParTournoi(int idTournoi) throws SQLException {

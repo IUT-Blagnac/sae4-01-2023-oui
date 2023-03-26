@@ -5,6 +5,7 @@ import fr.blagnac.com.control.DialogDataBase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Vector;
 
 
@@ -44,9 +45,6 @@ public class Tournoi {
 		}
 		statuttnom = "Inconnu";
 		switch(this.statut){
-		//case 0:
-		//	statuttnom = "Configuration du tournoi";
-		//break;
 		case 0:
 			statuttnom = "Inscription des joueurs";
 		break;
@@ -64,8 +62,8 @@ public class Tournoi {
 	}
 
 	public void majEquipes(){
-		dataeq = new Vector<Equipe>();
-		ideqs = new Vector<Integer>();
+		dataeq = new Vector<>();
+		ideqs = new Vector<>();
 		try {
 			ResultSet rs = this.ddb.getEquipesParTournoi(this.id_tournoi);
 			while(rs.next()){
@@ -79,7 +77,7 @@ public class Tournoi {
 	}
 
 	public void majMatch(){
-		datam = new Vector<Match>();
+		datam = new Vector<>();
 		try {
 			ResultSet rs= this.ddb.getMatchsParTournoi(id_tournoi);
 			while(rs.next()) datam.add(new Match(rs.getInt("id_match"),rs.getInt("equipe1"),rs.getInt("equipe2"), rs.getInt("score1"),rs.getInt("score2"),rs.getInt("num_tour"),rs.getString("termine").equals("oui")));
@@ -185,7 +183,7 @@ public class Tournoi {
 		
 		if(nbtoursav == 0){
 			Vector<Match> ms;
-			ms = Tournoi.getMatchsToDo(getNbEquipes(), nbtoursav+1).lastElement();
+			ms = Objects.requireNonNull(Tournoi.getMatchsToDo(getNbEquipes(), nbtoursav + 1)).lastElement();
 			try{
 				for(Match m:ms){
 					this.ddb.insertMatch(null, this.id_tournoi, (nbtoursav + 1), m.getEquipe1(), m.getEquipe2(), "non");
@@ -198,7 +196,7 @@ public class Tournoi {
 				ResultSet rs;
 				//rs = this.ddb.getStatement().executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2 AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 AND m.id_tournoi = id_tournoi )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + this.id_tournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + this.id_tournoi + ") GROUP BY equipe ORDER BY matchs_gagnes DESC;");
 				rs = this.ddb.getMatchsDataCount(this.id_tournoi);
-				ArrayList<Integer> ordreeq= new ArrayList<Integer>();
+				ArrayList<Integer> ordreeq= new ArrayList<>();
 				while(rs.next()){
 					ordreeq.add(rs.getInt("equipe"));
 					System.out.println(rs.getInt(1) +" _ " + rs.getString(2));
@@ -215,7 +213,7 @@ public class Tournoi {
 					}
 					i=1;
 					do{
-						rs = this.ddb.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i));
+						rs = this.ddb.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i-1));
 						rs.next();
 						if(rs.getInt(1) > 0){
 							// Le match est d�j� jou�
@@ -309,7 +307,7 @@ public class Tournoi {
 	}
 
 	// TODO : mettre dans une classe Tool
-    public static String mysql_real_escape_string( String str) throws Exception {
+    public static String mysql_real_escape_string( String str) {
           if (str == null) {
               return null;
           }
@@ -348,7 +346,7 @@ public class Tournoi {
 		}
 		boolean quitter;
 		int i, increment = 1, temp;
-		Vector<Vector<Match>> retour = new Vector<Vector<Match>>();
+		Vector<Vector<Match>> retour = new Vector<>();
 		Vector<Match> vm;
 		for( int r = 1; r <= nbTours;r++){
 			if(r > 1){
@@ -360,18 +358,16 @@ public class Tournoi {
 			}
 			i = 0;
 			quitter = false;
-			vm = new Vector<Match>();
+			vm = new Vector<>();
 			while(!quitter){
-				if (tabJoueurs[i] == -1 || tabJoueurs[nbJoueurs - 1  - i] == -1){
-					// Nombre impair de joueur, le joueur n'a pas d'adversaire
-				}else{
+				if (!(tabJoueurs[i] == -1 || tabJoueurs[nbJoueurs - 1  - i] == -1)){
 					vm.add(new Match(tabJoueurs[i], tabJoueurs[nbJoueurs - 1  - i]));
 				}
 		        i+= increment;
 				if(i >= nbJoueurs / 2){
-					if(increment == 1){
+					quitter = true;
+					/*if(increment == 1){ TODO : à supprimer ?
 						quitter = true;
-						break;
 					}else{
 						increment = -2;
 						if( i > nbJoueurs / 2){
@@ -379,9 +375,8 @@ public class Tournoi {
 						}
 						if ((i < 1) && (increment == -2)){
 							quitter = true;
-							break;
 						}
-					}
+					}*/
 				}
 			}
 			retour.add(vm);
