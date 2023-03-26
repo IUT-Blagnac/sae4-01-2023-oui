@@ -1,7 +1,11 @@
-package fr.blagnac.com.model;
+package fr.blagnac.com.model.tournoi;
 
 
 import fr.blagnac.com.control.DialogDataBase;
+import fr.blagnac.com.model.Equipe;
+import fr.blagnac.com.model.Match;
+import fr.blagnac.com.model.tournoi.Statut;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,9 +14,8 @@ import java.util.Vector;
 
 public class Tournoi {
 
-	String statuttnom;
 	String nt;
-	int statut;
+	Statut statut;
 	int id_tournoi;
 	//int nbtours;
 	private Vector<Equipe> dataeq = null;
@@ -33,7 +36,7 @@ public class Tournoi {
 			if(!rs.next()){
 				return ;
 			}
-			this.statut = rs.getInt("statut");
+			this.statut = Statut.getStatut(rs.getInt("statut"));
 			this.id_tournoi = rs.getInt("id_tournoi");
 			rs.close();
 		} catch (SQLException e) { // TODO : popup
@@ -42,23 +45,8 @@ public class Tournoi {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		statuttnom = "Inconnu";
-		switch(this.statut){
-		//case 0:
-		//	statuttnom = "Configuration du tournoi";
-		//break;
-		case 0:
-			statuttnom = "Inscription des joueurs";
-		break;
-		case 1:
-			statuttnom = "Génération des matchs";
-		break;
-		case 2:
-			statuttnom = "Matchs en cours";
-		break;
-		case 3:
-			statuttnom = "Terminé";
-		break;
+		if (this.statut == null) {
+			this.statut = Statut.INCONNU;
 		}
 		this.nt = nt;
 	}
@@ -118,12 +106,8 @@ public class Tournoi {
 		return dataeq.size();
 	}
 	
-	public int getStatut(){
+	public Statut getStatut(){
 		return statut;
-	}
-
-	public String getNStatut(){
-		return statuttnom;
 	}
 
 	public String getNom() {
@@ -156,7 +140,7 @@ public class Tournoi {
 				z++;
 			}
 			this.ddb.setStatutTournoi(2, this.id_tournoi);
-			this.statut = 2;
+			this.statut = Statut.getStatut(2);
 		}catch(SQLException e){
 			System.out.println("Erreur validation �quipes : " + e.getMessage()); // TODO : popup
 		}

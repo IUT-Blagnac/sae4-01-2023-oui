@@ -27,9 +27,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import fr.blagnac.com.control.DialogDataBase;
 import fr.blagnac.com.control.DialogTournoi;
-import fr.blagnac.com.model.Tournoi;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
+import fr.blagnac.com.model.tournoi.Tournoi;
+import fr.blagnac.com.model.tournoi.Statut;
 
 
 public class Fenetre extends JFrame {
@@ -225,7 +226,7 @@ public class Fenetre extends JFrame {
 			bparams.setEnabled(false);			
 		}else{
 			switch(t.getStatut()){
-			case 0:
+			case INSCRIPTION:
 				btournois.setEnabled(true);
 				bequipes.setEnabled(true);
 				bmatchs.setEnabled(false);
@@ -233,7 +234,7 @@ public class Fenetre extends JFrame {
 				bresultats.setEnabled(false);
 				bparams.setEnabled(true);	
 			break;
-			case 2:
+			case EN_COURS:
 				btournois.setEnabled(true);
 				bequipes.setEnabled(true);
 				bmatchs.setEnabled(t.getNbTours() > 0);
@@ -384,7 +385,7 @@ public class Fenetre extends JFrame {
 		
 		if(details_trace){
 			detailt_nom.setText(t.getNom());
-			detailt_statut.setText(t.getNStatut());
+			detailt_statut.setText(t.getStatut().getLibelle());
 			detailt_nbtours.setText(Integer.toString(t.getNbTours()));
 		}else{
 			details_trace = false;
@@ -398,7 +399,7 @@ public class Fenetre extends JFrame {
 			tab.add(new JLabel("Nom du tournoi"));
 			tab.add(detailt_nom);
 
-			detailt_statut = new JLabel(t.getNStatut());
+			detailt_statut = new JLabel(t.getStatut().getLibelle());
 			tab.add(new JLabel("Statut"));
 			tab.add(detailt_statut);
 			
@@ -481,7 +482,7 @@ public class Fenetre extends JFrame {
 					return 3;
 				}
 				public boolean isCellEditable(int x, int y){
-					if(t.getStatut() != 0) return false;
+					if(t.getStatut() != Statut.INSCRIPTION) return false;
 					return y > 0;
 				}
 
@@ -550,10 +551,10 @@ public class Fenetre extends JFrame {
 			eq_p.add(bt);
 			eq_p.add(new JLabel("Dans le cas de nombre d'équipes impair, créer une équipe virtuelle"));
 		}
-		if(t.getStatut() != 0){
+		if(t.getStatut() != Statut.INSCRIPTION){
 			eq_ajouter.setEnabled(false);
 			eq_supprimer.setEnabled(false);
-			eq_valider.setEnabled(t.getStatut() == 1);
+			eq_valider.setEnabled(t.getStatut() == Statut.GENERATION);
 		}else{
 			eq_ajouter.setEnabled(true);
 			eq_supprimer.setEnabled(true);	

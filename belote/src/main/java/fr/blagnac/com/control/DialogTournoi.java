@@ -1,8 +1,10 @@
 package fr.blagnac.com.control;
 
 
-import fr.blagnac.com.model.Tournoi;
 import javax.swing.*;
+
+import fr.blagnac.com.model.tournoi.Tournoi;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
