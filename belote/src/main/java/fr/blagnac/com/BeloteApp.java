@@ -1,7 +1,7 @@
 package fr.blagnac.com;
 
 
-import fr.blagnac.com.control.DialogDataBase;
+import fr.blagnac.com.control.database.DialogDataBase;
 import fr.blagnac.com.view.Fenetre;
 import java.io.File;
 import java.sql.SQLException;
