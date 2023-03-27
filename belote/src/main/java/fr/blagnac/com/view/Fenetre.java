@@ -26,10 +26,8 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
-import fr.blagnac.com.control.DialogEquipe;
 import fr.blagnac.com.control.DialogMatch;
 import fr.blagnac.com.control.DialogTournoi;
-import fr.blagnac.com.control.database.DialogDataBase;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
 import fr.blagnac.com.model.tournoi.Tournoi;
@@ -42,9 +40,6 @@ public class Fenetre extends JFrame {
 
 	public JPanel c;
 
-	private JTextArea gt;
-	private JPanel ListeTournois;
-	private Vector<String> noms_tournois;
 	private JList<String> list;
 	private JButton selectTournoi;
 	private JButton deleteTournoi;
@@ -79,7 +74,6 @@ public class Fenetre extends JFrame {
 	JLabel tours_desc;
 	JButton tours_ajouter;
 	JButton tours_supprimer;
-	JButton tours_rentrer;
 
 	// Match tournois
 	private AbstractTableModel match_modele;
@@ -118,8 +112,8 @@ public class Fenetre extends JFrame {
     private final JLabel statut_slect; // = null;
 
 	// dialogs
-	private DialogTournoi dialogTournoi = new DialogTournoi();
-	private DialogMatch dialogMatch = new DialogMatch();
+	private final DialogTournoi dialogTournoi = new DialogTournoi();
+	private final DialogMatch dialogMatch = new DialogMatch();
 
 	public Fenetre(){
 
@@ -369,9 +363,6 @@ public class Fenetre extends JFrame {
 			return ;
 		}
 		majboutons();
-		detailt_nom.setText(t.getNom());
-		detailt_statut.setText(t.getStatut().getLibelle());
-		detailt_nbtours.setText(Integer.toString(t.getNbTours()));
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 		p.add(new JLabel("Détail du tournoi"));
@@ -382,7 +373,7 @@ public class Fenetre extends JFrame {
 		tab.add(new JLabel("Nom du tournoi"));
 		tab.add(detailt_nom);
 
-		detailt_statut = new JLabel(t.getNStatut());
+		detailt_statut = new JLabel(t.getStatut().getLibelle());
 		tab.add(new JLabel("Statut"));
 		tab.add(detailt_statut);
 
