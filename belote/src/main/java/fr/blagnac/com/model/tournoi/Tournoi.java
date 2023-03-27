@@ -10,6 +10,7 @@ import fr.blagnac.com.model.Match;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Vector;
 
 
@@ -51,13 +52,12 @@ public class Tournoi {
 		}
 		if (this.statut == null) {
 			this.statut = Statut.INCONNU;
-		}
-		this.nt = nt;
+        }
 	}
 
 	public void majEquipes(){
-		dataeq = new Vector<Equipe>();
-		ideqs = new Vector<Integer>();
+		dataeq = new Vector<>();
+		ideqs = new Vector<>();
 		try {
 			ResultSet rs = dialogTournoi.getEquipesParTournoi(this.id_tournoi);
 			while(rs.next()){
@@ -71,7 +71,7 @@ public class Tournoi {
 	}
 
 	public void majMatch(){
-		datam = new Vector<Match>();
+		datam = new Vector<>();
 		try {
 			ResultSet rs= dialogTournoi.getMatchsParTournoi(id_tournoi);
 			while(rs.next()) datam.add(new Match(rs.getInt("id_match"),rs.getInt("equipe1"),rs.getInt("equipe2"), rs.getInt("score1"),rs.getInt("score2"),rs.getInt("num_tour"),rs.getString("termine").equals("oui")));
@@ -99,17 +99,17 @@ public class Tournoi {
 	}
 
 	public Equipe getEquipe(int index){
-		if(dataeq == null) 
+		if(dataeq == null)
 			majEquipes();
 		return dataeq.get(index);
 	}
 
 	public int getNbEquipes(){
-		if(dataeq == null) 
+		if(dataeq == null)
 			majEquipes();
 		return dataeq.size();
 	}
-	
+
 	public Statut getStatut(){
 		return statut;
 	}
@@ -170,10 +170,10 @@ public class Tournoi {
 			return false;
 		}
 		System.out.println("Nombre de tours avant:" + nbtoursav);
-		
+
 		if(nbtoursav == 0){
 			Vector<Match> ms;
-			ms = Tournoi.getMatchsToDo(getNbEquipes(), nbtoursav+1).lastElement();
+			ms = Objects.requireNonNull(Tournoi.getMatchsToDo(getNbEquipes(), nbtoursav + 1)).lastElement();
 			try{
 				for(Match m:ms){
 					dialogMatch.insertMatch(null, this.id_tournoi, (nbtoursav + 1), m.getEquipe1(), m.getEquipe2(), "non");
@@ -203,13 +203,13 @@ public class Tournoi {
 					}
 					i=1;
 					do{
-						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i));
+						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i-1));
 						rs.next();
 						if(rs.getInt(1) > 0){
 							// Le match est d�j� jou�
 							i++;
 							fini = false;
-						}else{ 
+						}else{
 							fini = true;
 							dialogMatch.insertMatch(null, this.id_tournoi, (nbtoursav + 1), ordreeq.get(0), ordreeq.get(i), "non");
 							ordreeq.remove(0);
@@ -242,7 +242,7 @@ public class Tournoi {
 			System.out.println("Erreur del tour : " + e.getMessage()); // TODO : popup
 		}
 	}
-	
+
 	public void ajouterEquipe(){
 		int a_aj= this.dataeq.size()+1;
 		for ( int i=1;i <= this.dataeq.size(); i++){
@@ -293,11 +293,11 @@ public class Tournoi {
 		    majEquipes();
 		} catch (SQLException e) {
 			e.printStackTrace(); // TODO : popup
-		}		
+		}
 	}
 
 	// TODO : mettre dans une classe Tool
-    public static String mysql_real_escape_string( String str) throws Exception {
+    public static String mysql_real_escape_string( String str) {
           if (str == null) {
               return null;
           }
@@ -312,13 +312,13 @@ public class Tournoi {
           clean_string = clean_string.replaceAll("'", "''");
           return clean_string;
 	}
-    
+
 	public static Vector<Vector<Match>> getMatchsToDo(int nbJoueurs, int nbTours){
 		if( nbTours >= nbJoueurs){
 			System.out.println("Erreur tours < equipes"); // TODO : popup ?
 			return null;
 		}
-		
+
 		int[] tabJoueurs;
 		if((nbJoueurs % 2) == 1){
 			// Nombre impair de joueurs, on rajoute une �quipe fictive
@@ -336,7 +336,7 @@ public class Tournoi {
 		}
 		boolean quitter;
 		int i, increment = 1, temp;
-		Vector<Vector<Match>> retour = new Vector<Vector<Match>>();
+		Vector<Vector<Match>> retour = new Vector<>();
 		Vector<Match> vm;
 		for( int r = 1; r <= nbTours;r++){
 			if(r > 1){
@@ -348,18 +348,16 @@ public class Tournoi {
 			}
 			i = 0;
 			quitter = false;
-			vm = new Vector<Match>();
+			vm = new Vector<>();
 			while(!quitter){
-				if (tabJoueurs[i] == -1 || tabJoueurs[nbJoueurs - 1  - i] == -1){
-					// Nombre impair de joueur, le joueur n'a pas d'adversaire
-				}else{
+				if (!(tabJoueurs[i] == -1 || tabJoueurs[nbJoueurs - 1  - i] == -1)){
 					vm.add(new Match(tabJoueurs[i], tabJoueurs[nbJoueurs - 1  - i]));
 				}
 		        i+= increment;
 				if(i >= nbJoueurs / 2){
-					if(increment == 1){
+					quitter = true;
+					/*if(increment == 1){ TODO : à supprimer ?
 						quitter = true;
-						break;
 					}else{
 						increment = -2;
 						if( i > nbJoueurs / 2){
@@ -367,9 +365,8 @@ public class Tournoi {
 						}
 						if ((i < 1) && (increment == -2)){
 							quitter = true;
-							break;
 						}
-					}
+					}*/
 				}
 			}
 			retour.add(vm);
