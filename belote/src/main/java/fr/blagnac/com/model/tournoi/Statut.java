@@ -19,7 +19,16 @@ public enum Statut {
         return libelle;
     }
 
+    public int getOrdre() {
+        return ordre;
+    }
+
     public static Statut getStatut(int pfOrdre) {
-        return Statut.values()[pfOrdre];
+        for (Statut statut : Statut.values()) {
+            if (statut.getOrdre() == pfOrdre) {
+                return statut;
+            }
+        }
+        return INCONNU;
     }
 }

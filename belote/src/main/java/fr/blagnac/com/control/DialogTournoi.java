@@ -3,6 +3,7 @@ package fr.blagnac.com.control;
 
 import javax.swing.*;
 
+import fr.blagnac.com.control.database.actors.ActorTournoi;
 import fr.blagnac.com.model.tournoi.Tournoi;
 
 import java.sql.ResultSet;
@@ -10,20 +11,13 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 
-public class DialogTournoi {
+public class DialogTournoi extends ActorTournoi {
 
-    private DialogDataBase ddb;
-    private static DialogTournoi dt;
+    private DialogMatch dialogMatch = new DialogMatch();
+    private DialogEquipe dialogEquipe = new DialogEquipe();
 
-    private DialogTournoi() throws Exception {
-        this.ddb = DialogDataBase.getInstance();
-    }
-
-    public static DialogTournoi getInstance() throws Exception {
-        if (dt == null) {
-            dt = new DialogTournoi();
-        }
-        return dt;
+    public DialogTournoi() {
+        super();
     }
 
     public int creerTournoi(){
@@ -50,12 +44,12 @@ public class DialogTournoi {
             }else{
                 ResultSet rs;
                 try {
-                    rs = this.ddb.getTournoisParNom(s);
+                    rs = super.getTournoisParNom(s);
                     if(rs.next()){
                         JOptionPane.showMessageDialog(null, "Le tournoi n'a pas �t� cr��. Un tournoi du m�me nom existe d�j�");
                         return 2;
                     }
-                    this.ddb.insertTournoi(null, 10, s, 0);
+                    super.insertTournoi(null, 10, s, 0);
                 } catch (SQLException e) {
                     System.out.println("Erreur requete insertion nouveau tournoi:" + e.getMessage()); // TODO : popup
                     //e.printStackTrace();
@@ -66,16 +60,16 @@ public class DialogTournoi {
         return 0;
     }
 
-    public int deleteTournoi(String nomtournoi){
+    public int deleteTournoi(String nomtournoi) {
         try {
             int idt;
-            ResultSet rs = this.ddb.getTournoisParNom(nomtournoi);
+            ResultSet rs = this.getTournoisParNom(nomtournoi);
             rs.next();
             idt = rs.getInt("id_tournoi");
             rs.close();
-            this.ddb.deleteMatch(idt);
-            this.ddb.deleteEquipe(idt);
-            this.ddb.deleteTournoi(idt);
+            dialogMatch.deleteMatch(idt);
+            dialogEquipe.deleteEquipe(idt);
+            this.deleteTournoi(idt);
         } catch (SQLException e) {
             System.out.println("Erreur suppression" + e.getMessage()); // TODO : popup
         } catch (Exception e) {

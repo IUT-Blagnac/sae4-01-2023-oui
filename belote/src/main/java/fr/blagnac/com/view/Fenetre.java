@@ -25,8 +25,11 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-import fr.blagnac.com.control.DialogDataBase;
+
+import fr.blagnac.com.control.DialogEquipe;
+import fr.blagnac.com.control.DialogMatch;
 import fr.blagnac.com.control.DialogTournoi;
+import fr.blagnac.com.control.database.DialogDataBase;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
 import fr.blagnac.com.model.tournoi.Tournoi;
@@ -38,8 +41,6 @@ public class Fenetre extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public JPanel c;
-	private DialogDataBase ddb;
-	private DialogTournoi dt;
 	
 	private JTextArea gt;
 	private JPanel ListeTournois;
@@ -122,14 +123,12 @@ public class Fenetre extends JFrame {
     private JLabel statut_slect = null;
     private final String statut_deft = "Gestion de tournois de Belote v1.0 - ";
 
-	public Fenetre(){
+	// dialogs
+	private DialogTournoi dialogTournoi = new DialogTournoi();
+	private DialogMatch dialogMatch = new DialogMatch();
 
-		try {
-			this.ddb = DialogDataBase.getInstance();
-			this.dt = DialogTournoi.getInstance();
-		} catch (Exception e) {
-			System.out.println(e.getMessage()); // TODO : à enlever ou popup ?
-		}
+	public Fenetre(){
+		
 		this.setTitle("Gestion de tournoi de Belote");
 		setSize(800,400);
 		this.setVisible(true);
@@ -241,7 +240,7 @@ public class Fenetre extends JFrame {
 				btours.setEnabled(true);
 				int total=-1, termines=-1;
 				try {
-					ResultSet rs = this.ddb.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
+					ResultSet rs = dialogTournoi.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
 					rs.next();
 					total = rs.getInt(1);
 					termines = rs.getInt(2);
@@ -265,7 +264,7 @@ public class Fenetre extends JFrame {
        this.setStatutSelect("sélection d'un tournoi");
 		ResultSet rs;
 		try {
-			rs = this.ddb.getTousLesTournois();
+			rs = dialogTournoi.getTousLesTournois();
 			while( rs.next() ){
 				nbdeLignes++;
 				noms_tournois.add(rs.getString("nom_tournoi"));
@@ -349,7 +348,7 @@ public class Fenetre extends JFrame {
 	        creerTournoi.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				dt.creerTournoi();
+				dialogTournoi.creerTournoi();
 				Fenetre.this.tracer_select_tournoi();
 				//String nt = JOptionPane.showInputDialog("Nom du tournoi ?");
 				//ResultSet rs = Fenetre.this.s.executeQuery("SELECT)
@@ -359,7 +358,7 @@ public class Fenetre extends JFrame {
 	        deleteTournoi.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				dt.deleteTournoi(Fenetre.this.list.getSelectedValue());
+				dialogTournoi.deleteTournoi(Fenetre.this.list.getSelectedValue());
 				Fenetre.this.tracer_select_tournoi();
 				}
 			});
@@ -573,7 +572,7 @@ public class Fenetre extends JFrame {
 		Vector<Object> v;
 		boolean peutajouter = true;
 		try {
-			ResultSet rs = this.ddb.getNbToursParMatchParTournoi(this.t.getIdTournoi());
+			ResultSet rs = dialogTournoi.getNbToursParMatchParTournoi(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<Object>();
 				v.add(rs.getInt("num_tour"));
@@ -773,7 +772,7 @@ public class Fenetre extends JFrame {
 		Vector< Vector<Object>> to =new Vector<Vector<Object>>();
 		Vector<Object> v;		
 		try {
-			ResultSet rs = this.ddb.getResultatsMatch(this.t.getIdTournoi());
+			ResultSet rs = dialogMatch.getResultatsMatch(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<Object>();
 				v.add(rs.getInt("equipe"));
@@ -825,7 +824,7 @@ public class Fenetre extends JFrame {
 	private void majStatutM(){
 		int total=-1, termines=-1;
 		try {
-			ResultSet rs = this.ddb.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
+			ResultSet rs = dialogTournoi.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
 			rs.next();
 			total = rs.getInt(1);
 			termines = rs.getInt(2);

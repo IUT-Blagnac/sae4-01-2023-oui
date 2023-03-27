@@ -1,10 +1,11 @@
 package fr.blagnac.com.model.tournoi;
 
 
-import fr.blagnac.com.control.DialogDataBase;
+import fr.blagnac.com.control.DialogEquipe;
+import fr.blagnac.com.control.DialogMatch;
+import fr.blagnac.com.control.DialogTournoi;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
-import fr.blagnac.com.model.tournoi.Statut;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +23,11 @@ public class Tournoi {
 	private Vector<Match> datam  = null;
 	private Vector<Integer>ideqs  = null; 
 	//Statement st;
-	private DialogDataBase ddb;
+
+	// Dialogs
+	private DialogEquipe dialogEquipe = new DialogEquipe();
+	private DialogMatch dialogMatch = new DialogMatch();
+	private DialogTournoi dialogTournoi = new DialogTournoi();
 
 
 /* =====================================================================================================================
@@ -31,8 +36,7 @@ public class Tournoi {
 
 	public Tournoi(String nt){
 		try {
-			this.ddb = DialogDataBase.getInstance();
-			ResultSet rs = this.ddb.getTournoisParNom(Tournoi.mysql_real_escape_string(nt)); // TODO : mettre dans classe Tool
+			ResultSet rs = dialogTournoi.getTournoisParNom(Tournoi.mysql_real_escape_string(nt)); // TODO : mettre dans classe Tool
 			if(!rs.next()){
 				return ;
 			}
@@ -55,7 +59,7 @@ public class Tournoi {
 		dataeq = new Vector<Equipe>();
 		ideqs = new Vector<Integer>();
 		try {
-			ResultSet rs = this.ddb.getEquipesParTournoi(this.id_tournoi);
+			ResultSet rs = dialogTournoi.getEquipesParTournoi(this.id_tournoi);
 			while(rs.next()){
 				dataeq.add(new Equipe(rs.getInt("id_equipe"),rs.getInt("num_equipe"), rs.getString("nom_j1"), rs.getString("nom_j2")));
 				ideqs.add(rs.getInt("num_equipe"));
@@ -69,7 +73,7 @@ public class Tournoi {
 	public void majMatch(){
 		datam = new Vector<Match>();
 		try {
-			ResultSet rs= this.ddb.getMatchsParTournoi(id_tournoi);
+			ResultSet rs= dialogTournoi.getMatchsParTournoi(id_tournoi);
 			while(rs.next()) datam.add(new Match(rs.getInt("id_match"),rs.getInt("equipe1"),rs.getInt("equipe2"), rs.getInt("score1"),rs.getInt("score2"),rs.getInt("num_tour"),rs.getString("termine").equals("oui")));
 			//public MatchM(int _idmatch,int _e1,int _e2,int _score1, int _score2, int _num_tour, boolean _termine)
 			rs.close();
@@ -116,7 +120,7 @@ public class Tournoi {
 
 	public int getNbTours(){
 		try {
-			ResultSet rs = this.ddb.getNbToursMaxMatchParTournoi(id_tournoi);
+			ResultSet rs = dialogTournoi.getNbToursMaxMatchParTournoi(id_tournoi);
 			rs.next();
 			return rs.getInt(1);
 		} catch (SQLException e) {
@@ -135,11 +139,11 @@ public class Tournoi {
 		try {
 			for(Vector<Match> t :ms){
 				for(Match m:t){
-					this.ddb.insertMatch(null, this.id_tournoi, z, m.getEquipe1(), m.getEquipe2(), "non");
+					dialogMatch.insertMatch(null, this.id_tournoi, z, m.getEquipe1(), m.getEquipe2(), "non");
 				}
 				z++;
 			}
-			this.ddb.setStatutTournoi(2, this.id_tournoi);
+			dialogTournoi.setStatutTournoi(2, this.id_tournoi);
 			this.statut = Statut.getStatut(2);
 		}catch(SQLException e){
 			System.out.println("Erreur validation �quipes : " + e.getMessage()); // TODO : popup
@@ -157,7 +161,7 @@ public class Tournoi {
 		if(getNbTours() >=  (getNbEquipes() -1) ) return false;
 		System.out.println("Eq:" + getNbEquipes() + "  tours" + getNbTours());
 		try {
-			ResultSet rs = this.ddb.getNbToursMaxMatchParTournoi(this.id_tournoi);
+			ResultSet rs = dialogTournoi.getNbToursMaxMatchParTournoi(this.id_tournoi);
 			rs.next();
 			nbtoursav = rs.getInt(1);
 			rs.close();
@@ -172,7 +176,7 @@ public class Tournoi {
 			ms = Tournoi.getMatchsToDo(getNbEquipes(), nbtoursav+1).lastElement();
 			try{
 				for(Match m:ms){
-					this.ddb.insertMatch(null, this.id_tournoi, (nbtoursav + 1), m.getEquipe1(), m.getEquipe2(), "non");
+					dialogMatch.insertMatch(null, this.id_tournoi, (nbtoursav + 1), m.getEquipe1(), m.getEquipe2(), "non");
 				}
 			}catch(SQLException e){
 				System.out.println("Erreur ajout tour : " + e.getMessage()); // TODO : popup
@@ -180,8 +184,8 @@ public class Tournoi {
 		}else{
 			try {
 				ResultSet rs;
-				//rs = this.ddb.getStatement().executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2 AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 AND m.id_tournoi = id_tournoi )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + this.id_tournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + this.id_tournoi + ") GROUP BY equipe ORDER BY matchs_gagnes DESC;");
-				rs = this.ddb.getMatchsDataCount(this.id_tournoi);
+				//rs = dialogTournoi.getStatement().executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2 AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 AND m.id_tournoi = id_tournoi )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + this.id_tournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + this.id_tournoi + ") GROUP BY equipe ORDER BY matchs_gagnes DESC;");
+				rs = dialogMatch.getMatchsDataCount(this.id_tournoi);
 				ArrayList<Integer> ordreeq= new ArrayList<Integer>();
 				while(rs.next()){
 					ordreeq.add(rs.getInt("equipe"));
@@ -199,7 +203,7 @@ public class Tournoi {
 					}
 					i=1;
 					do{
-						rs = this.ddb.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i));
+						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i));
 						rs.next();
 						if(rs.getInt(1) > 0){
 							// Le match est d�j� jou�
@@ -207,7 +211,7 @@ public class Tournoi {
 							fini = false;
 						}else{ 
 							fini = true;
-							this.ddb.insertMatch(null, this.id_tournoi, (nbtoursav + 1), ordreeq.get(0), ordreeq.get(i), "non");
+							dialogMatch.insertMatch(null, this.id_tournoi, (nbtoursav + 1), ordreeq.get(0), ordreeq.get(i), "non");
 							ordreeq.remove(0);
 							ordreeq.remove(i-1);
 						}
@@ -223,7 +227,7 @@ public class Tournoi {
 	public void supprimerTour(){
 		int nbtoursav;
 		try {
-			ResultSet rs = this.ddb.getNbToursMaxMatchParTournoi(this.id_tournoi);
+			ResultSet rs = dialogTournoi.getNbToursMaxMatchParTournoi(this.id_tournoi);
 			rs.next();
 			nbtoursav = rs.getInt(1);
 			rs.close();
@@ -233,7 +237,7 @@ public class Tournoi {
 		}
 		//if(tour != nbtoursav) return ;
 		try {
-			this.ddb.deleteMatch(this.id_tournoi, nbtoursav);
+			dialogMatch.deleteMatch(this.id_tournoi, nbtoursav);
 		} catch (SQLException e) {
 			System.out.println("Erreur del tour : " + e.getMessage()); // TODO : popup
 		}
@@ -248,7 +252,7 @@ public class Tournoi {
 			}
 		}
 		try {
-			this.ddb.insertEquipe(null, a_aj, this.id_tournoi, "Joueur 1", "Joueur 2");
+			dialogEquipe.insertEquipe(null, a_aj, this.id_tournoi, "Joueur 1", "Joueur 2");
 		    majEquipes();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -257,7 +261,7 @@ public class Tournoi {
 
 	public void majEquipe(int index){
 		try {
-			this.ddb.setNomsJoueursEquipe(getEquipe(index).getId(), mysql_real_escape_string(getEquipe(index).getEquipe1()), mysql_real_escape_string(getEquipe(index).getEquipe2()));
+			dialogEquipe.setNomsJoueursEquipe(getEquipe(index).getId(), mysql_real_escape_string(getEquipe(index).getEquipe1()), mysql_real_escape_string(getEquipe(index).getEquipe2()));
 		    majEquipes();
 		} catch (SQLException e) { // TODO : popup
 			e.printStackTrace();
@@ -270,7 +274,7 @@ public class Tournoi {
 		String termine = (getMatch(index).getScore1() > 0 || getMatch(index).getScore2() > 0) ? "oui":"non";
 		System.out.println(termine);
 		try {
-			this.ddb.updateMatch(getMatch(index).getIdMatch(), getMatch(index).getEquipe1(), getMatch(index).getEquipe2(), getMatch(index).getScore1(), getMatch(index).getScore2(), termine);
+			dialogMatch.updateMatch(getMatch(index).getIdMatch(), getMatch(index).getEquipe1(), getMatch(index).getEquipe2(), getMatch(index).getScore1(), getMatch(index).getScore2(), termine);
 		} catch (SQLException e) {
 			e.printStackTrace(); // TODO popup
 		}
@@ -280,12 +284,12 @@ public class Tournoi {
 	public void supprimerEquipe(int ideq){
 		try {
 			int numeq;
-			ResultSet rs = this.ddb.getEquipe(ideq);
+			ResultSet rs = dialogEquipe.getEquipe(ideq);
 			rs.next();
 			numeq = rs.getInt("num_equipe");
 			rs.close();
-			this.ddb.deleteEquipe(this.id_tournoi, ideq);
-			this.ddb.setNumEquipe(this.id_tournoi, numeq);
+			dialogEquipe.deleteEquipe(this.id_tournoi, ideq);
+			dialogEquipe.setNumEquipe(this.id_tournoi, numeq);
 		    majEquipes();
 		} catch (SQLException e) {
 			e.printStackTrace(); // TODO : popup
