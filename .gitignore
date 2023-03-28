@@ -1,6 +1,6 @@
-belote/.idea
+Belote/.idea
 .vscode
-belote/.settings
-belote/bin/**
-belote/target
+Belote/.settings
+Belote/bin/**
+Belote/target
 jBelote
