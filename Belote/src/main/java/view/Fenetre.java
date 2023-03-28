@@ -1,4 +1,4 @@
-package fr.blagnac.com.view;
+package view;
 
 
 import java.awt.BorderLayout;
@@ -25,12 +25,12 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-import fr.blagnac.com.control.dialogs.DialogMatch;
-import fr.blagnac.com.control.dialogs.DialogTournoi;
-import fr.blagnac.com.model.Equipe;
-import fr.blagnac.com.model.Match;
-import fr.blagnac.com.model.tournoi.Tournoi;
-import fr.blagnac.com.model.tournoi.StatutTournoi;
+import control.dialogs.DialogMatch;
+import control.dialogs.DialogTournoi;
+import model.Equipe;
+import model.Match;
+import model.tournoi.Tournoi;
+import model.tournoi.StatutTournoi;
 
 
 public class Fenetre extends JFrame {

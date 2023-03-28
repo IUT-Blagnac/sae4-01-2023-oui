@@ -1,4 +1,4 @@
-package fr.blagnac.com.model.tournoi;
+package model.tournoi;
 
 
 public enum StatutTournoi {

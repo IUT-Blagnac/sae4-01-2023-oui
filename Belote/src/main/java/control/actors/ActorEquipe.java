@@ -1,10 +1,10 @@
-package fr.blagnac.com.control.actors;
+package control.actors;
 
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import fr.blagnac.com.control.dialogs.DialogDataBase;
+import control.dialogs.DialogDataBase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

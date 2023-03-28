@@ -1,9 +1,9 @@
-package fr.blagnac.com.control.dialogs;
+package control.dialogs;
 
 
 import javax.swing.*;
-import fr.blagnac.com.control.actors.ActorTournoi;
-import fr.blagnac.com.model.tournoi.Tournoi;
+import control.actors.ActorTournoi;
+import model.tournoi.Tournoi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;

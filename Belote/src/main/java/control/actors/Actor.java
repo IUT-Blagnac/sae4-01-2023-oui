@@ -1,4 +1,4 @@
-package fr.blagnac.com.control.actors;
+package control.actors;
 
 
 import java.sql.ResultSet;

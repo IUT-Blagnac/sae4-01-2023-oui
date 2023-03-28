@@ -1,4 +1,4 @@
-package fr.blagnac.com.model;
+package model;
 
 
 public 	class Equipe {

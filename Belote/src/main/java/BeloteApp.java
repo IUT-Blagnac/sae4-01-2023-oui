@@ -1,8 +1,5 @@
-package fr.blagnac.com;
-
-
-import fr.blagnac.com.control.dialogs.DialogDataBase;
-import fr.blagnac.com.view.Fenetre;
+import control.dialogs.DialogDataBase;
+import view.Fenetre;
 import java.io.File;
 import java.sql.SQLException;
 import javax.swing.JFrame;

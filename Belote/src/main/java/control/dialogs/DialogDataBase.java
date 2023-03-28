@@ -1,7 +1,6 @@
-package fr.blagnac.com.control.dialogs;
+package control.dialogs;
 
 
-import fr.blagnac.com.BeloteApp;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
@@ -17,7 +16,7 @@ public class DialogDataBase {
     private DialogDataBase(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
         this.connection = DriverManager.getConnection("jdbc:hsqldb:file:" + beloteDir + "/belote", "sa", "");
         statement = this.connection.createStatement();
-        InputStream createFileInputStream = BeloteApp.class.getResourceAsStream(createFile);
+        InputStream createFileInputStream = this.getClass().getResourceAsStream(createFile);
         importSQL(this.connection, createFileInputStream);
     }
 

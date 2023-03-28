@@ -85,7 +85,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>fr.blagnac.com.BeloteApp</mainClass>
+              <mainClass>BeloteApp</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

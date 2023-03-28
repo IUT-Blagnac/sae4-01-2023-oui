@@ -1,7 +1,7 @@
-package fr.blagnac.com.control.dialogs;
+package control.dialogs;
 
 
-import fr.blagnac.com.control.actors.ActorEquipe;
+import control.actors.ActorEquipe;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

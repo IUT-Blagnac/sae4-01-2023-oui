@@ -1,9 +1,8 @@
-package fr.blagnac.com;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import fr.blagnac.com.model.Match;
+import model.Match;
 
 public class MatchTest {
     @Test

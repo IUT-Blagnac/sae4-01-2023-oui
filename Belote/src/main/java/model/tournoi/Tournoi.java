@@ -1,11 +1,11 @@
-package fr.blagnac.com.model.tournoi;
+package model.tournoi;
 
 
-import fr.blagnac.com.control.dialogs.DialogEquipe;
-import fr.blagnac.com.control.dialogs.DialogMatch;
-import fr.blagnac.com.control.dialogs.DialogTournoi;
-import fr.blagnac.com.model.Equipe;
-import fr.blagnac.com.model.Match;
+import control.dialogs.DialogEquipe;
+import control.dialogs.DialogMatch;
+import control.dialogs.DialogTournoi;
+import model.Equipe;
+import model.Match;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

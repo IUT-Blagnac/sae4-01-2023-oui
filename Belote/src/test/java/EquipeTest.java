@@ -1,10 +1,8 @@
-package fr.blagnac.com;
-
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import fr.blagnac.com.model.Equipe;
+import model.Equipe;
 
 public class EquipeTest {
     @Test
