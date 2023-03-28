@@ -12,10 +12,15 @@ import java.util.Objects;
 public class DialogTournoi extends ActorTournoi {
 
     private final DialogMatch dM = new DialogMatch();
-    private final DialogEquipe dE = new DialogEquipe();
+    private DialogEquipe dE;
 
     public DialogTournoi() {
         super();
+        try {
+            this.dE = new DialogEquipe();
+        } catch (Exception e) {
+            System.out.println(e.getMessage()); // TODO : popup
+        }
     }
 
     public int creerTournoi(){
@@ -66,12 +71,13 @@ public class DialogTournoi extends ActorTournoi {
             idt = rs.getInt("id_tournoi");
             rs.close();
             dM.deleteMatch(idt);
-            dE.deleteEquipe(idt);
+            dE.removeToutesEquipesDUnTournoi(idt);
             this.deleteTournoi(idt);
         } catch (SQLException e) {
             System.out.println("Erreur suppression" + e.getMessage()); // TODO : popup
         } catch (Exception e) {
             System.out.println("Erreur inconnue"); // TODO : popup
+            System.out.println(e.getMessage());
         }
         return 0;
     }

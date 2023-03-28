@@ -16,7 +16,7 @@ public class DialogDataBase {
 
     private DialogDataBase(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
         this.connection = DriverManager.getConnection("jdbc:hsqldb:file:" + beloteDir + "/belote", "sa", "");
-        this.statement = this.connection.createStatement();
+        statement = this.connection.createStatement();
         InputStream createFileInputStream = BeloteApp.class.getResourceAsStream(createFile);
         importSQL(this.connection, createFileInputStream);
     }

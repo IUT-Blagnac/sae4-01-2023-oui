@@ -1,7 +1,7 @@
 package fr.blagnac.com.model;
 
 
-public 	class Equipe{
+public 	class Equipe {
 
 	private int id;
 	private int numero;

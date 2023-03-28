@@ -25,7 +25,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-
 import fr.blagnac.com.control.dialogs.DialogMatch;
 import fr.blagnac.com.control.dialogs.DialogTournoi;
 import fr.blagnac.com.model.Equipe;

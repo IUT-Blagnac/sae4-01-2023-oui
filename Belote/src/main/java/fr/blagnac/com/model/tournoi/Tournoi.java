@@ -25,7 +25,7 @@ public class Tournoi {
 	//Statement st;
 
 	// Dialogs
-	private DialogEquipe dialogEquipe = new DialogEquipe();
+	private DialogEquipe dE;
 	private DialogMatch dialogMatch = new DialogMatch();
 	private DialogTournoi dialogTournoi = new DialogTournoi();
 
@@ -36,6 +36,7 @@ public class Tournoi {
 
 	public Tournoi(String nt){
 		try {
+			this.dE = new DialogEquipe();
 			ResultSet rs = dialogTournoi.getTournoisParNom(Tournoi.mysql_real_escape_string(nt)); // TODO : mettre dans classe Tool
 			if(!rs.next()){
 				return ;
@@ -251,16 +252,18 @@ public class Tournoi {
 			}
 		}
 		try {
-			dialogEquipe.insertEquipe(null, a_aj, this.id_tournoi, "Joueur 1", "Joueur 2");
+			dE.addEquipe(null, a_aj, this.id_tournoi, "Joueur 1", "Joueur 2");
 		    majEquipes();
-		} catch (SQLException e) {
+		} catch (SQLException e) { // TODO : popup
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void majEquipe(int index){
 		try {
-			dialogEquipe.setNomsJoueursEquipe(getEquipe(index).getId(), mysql_real_escape_string(getEquipe(index).getEquipe1()), mysql_real_escape_string(getEquipe(index).getEquipe2()));
+			dE.setNomsJoueursDUneEquipe(getEquipe(index).getId(), mysql_real_escape_string(getEquipe(index).getEquipe1()), mysql_real_escape_string(getEquipe(index).getEquipe2()));
 		    majEquipes();
 		} catch (SQLException e) { // TODO : popup
 			e.printStackTrace();
@@ -283,12 +286,12 @@ public class Tournoi {
 	public void supprimerEquipe(int ideq){
 		try {
 			int numeq;
-			ResultSet rs = dialogEquipe.getEquipe(ideq);
+			ResultSet rs = dE.getEquipeDUnTournoi(ideq);
 			rs.next();
 			numeq = rs.getInt("num_equipe");
 			rs.close();
-			dialogEquipe.deleteEquipe(this.id_tournoi, ideq);
-			dialogEquipe.setNumEquipe(this.id_tournoi, numeq);
+			dE.removeUneEquipe(this.id_tournoi, ideq);
+			dE.setNumEquipesDUnTournoi(this.id_tournoi, numeq);
 		    majEquipes();
 		} catch (SQLException e) {
 			e.printStackTrace(); // TODO : popup
