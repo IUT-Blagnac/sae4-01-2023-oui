@@ -1,12 +1,11 @@
 package fr.blagnac.com.model.tournoi;
 
 
-import fr.blagnac.com.control.DialogEquipe;
-import fr.blagnac.com.control.DialogMatch;
-import fr.blagnac.com.control.DialogTournoi;
+import fr.blagnac.com.control.dialogs.DialogEquipe;
+import fr.blagnac.com.control.dialogs.DialogMatch;
+import fr.blagnac.com.control.dialogs.DialogTournoi;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.Vector;
 public class Tournoi {
 
 	String nt;
-	Statut statut;
+	StatutTournoi statut;
 	int id_tournoi;
 	//int nbtours;
 	private Vector<Equipe> dataeq = null;
@@ -41,7 +40,7 @@ public class Tournoi {
 			if(!rs.next()){
 				return ;
 			}
-			this.statut = Statut.getStatut(rs.getInt("statut"));
+			this.statut = StatutTournoi.getStatut(rs.getInt("statut"));
 			this.id_tournoi = rs.getInt("id_tournoi");
 			rs.close();
 		} catch (SQLException e) { // TODO : popup
@@ -51,7 +50,7 @@ public class Tournoi {
 			e.printStackTrace();
 		}
 		if (this.statut == null) {
-			this.statut = Statut.INCONNU;
+			this.statut = StatutTournoi.INCONNU;
         }
 	}
 
@@ -110,7 +109,7 @@ public class Tournoi {
 		return dataeq.size();
 	}
 
-	public Statut getStatut(){
+	public StatutTournoi getStatut(){
 		return statut;
 	}
 
@@ -144,7 +143,7 @@ public class Tournoi {
 				z++;
 			}
 			dialogTournoi.setStatutTournoi(2, this.id_tournoi);
-			this.statut = Statut.getStatut(2);
+			this.statut = StatutTournoi.getStatut(2);
 		}catch(SQLException e){
 			System.out.println("Erreur validation �quipes : " + e.getMessage()); // TODO : popup
 		}

@@ -26,12 +26,12 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
-import fr.blagnac.com.control.DialogMatch;
-import fr.blagnac.com.control.DialogTournoi;
+import fr.blagnac.com.control.dialogs.DialogMatch;
+import fr.blagnac.com.control.dialogs.DialogTournoi;
 import fr.blagnac.com.model.Equipe;
 import fr.blagnac.com.model.Match;
 import fr.blagnac.com.model.tournoi.Tournoi;
-import fr.blagnac.com.model.tournoi.Statut;
+import fr.blagnac.com.model.tournoi.StatutTournoi;
 
 
 public class Fenetre extends JFrame {
@@ -448,7 +448,7 @@ public class Fenetre extends JFrame {
 					return 3;
 				}
 				public boolean isCellEditable(int x, int y){
-					if(t.getStatut() != Statut.INSCRIPTION) return false;
+					if(t.getStatut() != StatutTournoi.INSCRIPTION) return false;
 					return y > 0;
 				}
 
@@ -515,10 +515,10 @@ public class Fenetre extends JFrame {
 			eq_p.add(bt);
 			eq_p.add(new JLabel("Dans le cas de nombre d'équipes impair, créer une équipe virtuelle"));
 		}
-		if(t.getStatut() != Statut.INSCRIPTION){
+		if(t.getStatut() != StatutTournoi.INSCRIPTION){
 			eq_ajouter.setEnabled(false);
 			eq_supprimer.setEnabled(false);
-			eq_valider.setEnabled(t.getStatut() == Statut.GENERATION);
+			eq_valider.setEnabled(t.getStatut() == StatutTournoi.GENERATION);
 		}else{
 			eq_ajouter.setEnabled(true);
 			eq_supprimer.setEnabled(true);

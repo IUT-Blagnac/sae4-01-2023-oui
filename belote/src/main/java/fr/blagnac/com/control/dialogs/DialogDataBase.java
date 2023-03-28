@@ -1,20 +1,18 @@
-package fr.blagnac.com.control.database;
+package fr.blagnac.com.control.dialogs;
 
 
 import fr.blagnac.com.BeloteApp;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.Scanner;
 
 
-// TODO : singleton
 public class DialogDataBase {
 
-    private Statement statement;
-    private Connection connection;
     private static DialogDataBase ddb;
+    private static Statement statement;
+    private Connection connection;
 
     private DialogDataBase(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
         this.connection = DriverManager.getConnection("jdbc:hsqldb:file:" + beloteDir + "/belote", "sa", "");
@@ -23,38 +21,21 @@ public class DialogDataBase {
         importSQL(this.connection, createFileInputStream);
     }
 
-    /**
-     *
-     * @param beloteDir (can't be modified)
-     * @return
-     * @throws SQLException
-     * @throws FileNotFoundException
-     */
-    public static DialogDataBase getInstance(String beloteDir, String createFile)
-            throws SQLException, FileNotFoundException {
+    public static DialogDataBase initialize(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
         if (ddb == null) {
             ddb = new DialogDataBase(beloteDir, createFile);
         }
         return ddb;
     }
 
-    /**
-     *
-     * @return
-     * @throws Exception
-     */
-    public static DialogDataBase getInstance() throws Exception {
+    public static Statement getStatement() throws Exception {
         if (ddb == null) {
-            throw new Exception("Paramètres attendus :\n" +
+            throw new Exception("Le DialogDataBase doit être initialisé avec les paramètres suivants :\n" +
                     "1) Répertoire de stockage des données de l'application\n" +
                     "2) Chemin du script SQL de création des tables de la base de données de l'application");
         }
-        return ddb;
+        return statement;
     }
-
-    /*public Statement getStatement() {
-        return this.statement;
-    }*/
 
     private void importSQL(Connection conn, InputStream in) throws SQLException, FileNotFoundException {
         Scanner scaner = new Scanner(in);
@@ -63,7 +44,6 @@ public class DialogDataBase {
         try {
             // create a statement
             st = conn.createStatement();
-
             // execute each request
             while (scaner.hasNext()) {
                 String line = scaner.next();
@@ -81,10 +61,6 @@ public class DialogDataBase {
             }
             scaner.close();
         }
-    }
-
-    public Statement getStatement() {
-        return this.statement;
     }
 
     // // Requêtes SQL-LID (SELECT)

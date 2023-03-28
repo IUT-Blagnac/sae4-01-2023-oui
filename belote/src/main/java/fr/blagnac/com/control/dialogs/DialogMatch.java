@@ -1,6 +1,8 @@
-package fr.blagnac.com.control;
+package fr.blagnac.com.control.dialogs;
 
-import fr.blagnac.com.control.database.actors.ActorMatch;
+
+import fr.blagnac.com.control.actors.ActorMatch;
+
 
 public class DialogMatch extends ActorMatch {
     

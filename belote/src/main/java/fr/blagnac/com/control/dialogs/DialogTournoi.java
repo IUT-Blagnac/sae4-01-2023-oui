@@ -1,11 +1,9 @@
-package fr.blagnac.com.control;
+package fr.blagnac.com.control.dialogs;
 
 
 import javax.swing.*;
-
-import fr.blagnac.com.control.database.actors.ActorTournoi;
+import fr.blagnac.com.control.actors.ActorTournoi;
 import fr.blagnac.com.model.tournoi.Tournoi;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -13,8 +11,8 @@ import java.util.Objects;
 
 public class DialogTournoi extends ActorTournoi {
 
-    private DialogMatch dialogMatch = new DialogMatch();
-    private DialogEquipe dialogEquipe = new DialogEquipe();
+    private final DialogMatch dM = new DialogMatch();
+    private final DialogEquipe dE = new DialogEquipe();
 
     public DialogTournoi() {
         super();
@@ -67,8 +65,8 @@ public class DialogTournoi extends ActorTournoi {
             rs.next();
             idt = rs.getInt("id_tournoi");
             rs.close();
-            dialogMatch.deleteMatch(idt);
-            dialogEquipe.deleteEquipe(idt);
+            dM.deleteMatch(idt);
+            dE.deleteEquipe(idt);
             this.deleteTournoi(idt);
         } catch (SQLException e) {
             System.out.println("Erreur suppression" + e.getMessage()); // TODO : popup

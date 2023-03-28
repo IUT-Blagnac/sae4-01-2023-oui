@@ -1,6 +1,8 @@
-package fr.blagnac.com.control;
+package fr.blagnac.com.control.dialogs;
 
-import fr.blagnac.com.control.database.actors.ActorEquipe;
+
+import fr.blagnac.com.control.actors.ActorEquipe;
+
 
 public class DialogEquipe extends ActorEquipe {
 
