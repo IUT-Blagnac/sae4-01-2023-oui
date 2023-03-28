@@ -50,17 +50,17 @@ public class DialogEquipe extends ActorEquipe {
 
     public void addEquipe(Integer idEquipe, Integer numEquipe, Integer idTournoi, String nomJ1, String nomJ2) throws SQLException, Exception {
         Map<String, String> parametresValues = new HashMap<>();
-        parametresValues.put("id_equipe", ""+idEquipe); // NULL
+        parametresValues.put("id_equipe", ""+idEquipe);
         parametresValues.put("num_equipe", ""+numEquipe);
         parametresValues.put("id_tournoi", ""+idTournoi);
-        parametresValues.put("nom_j1", "'"+nomJ1+"'");
+        parametresValues.put("nom_j1", "'"+nomJ1+"'"); // TODO : déplacer prise en compte des ''
         parametresValues.put("nom_j2", "'"+nomJ2+"'");
         this.add(parametresValues);
     }
 
     public void setNomsJoueursDUneEquipe(int idEquipe, String nomJ1, String nomJ2) throws SQLException, Exception {
         Map<String, String> parametresValues = new HashMap<>();
-        parametresValues.put("nom_j1", "'"+nomJ1+"'");
+        parametresValues.put("nom_j1", "'"+nomJ1+"'"); // TODO : déplacer prise en compte des ''
         parametresValues.put("nom_j2", "'"+nomJ2+"'");
         Map<String, String> parametresWhere = new HashMap<>();
         parametresWhere.put("id_equipe", ""+idEquipe);
