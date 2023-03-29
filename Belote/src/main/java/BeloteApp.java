@@ -11,7 +11,6 @@ public class BeloteApp {
 	public static void main(String[] args) throws SQLException {
 
 		String beloteDir = System.getProperty("user.dir") + "/jBelote";
-		DialogDataBase ddb = null;
 
 		try {
 			Class.forName("org.hsqldb.jdbcDriver").newInstance();
@@ -19,8 +18,8 @@ public class BeloteApp {
 				new File(beloteDir).mkdir();
 			}
 
-			// Get the DB dialog
-			ddb = DialogDataBase.initialize(beloteDir, "/create.sql");
+			// Initialisation du Dialog de la base de données
+			DialogDataBase.initialize(beloteDir, "/create.sql");
 
 			// Graphical interface
 			Fenetre fenetre = new Fenetre(); //new Fenetre(statement);
