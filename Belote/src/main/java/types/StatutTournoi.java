@@ -1,4 +1,4 @@
-package model.tournoi;
+package types;
 
 
 public enum StatutTournoi {

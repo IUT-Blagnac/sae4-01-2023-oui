@@ -29,8 +29,8 @@ import control.dialogs.DialogMatch;
 import control.dialogs.DialogTournoi;
 import model.Equipe;
 import model.Match;
-import model.tournoi.Tournoi;
-import model.tournoi.StatutTournoi;
+import model.Tournoi;
+import types.StatutTournoi;
 
 
 public class Fenetre extends JFrame {
