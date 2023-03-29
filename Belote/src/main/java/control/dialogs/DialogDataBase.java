@@ -4,6 +4,7 @@ package control.dialogs;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Properties;
 import java.util.Scanner;
 
 
@@ -12,9 +13,11 @@ public class DialogDataBase {
     private static DialogDataBase ddb;
     private static Statement statement;
     private Connection connection;
+    private Properties properties = new Properties();
 
     private DialogDataBase(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
-        this.connection = DriverManager.getConnection("jdbc:hsqldb:file:" + beloteDir + "/belote", "sa", "");
+        loadConfig();
+        this.connection = DriverManager.getConnection(properties.getProperty("DBURL") + beloteDir + "/" + properties.getProperty("DBName"), properties.getProperty("DBUser"), properties.getProperty("DBPassword"));
         statement = this.connection.createStatement();
         InputStream createFileInputStream = this.getClass().getResourceAsStream(createFile);
         importSQL(this.connection, createFileInputStream);
@@ -59,6 +62,15 @@ public class DialogDataBase {
                 st.close();
             }
             scaner.close();
+        }
+    }
+
+    private void loadConfig() {
+        try {
+            InputStream inputStream = this.getClass().getResourceAsStream("/database.properties");
+            properties.load(inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
