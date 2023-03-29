@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class ActorEquipe implements Actor {
+public abstract class ActorEquipe implements ActorInterface {
 
     private final Statement ddbStatement;
 
