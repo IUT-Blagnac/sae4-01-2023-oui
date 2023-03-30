@@ -231,9 +231,8 @@ public class Fenetre extends JFrame {
 					total = rs.getInt(1);
 					termines = rs.getInt(2);
 				} catch (Exception e) {
-					Fenetre.afficherInformation("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
+					Fenetre.afficherErreur("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
 					System.out.println(e.getMessage()); // Message développeur
-
 					return;
 				}
 				bresultats.setEnabled(total == termines && total > 0);
@@ -259,7 +258,7 @@ public class Fenetre extends JFrame {
 			}
 			rs.close();
 		} catch (Exception e) {
-			Fenetre.afficherInformation("Une erreur est survenue lors de la récupération des tournois.");
+			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération des tournois.");
 			System.out.println(e.getMessage()); // Message développeur
 
 		}
@@ -538,7 +537,7 @@ public class Fenetre extends JFrame {
 				peutajouter = peutajouter && rs.getInt("tmatchs") == rs.getInt("termines");
 			}
 		} catch (Exception e) {
-			Fenetre.afficherInformation("Une erreur est survenue lors de la récupération des tours du match du tournoi.");
+			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération des tours du match du tournoi.");
 			System.out.println(e.getMessage()); // Message développeur
 		}
 		Vector<String> columnNames = new Vector<>();
@@ -683,7 +682,7 @@ public class Fenetre extends JFrame {
 							m.setScore1(sco);
 							t.majMatch(rowIndex);
 						}catch(Exception e){
-							Fenetre.afficherInformation("Une érreur est survenue: Le score doit être un nombre entier");
+							Fenetre.afficherErreur("Erreur lors de la saisie des scores, les scores doivent être des nombres entiers.");
 						}
 					}else if( columnIndex == 4){
 						try{
@@ -691,7 +690,7 @@ public class Fenetre extends JFrame {
 							m.setScore2(sco);
 							t.majMatch(rowIndex);
 						}catch(Exception e){
-							Fenetre.afficherInformation("Une érreur est survenue: Le score doit être un nombre entier");
+							Fenetre.afficherErreur("Erreur lors de la saisie des scores, les scores doivent être des nombres entiers.");
 						}
 					}
 					fireTableDataChanged();
@@ -733,7 +732,7 @@ public class Fenetre extends JFrame {
 				to.add(v);
 			}
 		} catch (Exception e) {
-			Fenetre.afficherInformation("Une erreur est survenue lors de la récupération des résultats du match pour ce tournoi.");
+			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération des résultats du match pour ce tournoi.");
 			System.out.println(e.getMessage()); // Message développeur
 		}
 		Vector<String> columnNames = new Vector<>();
@@ -778,7 +777,7 @@ public class Fenetre extends JFrame {
 			total = rs.getInt(1);
 			termines = rs.getInt(2);
 		} catch (Exception e) {
-			Fenetre.afficherInformation("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
+			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
 			System.out.println(e.getMessage()); // Message développeur
 			return ;
 		}
@@ -786,8 +785,12 @@ public class Fenetre extends JFrame {
 		match_valider.setEnabled(total == termines);
 	}
 
-	public static void afficherInformation(String message){
+	public static void afficherErreur(String message){
 		JOptionPane.showMessageDialog(null, message, "ERREUR", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public static String saisieNomTournoi() {
+		return JOptionPane.showInputDialog(null, "Entrez le nom du tournoi", "Nom du tournoi", JOptionPane.PLAIN_MESSAGE);
 	}
 
 }

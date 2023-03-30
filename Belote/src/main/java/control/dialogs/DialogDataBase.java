@@ -71,7 +71,7 @@ public class DialogDataBase {
             InputStream inputStream = this.getClass().getResourceAsStream(dataBaseConfigFile);
             properties.load(inputStream);
         } catch (Exception e) {
-            Fenetre.afficherInformation("Erreur lors du chargement du fichier de configuration de la base de données " + dataBaseConfigFile + ".");
+            Fenetre.afficherErreur("Erreur lors du chargement du fichier de configuration de la base de données " + dataBaseConfigFile + ".");
         }
     }
 

@@ -13,7 +13,16 @@ public enum TableAttributType {
     ID_EQUIPE("id_equipe"),
     NUM_EQUIPE("num_equipe"),
     NOM_J1("nom_j1"),
-    NOM_J2("nom_j2");
+    NOM_J2("nom_j2"),
+
+    // Match
+    ID_MATCH("id_match"),
+    NUM_TOUR("num_tour"),
+    EQUIPE1("equipe1"),
+    EQUIPE2("equipe2"),
+    SCORE1("score1"),
+    SCORE2("score2"),
+    TERMINE("termine");
 
 
     private final String columnName;

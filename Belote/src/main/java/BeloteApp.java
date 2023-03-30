@@ -27,11 +27,11 @@ public class BeloteApp {
 			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		} catch (SQLException e) {
-			Fenetre.afficherInformation(
+			Fenetre.afficherErreur(
 					"Erreur lors de la connexion à la base de données, une autre instance du logiciel est peut-être déjà ouverte.");
 			System.exit(0);
 		} catch (Exception e) {
-			Fenetre.afficherInformation(
+			Fenetre.afficherErreur(
 					"Erreur lors du lancement de l'application, vérifier l'installation Java.");
 			System.exit(0);
 		}
