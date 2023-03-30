@@ -2,7 +2,6 @@ package control.dialogs;
 
 
 import view.Fenetre;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;

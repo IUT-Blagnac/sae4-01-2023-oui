@@ -3,15 +3,13 @@ package control.dialogs;
 
 import control.actors.Actor;
 import control.actors.ActorFactory;
-import model.Tournoi;
 import types.ActorType;
+import view.Fenetre;
+import model.Tournoi;
 import types.StatutTournoi;
 import types.TableAttributType;
-import view.Fenetre;
-
 import javax.swing.*;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +27,7 @@ public class DialogTournoi {
             this.dialogEquipe = new DialogEquipe();
             this.actorTournoi = ActorFactory.getActor(ActorType.TOURNOI);
         } catch (Exception e) {
-            System.out.println(e.getMessage()); // TODO : popup
+            Fenetre.afficherInformation("Erreur lors de la récupération de l'acteur Tournoi.");
         }
     }
 

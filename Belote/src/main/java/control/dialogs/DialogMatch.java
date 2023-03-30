@@ -5,7 +5,6 @@ import control.actors.Actor;
 import control.actors.ActorFactory;
 import types.ActorType;
 import view.Fenetre;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

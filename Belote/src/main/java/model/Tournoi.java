@@ -190,7 +190,6 @@ public class Tournoi {
 						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i-1));
 						rs.next();
 						if(rs.getInt(1) > 0){
-							// Le match est d�j� jou�
 							i++;
 							fini = false;
 						}else{

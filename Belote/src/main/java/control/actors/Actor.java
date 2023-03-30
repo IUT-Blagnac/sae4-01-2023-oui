@@ -52,7 +52,7 @@ public abstract class Actor {
             }
             strSQL += "WHERE " + strWhere;
         }
-        return this.ddbStatement.executeQuery(strSQL); // + " ORDER BY num_equipe");
+        return this.ddbStatement.executeQuery(strSQL);
     }
 
     public void add(Map<TableAttributType, String> parametresValues) throws Exception {

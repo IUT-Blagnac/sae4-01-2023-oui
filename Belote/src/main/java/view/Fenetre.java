@@ -11,7 +11,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.util.Vector;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import control.dialogs.DialogMatch;
 import control.dialogs.DialogTournoi;
@@ -221,6 +233,7 @@ public class Fenetre extends JFrame {
 				} catch (Exception e) {
 					Fenetre.afficherInformation("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
 					System.out.println(e.getMessage()); // Message développeur
+
 					return;
 				}
 				bresultats.setEnabled(total == termines && total > 0);
@@ -248,6 +261,7 @@ public class Fenetre extends JFrame {
 		} catch (Exception e) {
 			Fenetre.afficherInformation("Une erreur est survenue lors de la récupération des tournois.");
 			System.out.println(e.getMessage()); // Message développeur
+
 		}
 
 		if(tournois_trace){
@@ -669,7 +683,7 @@ public class Fenetre extends JFrame {
 							m.setScore1(sco);
 							t.majMatch(rowIndex);
 						}catch(Exception e){
-							return ;
+							Fenetre.afficherInformation("Une érreur est survenue: Le score doit être un nombre entier");
 						}
 					}else if( columnIndex == 4){
 						try{
@@ -677,7 +691,7 @@ public class Fenetre extends JFrame {
 							m.setScore2(sco);
 							t.majMatch(rowIndex);
 						}catch(Exception e){
-							return ;
+							Fenetre.afficherInformation("Une érreur est survenue: Le score doit être un nombre entier");
 						}
 					}
 					fireTableDataChanged();
