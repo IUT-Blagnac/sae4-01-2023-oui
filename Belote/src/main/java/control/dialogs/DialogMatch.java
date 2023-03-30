@@ -4,16 +4,22 @@ package control.dialogs;
 import control.actors.Actor;
 import control.actors.ActorFactory;
 import types.ActorType;
+import view.Fenetre;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
 public class DialogMatch  {
 
-    private final Actor actorMatch;
+    private Actor actorMatch;
 
     public DialogMatch() {
-        this.actorMatch = ActorFactory.getActor(ActorType.MATCH);
+        try {
+            this.actorMatch = ActorFactory.getActor(ActorType.MATCH);
+        } catch (Exception e) {
+            Fenetre.afficherInformation("Erreur lors de la récupération de l'acteur Match.");
+        }
     }
 
     // TODO : bonnes utilisations de actorMatch !
@@ -54,6 +60,24 @@ public class DialogMatch  {
 
     public void deleteMatch(int idTournoi) throws SQLException {
         this.actorMatch.getStatement().executeUpdate("DELETE FROM matchs WHERE id_tournoi=" + idTournoi);
+    }
+
+    public ResultSet getNbMatchsTerminesParTournois(int idTournoi) throws SQLException {
+        return this.actorMatch.getStatement().executeQuery(
+                "Select count(*) as total, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.termine='oui' ) as termines from matchs m  WHERE m.id_tournoi="
+                        + idTournoi + " GROUP by id_tournoi ;");
+    }
+
+    public ResultSet getMatchsParTournoi(int idTournoi) throws SQLException {
+        return this.actorMatch.getStatement().executeQuery("SELECT * FROM matchs WHERE id_tournoi=" + idTournoi + ";");
+    }
+
+    public ResultSet getNbToursMaxMatchParTournoi(int idTournoi) throws SQLException {
+        return this.actorMatch.getStatement().executeQuery("SELECT MAX (num_tour)  FROM matchs WHERE id_tournoi=" + idTournoi + "; ");
+    }
+
+    public ResultSet getNbToursParMatchParTournoi(int idTournoi) throws SQLException {
+        return this.actorMatch.getStatement().executeQuery("Select num_tour,count(*) as tmatchs, (Select count(*) from matchs m2 WHERE m2.id_tournoi = m.id_tournoi AND m2.num_tour=m.num_tour AND m2.termine='oui' ) as termines from matchs m WHERE m.id_tournoi=" + idTournoi + " GROUP BY m.num_tour,m.id_tournoi;");
     }
 
 }

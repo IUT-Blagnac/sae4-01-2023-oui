@@ -19,7 +19,7 @@ public class BeloteApp {
 			}
 
 			// Initialisation du Dialog de la base de données
-			DialogDataBase.initialize(beloteDir, "/create.sql");
+			DialogDataBase.initialize(beloteDir, "/create.sql", "/database.properties");
 
 			// Graphical interface
 			Fenetre fenetre = new Fenetre();

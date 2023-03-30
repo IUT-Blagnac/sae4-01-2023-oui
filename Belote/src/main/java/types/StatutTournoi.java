@@ -9,8 +9,9 @@ public enum StatutTournoi {
     EN_COURS(2, "Matchs en cours"),
     TERMINE(3, "Terminé");
 
+
     private final String libelle;
-    private final int ordre;
+    private final Integer ordre;
 
     StatutTournoi(int pfOrdre, String pfLibelle) {
         this.libelle = pfLibelle;
@@ -21,7 +22,7 @@ public enum StatutTournoi {
         return libelle;
     }
 
-    public int getOrdre() {
+    public Integer getOrdre() {
         return ordre;
     }
 

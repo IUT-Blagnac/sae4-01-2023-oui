@@ -6,7 +6,7 @@ import types.ActorType;
 
 public class ActorFactory {
 
-    public static Actor getActor(ActorType at) {
+    public static Actor getActor(ActorType at) throws Exception {
         switch (at) {
             case EQUIPE:
                 return new ActorEquipe();
@@ -15,7 +15,7 @@ public class ActorFactory {
             case TOURNOI:
                 return new ActorTournoi();
             default:
-                return null;
+                throw new Exception("Le type d'acteur " + at + " n'a pas été trouvé.");
         }
     }
 

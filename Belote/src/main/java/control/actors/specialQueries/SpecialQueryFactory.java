@@ -7,12 +7,12 @@ import java.util.List;
 
 public class SpecialQueryFactory {
 
-    public static SpecialQuery getSpecialQuery(SpecialQueryType sqt, List<String> parametres) {
+    public static SpecialQuery getSpecialQuery(SpecialQueryType sqt, List<String> parametres) throws Exception {
         switch (sqt) {
             case SetNumEquipesDUnTournoi:
                 return new SetNumEquipesDUnTournoi(parametres);
             default:
-                return null;
+                throw new Exception("Le type de requête spéciale " + sqt + " n'a pas été trouvé.");
         }
     }
 

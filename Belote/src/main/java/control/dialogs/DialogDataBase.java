@@ -1,6 +1,8 @@
 package control.dialogs;
 
 
+import view.Fenetre;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
@@ -15,17 +17,17 @@ public class DialogDataBase {
     private Connection connection;
     private Properties properties = new Properties();
 
-    private DialogDataBase(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
-        loadConfig();
+    private DialogDataBase(String beloteDir, String createFile, String databaseConfigFile) throws SQLException, FileNotFoundException {
+        this.loadConfig(databaseConfigFile);
         this.connection = DriverManager.getConnection(properties.getProperty("DBURL") + beloteDir + "/" + properties.getProperty("DBName"), properties.getProperty("DBUser"), properties.getProperty("DBPassword"));
         statement = this.connection.createStatement();
         InputStream createFileInputStream = this.getClass().getResourceAsStream(createFile);
         importSQL(this.connection, createFileInputStream);
     }
 
-    public static DialogDataBase initialize(String beloteDir, String createFile) throws SQLException, FileNotFoundException {
+    public static DialogDataBase initialize(String beloteDir, String createFile, String databaseConfigFile) throws SQLException, FileNotFoundException {
         if (ddb == null) {
-            ddb = new DialogDataBase(beloteDir, createFile);
+            ddb = new DialogDataBase(beloteDir, createFile, databaseConfigFile);
         }
         return ddb;
     }
@@ -65,12 +67,12 @@ public class DialogDataBase {
         }
     }
 
-    private void loadConfig() {
+    private void loadConfig(String dataBaseConfigFile) {
         try {
-            InputStream inputStream = this.getClass().getResourceAsStream("/database.properties");
+            InputStream inputStream = this.getClass().getResourceAsStream(dataBaseConfigFile);
             properties.load(inputStream);
         } catch (Exception e) {
-            e.printStackTrace();
+            Fenetre.afficherInformation("Erreur lors du chargement du fichier de configuration de la base de données " + dataBaseConfigFile + ".");
         }
     }
 
