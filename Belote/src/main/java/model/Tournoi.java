@@ -5,6 +5,7 @@ import control.dialogs.DialogEquipe;
 import control.dialogs.DialogMatch;
 import control.dialogs.DialogTournoi;
 import types.StatutTournoi;
+import view.Fenetre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,11 +44,8 @@ public class Tournoi {
 			this.statut = StatutTournoi.getStatut(rs.getInt("statut"));
 			this.id_tournoi = rs.getInt("id_tournoi");
 			rs.close();
-		} catch (SQLException e) { // TODO : popup
-			System.out.println("Erreur SQL: " + e.getMessage());
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Fenetre.afficherInformation("Erreur lors du test de l'existence du tournoi");
 		}
 		if (this.statut == null) {
 			this.statut = StatutTournoi.INCONNU;
@@ -65,7 +63,7 @@ public class Tournoi {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage()); // TODO : popup
+			Fenetre.afficherInformation("Erreur lors de la mise à jour des �quipes");
 		}
 	}
 
@@ -77,7 +75,7 @@ public class Tournoi {
 			//public MatchM(int _idmatch,int _e1,int _e2,int _score1, int _score2, int _num_tour, boolean _termine)
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			Fenetre.afficherInformation("Erreur lors de la mise à jour des matchs");
 		}
 	}
 
@@ -123,7 +121,7 @@ public class Tournoi {
 			rs.next();
 			return rs.getInt(1);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			Fenetre.afficherInformation("Erreur lors de la recherche du nombre de tours du tournoi");
 			return -1;
 		}
 	}
@@ -145,7 +143,7 @@ public class Tournoi {
 			dialogTournoi.setStatutTournoi(2, this.id_tournoi);
 			this.statut = StatutTournoi.getStatut(2);
 		}catch(SQLException e){
-			System.out.println("Erreur validation �quipes : " + e.getMessage()); // TODO : popup
+			Fenetre.afficherInformation("Erreur lors de la validation des équipes du tournoi");
 		}
 	}
 
@@ -165,7 +163,7 @@ public class Tournoi {
 			nbtoursav = rs.getInt(1);
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage()); // TODO : popup
+			Fenetre.afficherInformation("Erreur lors de la recherche du nombre de tours du tournoi");
 			return false;
 		}
 		System.out.println("Nombre de tours avant:" + nbtoursav);
@@ -178,7 +176,7 @@ public class Tournoi {
 					dialogMatch.insertMatch(null, this.id_tournoi, (nbtoursav + 1), m.getEquipe1(), m.getEquipe2(), "non");
 				}
 			}catch(SQLException e){
-				System.out.println("Erreur ajout tour : " + e.getMessage()); // TODO : popup
+				Fenetre.afficherInformation("Erreur lors de l'insertion du match");
 			}
 		}else{
 			try {
@@ -217,7 +215,7 @@ public class Tournoi {
 					}while(!fini);
 				}
 			} catch (SQLException e) {
-				e.printStackTrace(); // TODO : popup
+				Fenetre.afficherInformation("Erreur lors de la recherche des matchs du tournoi");
 			}
 		}
 		return true;
@@ -231,14 +229,14 @@ public class Tournoi {
 			nbtoursav = rs.getInt(1);
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage()); // TODO : popup
+			Fenetre.afficherInformation("Erreur lors de la recherche du nombre de tours du tournoi");
 			return ;
 		}
 		//if(tour != nbtoursav) return ;
 		try {
 			dialogMatch.deleteMatch(this.id_tournoi, nbtoursav);
 		} catch (SQLException e) {
-			System.out.println("Erreur del tour : " + e.getMessage()); // TODO : popup
+			Fenetre.afficherInformation("Erreur lors de la suppression du match");
 		}
 	}
 
@@ -253,10 +251,8 @@ public class Tournoi {
 		try {
 			dialogEquipe.addEquipe(null, a_aj, this.id_tournoi, "Joueur 1", "Joueur 2");
 		    majEquipes();
-		} catch (SQLException e) { // TODO : popup
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Fenetre.afficherInformation("Erreur lors de l'ajout de l'équipe");
 		}
 	}
 
@@ -264,10 +260,8 @@ public class Tournoi {
 		try {
 			dialogEquipe.setNomsJoueursDUneEquipe(getEquipe(index).getId(), mysql_real_escape_string(getEquipe(index).getEquipe1()), mysql_real_escape_string(getEquipe(index).getEquipe2()));
 		    majEquipes();
-		} catch (SQLException e) { // TODO : popup
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Fenetre.afficherInformation("Erreur lors de la mise à jour de l'équipe");
 		}
 	}
 
@@ -277,7 +271,7 @@ public class Tournoi {
 		try {
 			dialogMatch.updateMatch(getMatch(index).getIdMatch(), getMatch(index).getEquipe1(), getMatch(index).getEquipe2(), getMatch(index).getScore1(), getMatch(index).getScore2(), termine);
 		} catch (SQLException e) {
-			e.printStackTrace(); // TODO popup
+			Fenetre.afficherInformation("Erreur lors de la mise à jour du match");
 		}
 		majMatch();
 	}
@@ -293,7 +287,7 @@ public class Tournoi {
 			dialogEquipe.setNumEquipesDUnTournoi(this.id_tournoi, numeq);
 		    majEquipes();
 		} catch (Exception e) {
-			e.printStackTrace(); // TODO : popup
+			Fenetre.afficherInformation("Erreur lors de la suppression de l'équipe");
 		}
 	}
 

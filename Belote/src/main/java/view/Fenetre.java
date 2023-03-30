@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -233,7 +234,7 @@ public class Fenetre extends JFrame {
 					total = rs.getInt(1);
 					termines = rs.getInt(2);
 				} catch (SQLException e) {
-					e.printStackTrace();
+					Fenetre.afficherInformation("Une érreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi");
 					return;
 				}
 				bresultats.setEnabled(total == termines && total > 0);
@@ -258,9 +259,8 @@ public class Fenetre extends JFrame {
 				noms_tournois.add(rs.getString("nom_tournoi"));
 			}
 			rs.close();
-		} catch (SQLException e) { // TODO : popup
-			System.out.println("Erreur lors de la requète :" + e.getMessage());
-			e.printStackTrace();
+		} catch (SQLException e) {
+			Fenetre.afficherInformation("Une érreur est survenue lors de la récupération des tournois");
 		}
 
 		if(tournois_trace){
@@ -546,7 +546,7 @@ public class Fenetre extends JFrame {
 				peutajouter = peutajouter && rs.getInt("tmatchs") == rs.getInt("termines");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); // TODO : popup
+			Fenetre.afficherInformation("Une erreur est survenue lors de la récupération des tours du match du tournoi");
 		}
 		Vector<String> columnNames = new Vector<>();
 		columnNames.add("Numéro du tour");
@@ -691,7 +691,7 @@ public class Fenetre extends JFrame {
 							m.setScore1(sco);
 							t.majMatch(rowIndex);
 						}catch(Exception e){
-							return ;
+							Fenetre.afficherInformation("Une érreur est survenue: Le score doit être un nombre entier");
 						}
 					}else if( columnIndex == 4){
 						try{
@@ -699,7 +699,7 @@ public class Fenetre extends JFrame {
 							m.setScore2(sco);
 							t.majMatch(rowIndex);
 						}catch(Exception e){
-							return ;
+							Fenetre.afficherInformation("Une érreur est survenue: Le score doit être un nombre entier");
 						}
 					}
 					fireTableDataChanged();
@@ -744,7 +744,7 @@ public class Fenetre extends JFrame {
 				to.add(v);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage()); // TODO : popup
+			Fenetre.afficherInformation("Une érreur est survenue lors de la récupération des résultats du match pour ce tournoi");
 		}
 		Vector<String> columnNames = new Vector<>();
 		columnNames.add("Numéro d'équipe");
@@ -789,11 +789,15 @@ public class Fenetre extends JFrame {
 			total = rs.getInt(1);
 			termines = rs.getInt(2);
 		} catch (SQLException e) {
-			e.printStackTrace(); // TODO : popup
+			Fenetre.afficherInformation("Une érreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi");
 			return ;
 		}
 		match_statut.setText(termines + "/" + total + " matchs terminés");
 		match_valider.setEnabled(total == termines);
+	}
+
+	public static void afficherInformation(String message){
+		JOptionPane.showMessageDialog(null, message, "Information", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }

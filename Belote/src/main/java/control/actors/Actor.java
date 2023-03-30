@@ -6,6 +6,8 @@ import control.actors.specialQueries.SpecialQueryFactory;
 import control.dialogs.DialogDataBase;
 import types.QueryType;
 import types.SpecialQueryType;
+import view.Fenetre;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public abstract class Actor {
             this.tableName = tableName;
             // this.tableColumns = this.getColumnsFromTable();
         } catch (Exception e) {
-            System.out.println(e.getMessage()); // TODO : popup
+            Fenetre.afficherInformation("Erreur lors de la création de l'acteur " + this.getClass().getName() + ". Un acteur ne peut pas être créé sans connexion à la base de données.");
         }
     }
 

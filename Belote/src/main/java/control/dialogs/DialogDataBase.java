@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.Scanner;
 
+import view.Fenetre;
+
 
 public class DialogDataBase {
 
@@ -70,7 +72,7 @@ public class DialogDataBase {
             InputStream inputStream = this.getClass().getResourceAsStream("/database.properties");
             properties.load(inputStream);
         } catch (Exception e) {
-            e.printStackTrace();
+            Fenetre.afficherInformation("Erreur lors du chargement du fichier de configuration de la base de données");
         }
     }
 

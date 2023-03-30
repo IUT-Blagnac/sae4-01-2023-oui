@@ -25,15 +25,13 @@ public class BeloteApp {
 			Fenetre fenetre = new Fenetre();
 			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		} catch (SQLException e) { // TODO : rediriger vers la classe Fenetre
-			JOptionPane.showMessageDialog(null,
+		} catch (SQLException e) {
+			Fenetre.afficherInformation(
 					"Impossible de se connecter à la base de donnée. Vérifier qu'une autre instance du logiciel n'est pas déjà ouverte.");
-			System.out.println(e.getMessage());
 			System.exit(0);
 		} catch (Exception e) { // TODO : rediriger vers la classe Fenetre
-			JOptionPane.showMessageDialog(null,
+			Fenetre.afficherInformation(
 					"Erreur lors de l'initialisation du logiciel. Vérifiez votre installation Java et vos droits d'acc�s sur le dossier AppData.");
-			System.out.println(e.getMessage());
 			System.exit(0);
 		}
 	}

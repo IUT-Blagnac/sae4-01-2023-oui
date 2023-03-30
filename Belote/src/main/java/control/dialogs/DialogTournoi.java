@@ -5,6 +5,7 @@ import javax.swing.*;
 import control.actors.Actor;
 import control.actors.ActorFactory;
 import types.ActorType;
+import view.Fenetre;
 import model.Tournoi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,27 +36,26 @@ public class DialogTournoi {
             try {
                 s = Tournoi.mysql_real_escape_string(s); // TODO : déplacer fonction
                 if(s.length() < 3){
-                    JOptionPane.showMessageDialog(null, "Le tournoi n'a pas �t� cr��. Nom trop court.");
+                    JOptionPane.showMessageDialog(null, "Le tournoi n'a pas été créé. Nom trop court.");
                     return 2;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Fenetre.afficherInformation("Erreur lors de la création tournoi du tournoi");
             }
             if(Objects.equals(s, "")){
-                JOptionPane.showMessageDialog(null, "Le tournoi n'a pas �t� cr��. Ne pas mettre de caract�res sp�ciaux ou accents dans le nom");
+                JOptionPane.showMessageDialog(null, "Le tournoi n'a pas été créé. Ne pas mettre de caractères spéciaux ou accents dans le nom");
                 return 2;
             }else{
                 ResultSet rs;
                 try {
                     rs = this.getTournoisParNom(s);
                     if(rs.next()){
-                        JOptionPane.showMessageDialog(null, "Le tournoi n'a pas �t� cr��. Un tournoi du m�me nom existe d�j�");
+                        JOptionPane.showMessageDialog(null, "Le tournoi n'a pas été créé. Un tournoi du m�me nom existe déjà");
                         return 2;
                     }
                     this.insertTournoi(null, 10, s, 0);
                 } catch (SQLException e) {
-                    System.out.println("Erreur requete insertion nouveau tournoi:" + e.getMessage()); // TODO : popup
-                    //e.printStackTrace();
+                    Fenetre.afficherInformation("Impossible d'inserer le tournoi");
                 }
                 //s2.executeUpdate("INSERT INTO tournois (id")
             }
@@ -73,11 +73,8 @@ public class DialogTournoi {
             dialogMatch.deleteMatch(idt);
             dialogEquipe.removeToutesEquipesDUnTournoi(idt);
             this.deleteTournoi(idt);
-        } catch (SQLException e) {
-            System.out.println("Erreur suppression" + e.getMessage()); // TODO : popup
         } catch (Exception e) {
-            System.out.println("Erreur inconnue"); // TODO : popup
-            System.out.println(e.getMessage());
+            Fenetre.afficherInformation("Impossible de supprimer le tournoi");
         }
         return 0;
     }
