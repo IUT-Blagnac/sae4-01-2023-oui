@@ -4,11 +4,15 @@ package control.dialogs;
 import control.actors.Actor;
 import control.actors.ActorFactory;
 import types.ActorType;
+import types.QueryType;
+import types.SpecialQueryType;
 import types.TableAttributType;
 import view.Fenetre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,16 +28,13 @@ public class DialogMatch  {
         }
     }
 
-    // TODO : faire requêtes spéciales
-    public ResultSet getResultatsMatch(int idTournoi) throws SQLException {
-        return this.actorMatch.getStatement().executeQuery(
-                "SELECT equipe,(SELECT nom_j1 FROM equipes e WHERE e.id_equipe = equipe AND e.id_tournoi = " + idTournoi
-                        + ") as joueur1,(SELECT nom_j2 FROM equipes e WHERE e.id_equipe = equipe AND e.id_tournoi = "
-                        + idTournoi
-                        + ") as joueur2, SUM(score) as score, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2  AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 )) as matchs_gagnes, (SELECT COUNT(*) FROM matchs m WHERE m.equipe1 = equipe OR m.equipe2=equipe) as matchs_joues FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi="
-                        + idTournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi="
-                        + idTournoi + ") GROUP BY equipe ORDER BY matchs_gagnes DESC;");
+    public ResultSet getResultatsMatch(int idTournoi) throws Exception {
+        List<String> parametres = new ArrayList<>();
+        parametres.add(idTournoi+"");
+        return this.actorMatch.specialQuery(SpecialQueryType.GetResultatsMatch, QueryType.QUERY, parametres);
     }
+
+    // TODO : faire requêtes spéciales
     public ResultSet getMatchsDataCount(int idTournoi) throws SQLException { // TODO : renommer correctement
         return this.actorMatch.getStatement().executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2  AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + idTournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + idTournoi + ") GROUP BY equipe  ORDER BY matchs_gagnes DESC;");
     }

@@ -1,6 +1,9 @@
 package control.actors;
 
 
+import control.actors.actors.ActorEquipe;
+import control.actors.actors.ActorMatch;
+import control.actors.actors.ActorTournoi;
 import types.ActorType;
 
 

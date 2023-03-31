@@ -1,6 +1,7 @@
-package control.actors.specialQueries;
+package control.actors.specialQueries.specialQueries;
 
 
+import control.actors.specialQueries.SpecialQuery;
 import java.util.List;
 
 

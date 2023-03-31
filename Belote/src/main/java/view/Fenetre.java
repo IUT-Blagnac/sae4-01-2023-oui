@@ -531,11 +531,11 @@ public class Fenetre extends JFrame {
 			ResultSet rs = dialogMatch.getNbToursParMatchParTournoi(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<>();
-				v.add(rs.getInt("num_tour"));
-				v.add(rs.getInt("tmatchs"));
-				v.add(rs.getString("termines"));
+				v.add(rs.getInt(TableAttributType.NUM_TOUR.getColumnName()));
+				v.add(rs.getInt(2));
+				v.add(rs.getString(3));
 				to.add(v);
-				peutajouter = peutajouter && rs.getInt("tmatchs") == rs.getInt("termines");
+				peutajouter = peutajouter && rs.getInt(2) == rs.getInt(3);
 			}
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération des tours du match du tournoi.");
@@ -775,7 +775,7 @@ public class Fenetre extends JFrame {
 		try {
 			ResultSet rs = dialogMatch.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
 			rs.next();
-			total = rs.getInt(TableAttributType.ID_MATCH.getColumnName());
+			total = rs.getInt(1);
 			termines = rs.getInt(2);
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
