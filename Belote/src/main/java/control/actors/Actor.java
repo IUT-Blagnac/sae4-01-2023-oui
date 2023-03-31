@@ -170,9 +170,4 @@ public abstract class Actor {
         return formatedValue;
     }
 
-    // TODO : EXPERIMENTAL, à supprimer !
-    public Statement getStatement() {
-        return this.ddbStatement;
-    }
-
 }

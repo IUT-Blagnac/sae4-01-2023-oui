@@ -4,6 +4,11 @@ package types;
 public enum SpecialQueryType {
 
     SetNumEquipesDUnTournoi,
-    GetResultatsMatch
+    GetResultatsMatch,
+    GetDonneesTours,
+    GetNbMatchsParEquipes,
+    GetNbMatchsTermines,
+    GetNbToursMaxMatch,
+    GetNbToursParMatchParTournoi
 
 }

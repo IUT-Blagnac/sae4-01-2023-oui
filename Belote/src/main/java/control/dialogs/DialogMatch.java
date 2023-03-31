@@ -9,7 +9,6 @@ import types.SpecialQueryType;
 import types.TableAttributType;
 import view.Fenetre;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,23 +33,35 @@ public class DialogMatch  {
         return this.actorMatch.specialQuery(SpecialQueryType.GetResultatsMatch, QueryType.QUERY, parametres);
     }
 
-    // TODO : faire requêtes spéciales
-    public ResultSet getMatchsDataCount(int idTournoi) throws SQLException { // TODO : renommer correctement
-        return this.actorMatch.getStatement().executeQuery("SELECT equipe, (SELECT count(*) FROM matchs m WHERE (m.equipe1 = equipe AND m.score1 > m.score2  AND m.id_tournoi = id_tournoi) OR (m.equipe2 = equipe AND m.score2 > m.score1 )) as matchs_gagnes FROM  (select equipe1 as equipe,score1 as score from matchs where id_tournoi=" + idTournoi + " UNION select equipe2 as equipe,score2 as score from matchs where id_tournoi=" + idTournoi + ") GROUP BY equipe  ORDER BY matchs_gagnes DESC;");
+    public ResultSet getDonneesTours(int idTournoi) throws Exception {
+        List<String> parametres = new ArrayList<>();
+        parametres.add(idTournoi+"");
+        return this.actorMatch.specialQuery(SpecialQueryType.GetDonneesTours, QueryType.QUERY, parametres);
     }
-    public ResultSet getNbMatchsParEquipes(int equipe1, int equipe2) throws SQLException {
-        return this.actorMatch.getStatement().executeQuery("SELECT COUNT(*) FROM matchs m WHERE ( (m.equipe1 = " + equipe1 + " AND m.equipe2 = " + equipe2 + ") OR (m.equipe2 = " + equipe1 + " AND m.equipe1 = " + equipe2 + ")  )");
+
+    public ResultSet getNbMatchsParEquipes(int equipe1, int equipe2) throws Exception {
+        List<String> parametres = new ArrayList<>();
+        parametres.add(equipe1+"");
+        parametres.add(equipe2+"");
+        return this.actorMatch.specialQuery(SpecialQueryType.GetNbMatchsParEquipes, QueryType.QUERY, parametres);
     }
-    public ResultSet getNbMatchsTerminesParTournois(int idTournoi) throws SQLException {
-        return this.actorMatch.getStatement().executeQuery(
-                "Select count(*) as total, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.termine='oui' ) as termines from matchs m  WHERE m.id_tournoi="
-                        + idTournoi + " GROUP by id_tournoi ;");
+
+    public ResultSet getNbMatchsTermines(int idTournoi) throws Exception {
+        List<String> parametres = new ArrayList<>();
+        parametres.add(idTournoi+"");
+        return this.actorMatch.specialQuery(SpecialQueryType.GetNbMatchsTermines, QueryType.QUERY, parametres);
     }
-    public ResultSet getNbToursMaxMatchParTournoi(int idTournoi) throws SQLException {
-        return this.actorMatch.getStatement().executeQuery("SELECT MAX (num_tour)  FROM matchs WHERE id_tournoi=" + idTournoi + "; ");
+
+    public ResultSet getNbToursMaxMatch(int idTournoi) throws Exception {
+        List<String> parametres = new ArrayList<>();
+        parametres.add(idTournoi+"");
+        return this.actorMatch.specialQuery(SpecialQueryType.GetNbToursMaxMatch, QueryType.QUERY, parametres);
     }
-    public ResultSet getNbToursParMatchParTournoi(int idTournoi) throws SQLException {
-        return this.actorMatch.getStatement().executeQuery("Select num_tour,count(*) as tmatchs, (Select count(*) from matchs m2 WHERE m2.id_tournoi = m.id_tournoi AND m2.num_tour=m.num_tour AND m2.termine='oui' ) as termines from matchs m WHERE m.id_tournoi=" + idTournoi + " GROUP BY m.num_tour,m.id_tournoi;");
+
+    public ResultSet getNbToursParMatch(int idTournoi) throws Exception {
+        List<String> parametres = new ArrayList<>();
+        parametres.add(idTournoi+"");
+        return this.actorMatch.specialQuery(SpecialQueryType.GetNbToursParMatchParTournoi, QueryType.QUERY, parametres);
     }
 
     public ResultSet getMatchsDUnTournoi(int idTournoi) throws Exception {

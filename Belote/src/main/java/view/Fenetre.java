@@ -227,10 +227,10 @@ public class Fenetre extends JFrame {
 				btours.setEnabled(true);
 				int total = -1, termines = -1;
 				try {
-					ResultSet rs = dialogMatch.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
+					ResultSet rs = dialogMatch.getNbMatchsTermines(this.t.getIdTournoi());
 					rs.next();
-					total = rs.getInt(1);
-					termines = rs.getInt(2);
+					total = rs.getInt(TableAttributType.TOTAL.getColumnName());
+					termines = rs.getInt(TableAttributType.TERMINE.getColumnName());
 				} catch (Exception e) {
 					Fenetre.afficherErreur("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
 					System.out.println(e.getMessage()); // Message développeur
@@ -528,14 +528,14 @@ public class Fenetre extends JFrame {
 		Vector<Object> v;
 		boolean peutajouter = true;
 		try {
-			ResultSet rs = dialogMatch.getNbToursParMatchParTournoi(this.t.getIdTournoi());
+			ResultSet rs = dialogMatch.getNbToursParMatch(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<>();
 				v.add(rs.getInt(TableAttributType.NUM_TOUR.getColumnName()));
-				v.add(rs.getInt(2));
-				v.add(rs.getString(3));
+				v.add(rs.getInt(TableAttributType.NB_MATCHS.getColumnName()));
+				v.add(rs.getString(TableAttributType.TERMINE.getColumnName()));
 				to.add(v);
-				peutajouter = peutajouter && rs.getInt(2) == rs.getInt(3);
+				peutajouter = peutajouter && rs.getInt(TableAttributType.NB_MATCHS.getColumnName()) == rs.getInt(TableAttributType.TERMINE.getColumnName());
 			}
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération des tours du match du tournoi.");
@@ -724,12 +724,12 @@ public class Fenetre extends JFrame {
 			ResultSet rs = dialogMatch.getResultatsMatch(this.t.getIdTournoi());
 			while(rs.next()){
 				v = new Vector<>();
-				v.add(rs.getInt("equipe"));
-				v.add(rs.getString("joueur1"));
-				v.add(rs.getString("joueur2"));
-				v.add(rs.getInt("score"));
-				v.add(rs.getInt("matchs_gagnes"));
-				v.add(rs.getInt("matchs_joues"));
+				v.add(rs.getInt(TableAttributType.EQUIPE.getColumnName()));
+				v.add(rs.getString(TableAttributType.NOM_J1.getColumnName()));
+				v.add(rs.getString(TableAttributType.NOM_J2.getColumnName()));
+				v.add(rs.getInt(TableAttributType.SCORE.getColumnName()));
+				v.add(rs.getInt(TableAttributType.MATCHS_GAGNES.getColumnName()));
+				v.add(rs.getInt(TableAttributType.MATCHS_JOUES.getColumnName()));
 				to.add(v);
 			}
 		} catch (Exception e) {
@@ -773,10 +773,10 @@ public class Fenetre extends JFrame {
 	private void majStatutM(){
 		int total = -1, termines = -1;
 		try {
-			ResultSet rs = dialogMatch.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
+			ResultSet rs = dialogMatch.getNbMatchsTermines(this.t.getIdTournoi());
 			rs.next();
-			total = rs.getInt(1);
-			termines = rs.getInt(2);
+			total = rs.getInt(TableAttributType.TOTAL.getColumnName());
+			termines = rs.getInt(TableAttributType.TERMINE.getColumnName());
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
 			System.out.println(e.getMessage()); // Message développeur

@@ -22,7 +22,15 @@ public enum TableAttributType {
     EQUIPE2("equipe2"),
     SCORE1("score1"),
     SCORE2("score2"),
-    TERMINE("termine");
+    TERMINE("termine"),
+
+    // Spécial (alias)
+    EQUIPE("equipe"),
+    SCORE("score"),
+    MATCHS_GAGNES("matchs_gagnes"),
+    MATCHS_JOUES("matchs_joues"),
+    TOTAL("total"),
+    MAX_NUM_TOUR("max_num_tour");
 
 
     private final String columnName;

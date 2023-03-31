@@ -111,9 +111,9 @@ public class Tournoi {
 
 	public int getNbTours(){
 		try {
-			ResultSet rs = dialogMatch.getNbToursMaxMatchParTournoi(id_tournoi);
+			ResultSet rs = dialogMatch.getNbToursMaxMatch(id_tournoi);
 			rs.next();
-			return rs.getInt(1); // TODO
+			return rs.getInt(TableAttributType.MAX_NUM_TOUR.getColumnName());
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la récupération du nombre de tours du tournoi.");
 			System.out.println(e.getMessage()); // Message développeur
@@ -146,9 +146,9 @@ public class Tournoi {
 		int nbtoursav;
 		if(getNbTours() >=  (getNbEquipes() -1) ) return;
 		try {
-			ResultSet rs = dialogMatch.getNbToursMaxMatchParTournoi(this.id_tournoi);
+			ResultSet rs = dialogMatch.getNbToursMaxMatch(this.id_tournoi);
 			rs.next();
-			nbtoursav = rs.getInt(1); // TODO
+			nbtoursav = rs.getInt(TableAttributType.MAX_NUM_TOUR.getColumnName());
 			rs.close();
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la récupération du nombre de tours du tournoi.");
@@ -169,11 +169,10 @@ public class Tournoi {
 		}else{
 			try {
 				ResultSet rs;
-				rs = dialogMatch.getMatchsDataCount(this.id_tournoi);
+				rs = dialogMatch.getDonneesTours(this.id_tournoi);
 				ArrayList<Integer> ordreeq= new ArrayList<>();
 				while(rs.next()){
-					ordreeq.add(rs.getInt("equipe")); // TODO
-					System.out.println(rs.getInt(1) +" _ " + rs.getString(2)); // TODO
+					ordreeq.add(rs.getInt(TableAttributType.EQUIPE.getColumnName()));
 				}
 				System.out.println("Taille"+ordreeq.size());
 				int i;
@@ -189,7 +188,7 @@ public class Tournoi {
 					do{
 						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i-1));
 						rs.next();
-						if(rs.getInt(1) > 0){ // TODO
+						if(rs.getInt(TableAttributType.NB_MATCHS.getColumnName()) > 0){
 							i++;
 							fini = false;
 						}else{
@@ -210,9 +209,9 @@ public class Tournoi {
 	public void supprimerTour(){
 		int nbtoursav;
 		try {
-			ResultSet rs = dialogMatch.getNbToursMaxMatchParTournoi(this.id_tournoi);
+			ResultSet rs = dialogMatch.getNbToursMaxMatch(this.id_tournoi);
 			rs.next();
-			nbtoursav = rs.getInt(1); // TODO
+			nbtoursav = rs.getInt(TableAttributType.MAX_NUM_TOUR.getColumnName());
 			rs.close();
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la récupération du nombre de tours du tournoi.");
