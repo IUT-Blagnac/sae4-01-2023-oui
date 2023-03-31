@@ -6,6 +6,7 @@ import control.dialogs.DialogMatch;
 import control.dialogs.DialogTournoi;
 import resources.Tools;
 import types.StatutTournoi;
+import types.TableAttributType;
 import view.Fenetre;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ public class Tournoi {
 			if(!rs.next()){
 				return ;
 			}
-			this.statut = StatutTournoi.getStatut(rs.getInt("statut"));
-			this.id_tournoi = rs.getInt("id_tournoi");
+			this.statut = StatutTournoi.getStatut(rs.getInt(TableAttributType.STATUT.getColumnName()));
+			this.id_tournoi = rs.getInt(TableAttributType.ID_TOURNOI.getColumnName());
 			rs.close();
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors du test de l'existence du tournoi.");
@@ -50,8 +51,8 @@ public class Tournoi {
 		try {
 			ResultSet rs = dialogEquipe.getEquipeDUnTournoi(this.id_tournoi);
 			while(rs.next()){
-				dataeq.add(new Equipe(rs.getInt("id_equipe"),rs.getInt("num_equipe"), rs.getString("nom_j1"), rs.getString("nom_j2")));
-				ideqs.add(rs.getInt("num_equipe"));
+				dataeq.add(new Equipe(rs.getInt(TableAttributType.ID_EQUIPE.getColumnName()),rs.getInt(TableAttributType.NUM_EQUIPE.getColumnName()), rs.getString(TableAttributType.NOM_J1.getColumnName()), rs.getString(TableAttributType.NOM_J2.getColumnName())));
+				ideqs.add(rs.getInt(TableAttributType.NUM_EQUIPE.getColumnName()));
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -64,7 +65,7 @@ public class Tournoi {
 		datam = new Vector<>();
 		try {
 			ResultSet rs= dialogMatch.getMatchsDUnTournoi(id_tournoi);
-			while(rs.next()) datam.add(new Match(rs.getInt("id_match"),rs.getInt("equipe1"),rs.getInt("equipe2"), rs.getInt("score1"),rs.getInt("score2"),rs.getInt("num_tour"),rs.getString("termine").equals("oui")));
+			while(rs.next()) datam.add(new Match(rs.getInt(TableAttributType.ID_MATCH.getColumnName()),rs.getInt(TableAttributType.EQUIPE1.getColumnName()),rs.getInt(TableAttributType.EQUIPE2.getColumnName()), rs.getInt(TableAttributType.SCORE1.getColumnName()),rs.getInt(TableAttributType.SCORE2.getColumnName()),rs.getInt(TableAttributType.NUM_TOUR.getColumnName()),rs.getString(TableAttributType.TERMINE.getColumnName()).equals("oui")));
 			rs.close();
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la mise à jour des matchs.");
@@ -112,7 +113,7 @@ public class Tournoi {
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatchParTournoi(id_tournoi);
 			rs.next();
-			return rs.getInt(1);
+			return rs.getInt(1); // TODO
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la récupération du nombre de tours du tournoi.");
 			System.out.println(e.getMessage()); // Message développeur
@@ -147,7 +148,7 @@ public class Tournoi {
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatchParTournoi(this.id_tournoi);
 			rs.next();
-			nbtoursav = rs.getInt(1);
+			nbtoursav = rs.getInt(1); // TODO
 			rs.close();
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la récupération du nombre de tours du tournoi.");
@@ -171,8 +172,8 @@ public class Tournoi {
 				rs = dialogMatch.getMatchsDataCount(this.id_tournoi);
 				ArrayList<Integer> ordreeq= new ArrayList<>();
 				while(rs.next()){
-					ordreeq.add(rs.getInt("equipe"));
-					System.out.println(rs.getInt(1) +" _ " + rs.getString(2));
+					ordreeq.add(rs.getInt("equipe")); // TODO
+					System.out.println(rs.getInt(1) +" _ " + rs.getString(2)); // TODO
 				}
 				System.out.println("Taille"+ordreeq.size());
 				int i;
@@ -188,7 +189,7 @@ public class Tournoi {
 					do{
 						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i-1));
 						rs.next();
-						if(rs.getInt(1) > 0){
+						if(rs.getInt(1) > 0){ // TODO
 							i++;
 							fini = false;
 						}else{
@@ -211,7 +212,7 @@ public class Tournoi {
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatchParTournoi(this.id_tournoi);
 			rs.next();
-			nbtoursav = rs.getInt(1);
+			nbtoursav = rs.getInt(1); // TODO
 			rs.close();
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Erreur lors de la récupération du nombre de tours du tournoi.");
@@ -272,7 +273,7 @@ public class Tournoi {
 			int numeq;
 			ResultSet rs = dialogEquipe.getNumDUneEquipe(ideq);
 			rs.next();
-			numeq = rs.getInt("num_equipe");
+			numeq = rs.getInt(TableAttributType.NUM_EQUIPE.getColumnName());
 			rs.close();
 			dialogEquipe.removeUneEquipe(this.id_tournoi, ideq);
 			dialogEquipe.setNumEquipesDUnTournoi(this.id_tournoi, numeq);
