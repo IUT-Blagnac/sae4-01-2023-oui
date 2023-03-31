@@ -31,6 +31,7 @@ import model.Equipe;
 import model.Match;
 import model.Tournoi;
 import types.StatutTournoi;
+import types.TableAttributType;
 
 
 public class Fenetre extends JFrame {
@@ -254,7 +255,7 @@ public class Fenetre extends JFrame {
 			rs = dialogTournoi.getTousLesTournois();
 			while( rs.next() ){
 				nbdeLignes++;
-				noms_tournois.add(rs.getString("nom_tournoi"));
+				noms_tournois.add(rs.getString(TableAttributType.NOM_TOURNOI.getColumnName()));
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -774,7 +775,7 @@ public class Fenetre extends JFrame {
 		try {
 			ResultSet rs = dialogMatch.getNbMatchsTerminesParTournois(this.t.getIdTournoi());
 			rs.next();
-			total = rs.getInt(1);
+			total = rs.getInt(TableAttributType.ID_MATCH.getColumnName());
 			termines = rs.getInt(2);
 		} catch (Exception e) {
 			Fenetre.afficherErreur("Une erreur est survenue lors de la récupération du nombre de matchs terminés pour ce tournoi.");
