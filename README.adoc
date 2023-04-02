@@ -163,12 +163,19 @@ TIP: En cas de besoin, n'hésitez pas à me contacter (jean-michel.bruel@univ-tl
 == Livrables [[livrables]]
 === Analyse de l'application
 [.text-justify]
-L'analyse du code source existant de l'application est retrouvable https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Analyse_application.adoc[ici].
+L'https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Analyse_application.adoc[analyse du code source] existant de l'application liste les principales défauts constatés et les possibles tâches de refactoring à appliquer.
 
-**********************************************************************
-Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`).
-Pour l'instant ce document est libre d'utilisation et géré par la 'Licence Creative Commons'.
-image:88x31.png["Licence Creative
-Commons",style="border-width:0",link="http://creativecommons.org/licenses/by-sa/3.0/"]
-http://creativecommons.org/licenses/by-sa/3.0/[licence Creative Commons Paternité - Partage à l&#39;Identique 3.0 non transposé].
-**********************************************************************
+=== Cahier de recette
+[.text-jusitfy]
+Le https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Cahier_de_recette.adoc[cahier de recette] de l'application atteste du bon fonctionnement de cette dernière en détaillant des plans de tests pour chaque fonctionnalité avec les actions à réaliser, les résultats attendus et ceux obtenus. Ce document explique également comment lancer l'application simplement avec Maven à partir de fichiers exécutables fournis avec le code source
+
+=== Scripts d'exécution de l'application
+[.text-justify]
+Deux scripts ont été fournis pour compiler et exécuter le code source de l'application avec module sous Windows ou sous Linux. Voir le cahier de recette pour plus de détails sur le lancement de l'application.
+
+* Sous Windows, lancer le script https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Belote/RUNAPP.bat[RUNAPP.bat]
+* Sous Linux, lancer le script https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Belote/RUNAPP.sh[RUNAPP.sh]
+
+// Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`). Pour l'instant ce document est libre d'utilisation et géré par la 'Licence Creative Commons'. image:88x31.png["Licence Creative
+// Commons",style="border-width:0",link="http://creativecommons.org/licenses/by-sa/3.0/"]
+// http://creativecommons.org/licenses/by-sa/3.0/[licence Creative Commons Paternité - Partage à l&#39;Identique 3.0 non transposé].
