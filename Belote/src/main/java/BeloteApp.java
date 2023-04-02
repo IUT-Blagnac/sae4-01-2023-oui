@@ -1,3 +1,16 @@
+
+/**
+ * Classe principale de l'application de Belote.
+ * 
+ * Cette classe contient la méthode "main" qui lance l'application. Elle initialise le répertoire de l'application,
+ * crée les tables de la base de données si nécessaire, et lance l'interface graphique de l'application.
+ * 
+ * Les paramètres nécessaires pour la création de la base de données sont stockés dans un fichier de propriétés.
+ * 
+ * En cas d'erreur lors de la connexion à la base de données ou lors du lancement de l'application, un message
+ * d'erreur est affiché à l'utilisateur.
+ */
+
 import control.dialogs.DialogDataBase;
 import view.Fenetre;
 import java.io.File;
