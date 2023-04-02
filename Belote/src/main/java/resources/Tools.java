@@ -1,7 +1,19 @@
+/**
+
+La classe Tools contient des méthodes utilitaires.
+*/
+
 package resources;
 
 public class Tools {
 
+    /**
+     * Échappe les caractères spéciaux dans une chaîne de caractères pour éviter les
+     * injections SQL.
+     * 
+     * @param str la chaîne de caractères à échapper
+     * @return la chaîne de caractères échappée
+     */
     public static String mysql_real_escape_string(String str) {
         if (str == null) {
             return null;

@@ -1,3 +1,9 @@
+/**
+
+Enumération représentant les types de requêtes spéciales possibles dans l'application.
+*/
+
+
 package types;
 
 
