@@ -1,3 +1,8 @@
+/**
+
+Cette classe représente un tournoi avec un nom, un statut, un identifiant, une liste d'équipes, une liste de matchs et une liste d'identifiants d'équipes.
+*/
+
 package model;
 
 
@@ -28,6 +33,11 @@ public class Tournoi {
 	private final DialogMatch dialogMatch = new DialogMatch();
 	private final DialogTournoi dialogTournoi = new DialogTournoi();
 
+	/**
+	 * Constructeur de la classe Tournoi.
+	 * 
+	 * @param nt Le nom du tournoi.
+	 */
 	public Tournoi(String nt) {
 		try {
 			ResultSet rs = dialogTournoi.getTournoiParNom(Tools.mysql_real_escape_string(nt));
@@ -46,6 +56,9 @@ public class Tournoi {
         }
 	}
 
+	/**
+	 * Met à jour la liste des équipes du tournoi.
+	 */
 	public void majEquipes() {
 		dataeq = new Vector<>();
 		ideqs = new Vector<>();
@@ -62,6 +75,14 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * 
+	 * Met à jour les matchs d'un tournoi en récupérant les données depuis la base
+	 * de données et en les stockant dans un vecteur.
+	 * Les données stockées dans le vecteur datam sont des objets Match.
+	 * Si une exception est levée lors de la récupération des données depuis la base
+	 * de données, une erreur est affichée dans la fenêtre.
+	 */
 	public void majMatch() {
 		datam = new Vector<>();
 		try {
@@ -76,38 +97,96 @@ public class Tournoi {
 
 	// ----- Getters -----
 
+	/**
+	 * 
+	 * Renvoie l'identifiant du tournoi.
+	 * 
+	 * @return L'identifiant du tournoi.
+	 */
 	public int getIdTournoi() {
 		return this.id_tournoi;
 	}
 
+	/**
+	 * 
+	 * Renvoie le match à l'index spécifié. Si les données des matchs n'ont pas été
+	 * mises à jour, la fonction met à jour les données avant de renvoyer le match.
+	 * 
+	 * @param index L'index du match.
+	 * @return Le match à l'index spécifié.
+	 */
 	public Match getMatch(int index) {
 		if (datam == null) majMatch();
 		return datam.get(index);
 	}
 
+	/**
+	 * 
+	 * Renvoie le nombre de matchs. Si les données des matchs n'ont pas été mises à
+	 * jour, la fonction met à jour les données avant de renvoyer le nombre de
+	 * matchs.
+	 * 
+	 * @return Le nombre de matchs.
+	 */
 	public int getNbMatchs() {
 		if (datam == null) majMatch();
 		return datam.size();
 	}
 
+	/**
+	 * 
+	 * Renvoie l'équipe à l'index spécifié. Si les données des équipes n'ont pas été
+	 * mises à jour, la fonction met à jour les données avant de renvoyer l'équipe.
+	 * 
+	 * @param index L'index de l'équipe.
+	 * @return L'équipe à l'index spécifié.
+	 */
 	public Equipe getEquipe(int index) {
 		if (dataeq == null) majEquipes();
 		return dataeq.get(index);
 	}
 
+	/**
+	 * 
+	 * Renvoie le nombre d'équipes. Si les données des équipes n'ont pas été mises à
+	 * jour, la fonction met à jour les données avant de renvoyer le nombre
+	 * d'équipes.
+	 * 
+	 * @return Le nombre d'équipes.
+	 */
 	public int getNbEquipes() {
 		if (dataeq == null) majEquipes();
 		return dataeq.size();
 	}
 
+	/**
+	 * 
+	 * Renvoie le statut du tournoi.
+	 * 
+	 * @return Le statut du tournoi.
+	 */
 	public StatutTournoi getStatut() {
 		return statut;
 	}
 
+	/**
+	 * 
+	 * Renvoie le nom du tournoi.
+	 * 
+	 * @return Le nom du tournoi.
+	 */
 	public String getNom() {
 		return nomTournoi;
 	}
 
+	/**
+	 * Cette fonction récupère le nombre de tours pour le tournoi courant à partir
+	 * de la base de données.
+	 * Elle retourne le nombre de tours si l'opération s'est bien déroulée, sinon
+	 * elle retourne -1 et affiche une erreur.
+	 * 
+	 * @return Le nombre de tours du tournoi courant ou -1 en cas d'erreur.
+	 */
 	public int getNbTours() {
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatch(id_tournoi);
@@ -120,6 +199,14 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * Cette fonction récupère le nombre de tours pour le tournoi courant à partir
+	 * de la base de données.
+	 * Elle retourne le nombre de tours si l'opération s'est bien déroulée, sinon
+	 * elle retourne -1 et affiche une erreur.
+	 * 
+	 * @return Le nombre de tours du tournoi courant ou -1 en cas d'erreur.
+	 */
 	public void genererMatchs() {
 		int nbt = 1;
 		Vector<Vector<Match>> ms;
@@ -140,6 +227,12 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * Cette fonction ajoute un tour de plus au tournoi courant en générant les
+	 * matchs à jouer pour ce tour.
+	 * Si le nombre maximum de tours a déjà été atteint, la fonction ne fait rien.
+	 * Si une erreur se produit lors de l'opération, une erreur s'affiche à l'écran.
+	 */
 	public void ajouterTour() {
 		int nbtoursav;
 		if (getNbTours() >=  (getNbEquipes() -1)) return;
@@ -201,6 +294,11 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * 
+	 * Cette méthode permet de supprimer le dernier tour d'un tournoi ainsi que les
+	 * matchs associés.
+	 */
 	public void supprimerTour() {
 		int nbtoursav;
 		try {
@@ -221,6 +319,12 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * 
+	 * Cette méthode permet d'ajouter une équipe dans le tournoi.
+	 * 
+	 * L'indice de l'équipe est déterminé automatiquement.
+	 */
 	public void ajouterEquipe() {
 		int a_aj= this.dataeq.size()+1;
 		for ( int i=1;i <= this.dataeq.size(); i++){
@@ -238,6 +342,12 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * 
+	 * Cette méthode permet de mettre à jour les noms des joueurs d'une équipe.
+	 * 
+	 * @param index L'indice de l'équipe à mettre à jour.
+	 */
 	public void majEquipe(int index) {
 		try {
 			dialogEquipe.setNomsJoueursDUneEquipe(getEquipe(index).getId(),
@@ -250,6 +360,12 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * 
+	 * Cette méthode permet de mettre à jour le score d'un match.
+	 * 
+	 * @param index L'indice du match à mettre à jour.
+	 */
 	public void majMatch(int index) {
 		String termine = (getMatch(index).getScore1() > 0 || getMatch(index).getScore2() > 0) ? "oui":"non";
 		try {
@@ -260,6 +376,13 @@ public class Tournoi {
 		}
 		majMatch();
 	}
+
+	/**
+	 * 
+	 * Supprime une équipe de ce tournoi.
+	 * 
+	 * @param ideq l'identifiant de l'équipe à supprimer
+	 */
 
 	public void supprimerEquipe(int ideq) {
 		try {
@@ -277,6 +400,16 @@ public class Tournoi {
 		}
 	}
 
+	/**
+	 * 
+	 * Récupère les matchs à faire pour un tournoi avec un nombre de joueurs et de
+	 * tours donnés.
+	 * 
+	 * @param nbJoueurs le nombre de joueurs ou d'équipes dans le tournoi
+	 * @param nbTours   le nombre de tours que le tournoi doit avoir
+	 * @return un vecteur de vecteurs de matchs à jouer, chaque vecteur de matchs
+	 *         correspondant à un tour
+	 */
 	public static Vector<Vector<Match>> getMatchsToDo(int nbJoueurs, int nbTours) {
 		if (nbTours >= nbJoueurs) {
 			Fenetre.afficherErreur("Erreur lors de la récupération des matchs à faire, le nombre de tours est supérieur ou égal au nombre d'équipes.");
