@@ -16,21 +16,22 @@ import java.util.Vector;
 
 public class Tournoi {
 
-	String nt;
+	String nomTournoi;
 	StatutTournoi statut;
 	int id_tournoi;
 	private Vector<Equipe> dataeq = null;
 	private Vector<Match> datam  = null;
 	private Vector<Integer>ideqs  = null;
 
+	// Dialogs
 	private final DialogEquipe dialogEquipe = new DialogEquipe();
 	private final DialogMatch dialogMatch = new DialogMatch();
 	private final DialogTournoi dialogTournoi = new DialogTournoi();
 
-	public Tournoi(String nt){
+	public Tournoi(String nt) {
 		try {
 			ResultSet rs = dialogTournoi.getTournoiParNom(Tools.mysql_real_escape_string(nt));
-			if(!rs.next()){
+			if (!rs.next()) {
 				return ;
 			}
 			this.statut = StatutTournoi.getStatut(rs.getInt(TableAttributType.STATUT.getColumnName()));
@@ -45,12 +46,12 @@ public class Tournoi {
         }
 	}
 
-	public void majEquipes(){
+	public void majEquipes() {
 		dataeq = new Vector<>();
 		ideqs = new Vector<>();
 		try {
 			ResultSet rs = dialogEquipe.getEquipeDUnTournoi(this.id_tournoi);
-			while(rs.next()){
+			while (rs.next()) {
 				dataeq.add(new Equipe(rs.getInt(TableAttributType.ID_EQUIPE.getColumnName()),rs.getInt(TableAttributType.NUM_EQUIPE.getColumnName()), rs.getString(TableAttributType.NOM_J1.getColumnName()), rs.getString(TableAttributType.NOM_J2.getColumnName())));
 				ideqs.add(rs.getInt(TableAttributType.NUM_EQUIPE.getColumnName()));
 			}
@@ -61,7 +62,7 @@ public class Tournoi {
 		}
 	}
 
-	public void majMatch(){
+	public void majMatch() {
 		datam = new Vector<>();
 		try {
 			ResultSet rs= dialogMatch.getMatchsDUnTournoi(id_tournoi);
@@ -73,43 +74,41 @@ public class Tournoi {
 		}
 	}
 
-	// Getters
+	// ----- Getters -----
 
 	public int getIdTournoi() {
 		return this.id_tournoi;
 	}
 
-	public Match getMatch(int index){
-		if(datam == null) majMatch();
+	public Match getMatch(int index) {
+		if (datam == null) majMatch();
 		return datam.get(index);
 	}
 
-	public int getNbMatchs(){
-		if(datam == null) majMatch();
+	public int getNbMatchs() {
+		if (datam == null) majMatch();
 		return datam.size();
 	}
 
-	public Equipe getEquipe(int index){
-		if(dataeq == null)
-			majEquipes();
+	public Equipe getEquipe(int index) {
+		if (dataeq == null) majEquipes();
 		return dataeq.get(index);
 	}
 
-	public int getNbEquipes(){
-		if(dataeq == null)
-			majEquipes();
+	public int getNbEquipes() {
+		if (dataeq == null) majEquipes();
 		return dataeq.size();
 	}
 
-	public StatutTournoi getStatut(){
+	public StatutTournoi getStatut() {
 		return statut;
 	}
 
 	public String getNom() {
-		return nt;
+		return nomTournoi;
 	}
 
-	public int getNbTours(){
+	public int getNbTours() {
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatch(id_tournoi);
 			rs.next();
@@ -121,14 +120,14 @@ public class Tournoi {
 		}
 	}
 
-	public void genererMatchs(){
+	public void genererMatchs() {
 		int nbt = 1;
 		Vector<Vector<Match>> ms;
 		ms = Tournoi.getMatchsToDo(getNbEquipes(), nbt);
 		int z = 1;
 		try {
-			for(Vector<Match> t :ms){
-				for(Match m:t){
+			for (Vector<Match> t :ms) {
+				for (Match m:t) {
 					dialogMatch.addMatch(null, this.id_tournoi, z, m.getEquipe1(), m.getEquipe2(), "non");
 				}
 				z++;
@@ -141,10 +140,9 @@ public class Tournoi {
 		}
 	}
 
-	public void ajouterTour(){
-		// Recherche du nombre de tours actuel
+	public void ajouterTour() {
 		int nbtoursav;
-		if(getNbTours() >=  (getNbEquipes() -1) ) return;
+		if (getNbTours() >=  (getNbEquipes() -1)) return;
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatch(this.id_tournoi);
 			rs.next();
@@ -155,7 +153,7 @@ public class Tournoi {
 			System.out.println(e.getMessage()); // Message développeur
 			return;
 		}
-		if(nbtoursav == 0){
+		if (nbtoursav == 0) {
 			Vector<Match> ms;
 			ms = Objects.requireNonNull(Tournoi.getMatchsToDo(getNbEquipes(), nbtoursav + 1)).lastElement();
 			try {
@@ -166,38 +164,35 @@ public class Tournoi {
 				Fenetre.afficherErreur("Erreur lors de l'insertion du match.");
 				System.out.println(e.getMessage()); // Message développeur
 			}
-		}else{
+		} else {
 			try {
 				ResultSet rs;
 				rs = dialogMatch.getDonneesTours(this.id_tournoi);
 				ArrayList<Integer> ordreeq= new ArrayList<>();
-				while(rs.next()){
+				while (rs.next()) {
 					ordreeq.add(rs.getInt(TableAttributType.EQUIPE.getColumnName()));
 				}
-				System.out.println("Taille"+ordreeq.size());
 				int i;
 				boolean fini;
-				while(ordreeq.size() > 1){
-					System.out.println("Taille " + ordreeq.size());
+				while (ordreeq.size() > 1) {
 					int j=0;
-					while(j<ordreeq.size()) {
-						System.out.println(ordreeq.get(j));
+					while (j<ordreeq.size()) {
 						j++;
 					}
 					i=1;
-					do{
+					do {
 						rs = dialogMatch.getNbMatchsParEquipes(ordreeq.get(0), ordreeq.get(i-1));
 						rs.next();
-						if(rs.getInt(TableAttributType.NB_MATCHS.getColumnName()) > 0){
+						if (rs.getInt(TableAttributType.NB_MATCHS.getColumnName()) > 0) {
 							i++;
 							fini = false;
-						}else{
+						} else {
 							fini = true;
 							dialogMatch.addMatch(null, this.id_tournoi, (nbtoursav + 1), ordreeq.get(0), ordreeq.get(i), "non");
 							ordreeq.remove(0);
 							ordreeq.remove(i-1);
 						}
-					}while(!fini);
+					} while(!fini);
 				}
 			} catch (Exception e) {
 				Fenetre.afficherErreur("Erreur lors de la récupération des matchs du tournoi.");
@@ -206,7 +201,7 @@ public class Tournoi {
 		}
 	}
 
-	public void supprimerTour(){
+	public void supprimerTour() {
 		int nbtoursav;
 		try {
 			ResultSet rs = dialogMatch.getNbToursMaxMatch(this.id_tournoi);
@@ -226,7 +221,7 @@ public class Tournoi {
 		}
 	}
 
-	public void ajouterEquipe(){
+	public void ajouterEquipe() {
 		int a_aj= this.dataeq.size()+1;
 		for ( int i=1;i <= this.dataeq.size(); i++){
 			if(!ideqs.contains(i)){
@@ -243,7 +238,7 @@ public class Tournoi {
 		}
 	}
 
-	public void majEquipe(int index){
+	public void majEquipe(int index) {
 		try {
 			dialogEquipe.setNomsJoueursDUneEquipe(getEquipe(index).getId(),
 					Tools.mysql_real_escape_string(getEquipe(index).getEquipe1()),
@@ -255,9 +250,8 @@ public class Tournoi {
 		}
 	}
 
-	public void majMatch(int index){
+	public void majMatch(int index) {
 		String termine = (getMatch(index).getScore1() > 0 || getMatch(index).getScore2() > 0) ? "oui":"non";
-		System.out.println(termine);
 		try {
 			dialogMatch.setScoresMatch(getMatch(index).getIdMatch(), getMatch(index).getEquipe1(), getMatch(index).getEquipe2(), getMatch(index).getScore1(), getMatch(index).getScore2(), termine);
 		} catch (Exception e) {
@@ -267,7 +261,7 @@ public class Tournoi {
 		majMatch();
 	}
 
-	public void supprimerEquipe(int ideq){
+	public void supprimerEquipe(int ideq) {
 		try {
 			int numeq;
 			ResultSet rs = dialogEquipe.getNumDUneEquipe(ideq);
@@ -283,22 +277,22 @@ public class Tournoi {
 		}
 	}
 
-	public static Vector<Vector<Match>> getMatchsToDo(int nbJoueurs, int nbTours){
-		if( nbTours >= nbJoueurs){
+	public static Vector<Vector<Match>> getMatchsToDo(int nbJoueurs, int nbTours) {
+		if (nbTours >= nbJoueurs) {
 			Fenetre.afficherErreur("Erreur lors de la récupération des matchs à faire, le nombre de tours est supérieur ou égal au nombre d'équipes.");
 			return null;
 		}
 		int[] tabJoueurs;
-		if((nbJoueurs % 2) == 1){
-			tabJoueurs   = new int[nbJoueurs+1];
+		if ((nbJoueurs % 2) == 1) {
+			tabJoueurs = new int[nbJoueurs+1];
 			tabJoueurs[nbJoueurs] = -1;
-			for(int z = 0; z < nbJoueurs;z++){
+			for (int z = 0; z < nbJoueurs;z++) {
 				tabJoueurs[z] = z+1;
 			}
 			nbJoueurs++;
-		}else{
+		} else {
 			tabJoueurs = new int[nbJoueurs];
-			for(int z = 0; z < nbJoueurs;z++){
+			for (int z = 0; z < nbJoueurs;z++) {
 				tabJoueurs[z] = z+1;
 			}
 		}
@@ -306,10 +300,10 @@ public class Tournoi {
 		int i, increment = 1, temp;
 		Vector<Vector<Match>> retour = new Vector<>();
 		Vector<Match> vm;
-		for( int r = 1; r <= nbTours;r++){
-			if(r > 1){
+		for (int r = 1; r <= nbTours;r++) {
+			if (r > 1) {
 				temp = tabJoueurs[nbJoueurs - 2];
-				for(i = (nbJoueurs - 2) ; i > 0; i--){
+				for (i = (nbJoueurs - 2) ; i > 0; i--) {
 					tabJoueurs[i] = tabJoueurs[i-1];
 				}
 				tabJoueurs[0] = temp;
@@ -317,12 +311,12 @@ public class Tournoi {
 			i = 0;
 			quitter = false;
 			vm = new Vector<>();
-			while(!quitter){
-				if (!(tabJoueurs[i] == -1 || tabJoueurs[nbJoueurs - 1  - i] == -1)){
+			while (!quitter) {
+				if (!(tabJoueurs[i] == -1 || tabJoueurs[nbJoueurs - 1  - i] == -1)) {
 					vm.add(new Match(tabJoueurs[i], tabJoueurs[nbJoueurs - 1  - i]));
 				}
 		        i+= increment;
-				if(i >= nbJoueurs / 2){
+				if (i >= nbJoueurs / 2) {
 					quitter = true;
 				}
 			}
