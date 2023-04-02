@@ -1,4 +1,6 @@
 package fr.blagnac.com.model;
+
+
 public 	class Equipe{
 
 	private int id;
@@ -45,5 +47,4 @@ public 	class Equipe{
 		this.equipe2 = equipe2;
 	}
 
-	
 }
