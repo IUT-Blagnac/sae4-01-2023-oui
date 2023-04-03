@@ -1,3 +1,10 @@
+/**
+
+Enumération des noms de colonnes des tables de la base de données.
+Elle contient des noms de colonnes pour les tables Tournoi, Equipe et Match,
+ainsi que des alias utilisés pour des requêtes spéciales.
+*/
+
 package types;
 
 
@@ -35,10 +42,20 @@ public enum TableAttributType {
 
     private final String columnName;
 
+    /**
+     * Crée un nouveau TableAttributType avec le nom de la colonne spécifié.
+     * 
+     * @param columnName le nom de la colonne dans la table
+     */
     TableAttributType(String columnName) {
         this.columnName = columnName;
     }
 
+    /**
+     * Retourne le nom de la colonne.
+     * 
+     * @return le nom de la colonne
+     */
     public String getColumnName() {
         return this.columnName;
     }

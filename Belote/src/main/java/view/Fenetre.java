@@ -1,3 +1,16 @@
+/**
+
+Cette classe est une fenêtre principale de l'application de gestion de tournois. Elle affiche une interface
+graphique qui permet à l'utilisateur de créer un nouveau tournoi, de visualiser les équipes participantes, les
+matchs programmés et les résultats du tournoi.
+Elle est composée de plusieurs panels qui contiennent des éléments d'interface graphique comme des boutons, des
+tableaux, des labels, etc.
+Elle utilise les classes "DialogEquipe", "DialogMatch" et "DialogTournoi" pour dialoguer avec la base de données et
+récupérer ou insérer des données dans les tables.
+Elle contient les méthodes qui gèrent l'affichage de chaque panel et qui sont appelées en fonction de l'action de
+l'utilisateur.
+*/
+
 package view;
 
 
@@ -115,6 +128,16 @@ public class Fenetre extends JFrame {
 	private final DialogTournoi dialogTournoi = new DialogTournoi();
 	private final DialogMatch dialogMatch = new DialogMatch();
 
+	/**
+	 * 
+	 * Constructeur de la fenêtre principale de l'application de gestion de tournoi
+	 * de Belote.
+	 * 
+	 * Initialise les différents éléments de l'interface graphique tels que les
+	 * boutons et les panels.
+	 * 
+	 * La fenêtre est également affichée à l'écran.
+	 */
 	public Fenetre() {
 		this.setTitle("Gestion de tournoi de Belote");
 		setSize(800,400);
@@ -187,11 +210,37 @@ public class Fenetre extends JFrame {
 		tracer_select_tournoi();
 	}
 
+	/**
+	 * Met à jour le statut affiché en haut de la fenêtre avec le texte donné en
+	 * paramètre.
+	 * Le statut affiché par défaut est "Gestion de tournois de Belote v1.0 - Pas de
+	 * tournoi sélectionné".
+	 *
+	 * @param t le texte à afficher après le statut par défaut.
+	 */
 	public void setStatutSelect(String t) {
 		String statut_deft = "Gestion de tournois de Belote v1.0 - ";
 		statut_select.setText(statut_deft + "" + t);
 	}
 
+	/**
+	 * Met à jour l'état d'activation des boutons en fonction de l'état du tournoi.
+	 * Si aucun tournoi n'est sélectionné, seuls les boutons "Tournois" et
+	 * "Paramètres" sont activés.
+	 * Si un tournoi est sélectionné, les boutons sont activés en fonction de l'état
+	 * du tournoi.
+	 * 
+	 * Si le tournoi est à l'état "Inscription", les boutons "Tournois", "Equipes"
+	 * et "Paramètres" sont activés.
+	 * Les boutons "Matchs", "Tours" et "Résultats" sont désactivés.
+	 * 
+	 * Si le tournoi est à l'état "En cours", les boutons "Tournois", "Equipes",
+	 * "Matchs", "Tours" et "Paramètres" sont activés.
+	 * Le bouton "Résultats" est activé uniquement si tous les matchs du tournoi
+	 * sont terminés.
+	 * 
+	 * @see Tournoi
+	 */
 	public void majboutons() {
 		if (tournoi == null){
 			btournois.setEnabled(true);
@@ -233,6 +282,20 @@ public class Fenetre extends JFrame {
 		}
 	}
 
+	/**
+	 * 
+	 * Cette fonction permet de tracer l'interface graphique de la sélection d'un
+	 * tournoi.
+	 * Elle initialise la liste des tournois en récupérant les noms de tous les
+	 * tournois stockés dans la base de données.
+	 * Si la liste est vide, les boutons "Sélectionner le tournoi" et "Supprimer le
+	 * tournoi" sont désactivés.
+	 * Sinon, le premier tournoi de la liste est sélectionné par défaut.
+	 * Si l'interface graphique de la sélection des tournois est déjà tracée, alors
+	 * elle la montre.
+	 * Sinon, elle crée l'interface graphique et l'ajoute à la fenêtre principale.
+	 * 
+	 */
 	public void tracer_select_tournoi() {
 		tournoi = null;
 		majboutons();
@@ -327,6 +390,14 @@ public class Fenetre extends JFrame {
 		}
 	}
 
+	/**
+	 * 
+	 * Affiche les détails du tournoi sélectionné.
+	 * Si aucun tournoi n'est sélectionné, ne fait rien.
+	 * Crée un nouveau panel et y ajoute un tableau de 4 lignes et 2 colonnes
+	 * contenant les informations du tournoi : nom, statut et nombre de tours.
+	 * Affiche le tout dans la fenêtre principale.
+	 */
 	public void tracer_details_tournoi() {
 		if (tournoi == null) {
 			return ;
@@ -351,6 +422,27 @@ public class Fenetre extends JFrame {
 		fen.show(c, DETAIL);
 	}
 
+	
+	/**
+	 * 
+	 * Cette fonction permet de tracer la fenêtre affichant les équipes du tournoi
+	 * en cours.
+	 * Si le tournoi est null, elle ne fait rien.
+	 * Sinon, elle met à jour les boutons, vérifie si les équipes ont déjà été
+	 * tracées. Si c'est le cas, elle met à jour les données
+	 * de l'interface correspondant aux équipes. Sinon, elle crée une nouvelle
+	 * fenêtre avec les informations sur les équipes du tournoi.
+	 * Cette fenêtre contient un tableau avec les numéros d'équipes, les noms des
+	 * joueurs 1 et 2 de chaque équipe, ainsi que trois boutons: "Ajouter une
+	 * équipe",
+	 * "Supprimer une équipe" et "Valider les équipes". Lorsqu'on appuie sur le
+	 * bouton "Ajouter une équipe", elle ajoute une nouvelle équipe au tournoi.
+	 * Lorsqu'on appuie sur le bouton "Supprimer une équipe", elle supprime l'équipe
+	 * sélectionnée dans le tableau. Lorsqu'on appuie sur le bouton "Valider les
+	 * équipes",
+	 * elle génère les matchs du tournoi et met à jour les boutons et la fenêtre des
+	 * matchs du tournoi.
+	 */
 	public void tracer_tournoi_equipes() {
 		if (tournoi == null) {
 			return ;
@@ -488,6 +580,14 @@ public class Fenetre extends JFrame {
 		fen.show(c, EQUIPES);
 	}
 
+	/**
+	 * 
+	 * Cette méthode permet de tracer les tours d'un tournoi en affichant un tableau
+	 * qui contient
+	 * le numéro du tour, le nombre de matchs et le nombre de matchs terminés pour
+	 * chaque tour.
+	 * Si le tournoi n'existe pas, cette méthode ne fait rien.
+	 */
 	public void tracer_tours_tournoi() {
 		if (tournoi == null) {
 			return ;
@@ -562,6 +662,22 @@ public class Fenetre extends JFrame {
 		fen.show(c, TOURS);
 	}
 
+	/**
+	 * 
+	 * Cette fonction affiche les matchs d'un tournoi dans un tableau.
+	 * Si le tournoi n'est pas initialisé, la fonction ne fait rien.
+	 * Si le tableau de matchs est déjà affiché, la fonction met à jour les données
+	 * affichées.
+	 * Sinon, la fonction crée le tableau et l'ajoute à la fenêtre.
+	 * Les colonnes du tableau sont : Tour, Équipe 1, Équipe 2, Score équipe 1,
+	 * Score équipe 2.
+	 * Les scores des deux équipes sont éditables si le match est en cours et est le
+	 * dernier match du tournoi.
+	 * Les statistiques sur le nombre de matchs joués et le bouton "Afficher les
+	 * résultats" sont également affichés.
+	 * Cette fonction met à jour le statut de la fenêtre et les boutons de
+	 * navigation.
+	 */
 	public void tracer_tournoi_matchs() {
 		if (tournoi == null) {
 			return ;
@@ -678,6 +794,22 @@ public class Fenetre extends JFrame {
 		fen.show(c, MATCHS);
 	}
 
+	/**
+	 * 
+	 * Cette fonction permet de tracer les résultats d'un tournoi dans une JTable et
+	 * de les afficher dans une fenêtre.
+	 * Si aucun tournoi n'a été créé, la fonction se termine sans rien faire.
+	 * Les résultats sont récupérés depuis la base de données à l'aide d'un
+	 * ResultSet et stockés dans un Vector de Vector d'objets.
+	 * Les noms des colonnes sont stockés dans un Vector de chaînes de caractères.
+	 * Ensuite, une JTable est créée à partir de ces deux vecteurs et affichée dans
+	 * une JScrollPane.
+	 * Si la JTable a déjà été affichée auparavant, elle est simplement mise à jour
+	 * avec les nouveaux résultats.
+	 * Si c'est la première fois que la JTable est affichée, elle est ajoutée à un
+	 * JPanel avec un titre et un JLabel pour afficher le gagnant.
+	 * Enfin, le JPanel est affiché dans une fenêtre.
+	 */
 	public void tracer_tournoi_resultats() {
 		if (tournoi == null) {
 			return ;
@@ -729,6 +861,15 @@ public class Fenetre extends JFrame {
 		fen.show(c, RESULTATS);
 	}
 
+	/**
+	 * 
+	 * Met à jour le statut des matchs pour le tournoi en cours.
+	 * Récupère le nombre de matchs terminés et le nombre total de matchs
+	 * et affiche le statut correspondant.
+	 * Si tous les matchs sont terminés, active le bouton de validation.
+	 * Si une erreur survient lors de la récupération des données, affiche une
+	 * erreur et ne fait rien.
+	 */
 	private void majStatutM() {
 		int total = -1, termines = -1;
 		try {
@@ -745,10 +886,23 @@ public class Fenetre extends JFrame {
 		match_valider.setEnabled(total == termines);
 	}
 
+	/**
+	 * 
+	 * Affiche une boîte de dialogue d'erreur avec le message spécifié.
+	 * 
+	 * @param message le message d'erreur à afficher
+	 */
 	public static void afficherErreur(String message) {
 		JOptionPane.showMessageDialog(null, message, "ERREUR", JOptionPane.ERROR_MESSAGE);
 	}
 
+	/**
+	 * 
+	 * Affiche une boîte de dialogue demandant à l'utilisateur d'entrer le nom du
+	 * tournoi.
+	 * 
+	 * @return le nom du tournoi saisi par l'utilisateur
+	 */
 	public static String saisieNomTournoi() {
 		return JOptionPane.showInputDialog(null, "Entrez le nom du tournoi", "Nom du tournoi", JOptionPane.PLAIN_MESSAGE);
 	}
