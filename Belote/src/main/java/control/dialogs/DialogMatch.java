@@ -65,7 +65,8 @@ public class DialogMatch {
     /**
      * Cette méthode retourne les données des tours pour un tournoi donné.
      *
-     * @param idTournoi l'identifiant du tournoi
+     * @param equipe1 l'identifiant de l'équipe 1
+     * @param equipe2 l'identifiant de l'équipe 2
      * @return un objet ResultSet contenant les données des tours
      * @throws Exception si une erreur se produit
      */

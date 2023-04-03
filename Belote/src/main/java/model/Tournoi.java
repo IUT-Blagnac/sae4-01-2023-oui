@@ -200,12 +200,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * Cette fonction récupère le nombre de tours pour le tournoi courant à partir
-	 * de la base de données.
-	 * Elle retourne le nombre de tours si l'opération s'est bien déroulée, sinon
-	 * elle retourne -1 et affiche une erreur.
-	 * 
-	 * @return Le nombre de tours du tournoi courant ou -1 en cas d'erreur.
+	 * Cette fonction génère les matchs du tournoi courant à partir de la base de données.
 	 */
 	public void genererMatchs() {
 		int nbt = 1;

@@ -66,6 +66,9 @@ public class DialogDataBase {
      *                           base de données de l'application.
      * @param databaseConfigFile chemin du fichier de configuration de la base de
      *                           données.
+     * 
+     * @return l'instance unique de la classe DialogDataBase.
+     * 
      * @throws SQLException          en cas d'erreur lors de la connexion à la base
      *                               de données.
      * @throws FileNotFoundException si le fichier de création des tables n'est pas

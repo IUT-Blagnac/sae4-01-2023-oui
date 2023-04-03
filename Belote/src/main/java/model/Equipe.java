@@ -92,7 +92,7 @@ public 	class Equipe {
 	/**
 	 * Setter pour l'identifiant de l'équipe.
 	 * 
-	 * @param id Le nouvel identifiant de l'équipe.
+	 * @param numero Le nouvel identifiant de l'équipe.
 	 */
 	public void setNumero(int numero) {
 		this.numero = numero;
