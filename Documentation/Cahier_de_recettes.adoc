@@ -319,6 +319,6 @@ NOTE: CRUD : Fonctionnalités de gestion de base (Create, Read, Update, Delete)
 4+|
 
 ^|ID ^|Action ^|Comportement attendu ^|Résultat
-^|1 ^|Saisir les scores des matchs d'au moins un tour et cliquer sur "Matchs"  ^|Affichage d'une fenêtre avec les résultats calculés pour chaque équipe ^|(en partie) OK : bug avec l'affichage des noms des joueurs des équipes
+^|1 ^|Saisir les scores des matchs d'au moins un tour et cliquer sur "Résultats"  ^|Affichage d'une fenêtre avec les résultats calculés pour chaque équipe ^|*(en partie) OK* : bug avec l'affichage des noms des joueurs des équipes
 
 |====

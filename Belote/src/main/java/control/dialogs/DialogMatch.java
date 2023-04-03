@@ -64,9 +64,8 @@ public class DialogMatch {
 
     /**
      * Cette méthode retourne les données des tours pour un tournoi donné.
-     *
-     * @param equipe1 l'identifiant de l'équipe 1
-     * @param equipe2 l'identifiant de l'équipe 2
+     * @param equipe1 : l'identifiant de l'équipe 1
+     * @param equipe2 : l'identifiant de l'équipe 2
      * @return un objet ResultSet contenant les données des tours
      * @throws Exception si une erreur se produit
      */
@@ -79,8 +78,7 @@ public class DialogMatch {
 
     /**
      * Cette méthode retourne les données des tours pour un tournoi donné.
-     *
-     * @param idTournoi l'identifiant du tournoi
+     * @param idTournoi : l'identifiant du tournoi
      * @return un objet ResultSet contenant les données des tours
      * @throws Exception si une erreur se produit
      */
@@ -91,10 +89,8 @@ public class DialogMatch {
     }
 
     /**
-     * Cette méthode retourne le nombre maximum de tours pour un match dans un
-     * tournoi donné.
-     *
-     * @param idTournoi l'identifiant du tournoi
+     * Cette méthode retourne le nombre maximum de tours pour un match dans un tournoi donné.
+     * @param idTournoi : l'identifiant du tournoi
      * @return un objet ResultSet contenant le nombre maximum de tours
      * @throws Exception si une erreur se produit
      */
@@ -106,7 +102,6 @@ public class DialogMatch {
 
     /**
      * Cette méthode retourne le nombre de tours par match pour un tournoi donné.
-     *
      * @param idTournoi l'identifiant du tournoi
      * @return un objet ResultSet contenant le nombre de tours par match
      * @throws Exception si une erreur se produit
@@ -119,8 +114,7 @@ public class DialogMatch {
 
     /**
      * Cette méthode retourne les matchs d'un tournoi donné.
-     *
-     * @param idTournoi l'identifiant du tournoi
+     * @param idTournoi : l'identifiant du tournoi
      * @return un objet ResultSet contenant les matchs du tournoi
      * @throws Exception si une erreur se produit
      */
@@ -131,20 +125,16 @@ public class DialogMatch {
     }
 
     /**
-     * 
      * Ajoute un nouveau match à la base de données.
-     * 
-     * @param idMatch   l'identifiant unique du match
+     * @param idMatch : l'identifiant unique du match
      * @param idTournoi l'identifiant unique du tournoi associé
-     * @param numTour   le numéro du tour du tournoi associé
-     * @param equipe1   l'identifiant unique de la première équipe
-     * @param equipe2   l'identifiant unique de la deuxième équipe
-     * @param termine   l'état du match (terminé ou non)
-     * @throws Exception si une erreur se produit lors de l'ajout du match à la base
-     *                   de données
+     * @param numTour : le numéro du tour du tournoi associé
+     * @param equipe1 : l'identifiant unique de la première équipe
+     * @param equipe2 : l'identifiant unique de la deuxième équipe
+     * @param termine : l'état du match (terminé ou non)
+     * @throws Exception si une erreur se produit lors de l'ajout du match à la base de données
      */
-    public void addMatch(Integer idMatch, Integer idTournoi, Integer numTour, Integer equipe1, Integer equipe2,
-            String termine) throws Exception {
+    public void addMatch(Integer idMatch, Integer idTournoi, Integer numTour, Integer equipe1, Integer equipe2, String termine) throws Exception {
         Map<TableAttributType, String> parametresValues = new HashMap<>();
         parametresValues.put(TableAttributType.ID_MATCH, idMatch + "");
         parametresValues.put(TableAttributType.ID_TOURNOI, idTournoi + "");
@@ -156,20 +146,16 @@ public class DialogMatch {
     }
 
     /**
-     * 
      * Modifie les scores du match identifié par l'ID donné.
-     * 
-     * @param idMatch  L'ID du match à modifier.
-     * @param equipe1  L'ID de la première équipe.
-     * @param equipe2  L'ID de la deuxième équipe.
-     * @param scoreEq1 Le score de la première équipe.
-     * @param scoreEq2 Le score de la deuxième équipe.
-     * @param termine  L'état du match (terminé ou non terminé).
-     * @throws Exception si une erreur se produit lors de l'accès à la base de
-     *                   données.
+     * @param idMatch : ID du match à modifier.
+     * @param equipe1 : ID de la première équipe.
+     * @param equipe2 : ID de la deuxième équipe.
+     * @param scoreEq1 : le score de la première équipe.
+     * @param scoreEq2 : le score de la deuxième équipe.
+     * @param termine : l'état du match (terminé ou non terminé).
+     * @throws Exception si une erreur se produit lors de l'accès à la base de données.
      */
-    public void setScoresMatch(int idMatch, Integer equipe1, Integer equipe2, Integer scoreEq1, Integer scoreEq2,
-            String termine) throws Exception {
+    public void setScoresMatch(int idMatch, Integer equipe1, Integer equipe2, Integer scoreEq1, Integer scoreEq2, String termine) throws Exception {
         Map<TableAttributType, String> parametresValues = new HashMap<>();
         parametresValues.put(TableAttributType.ID_MATCH, idMatch + "");
         parametresValues.put(TableAttributType.EQUIPE1, equipe1 + "");
@@ -183,11 +169,9 @@ public class DialogMatch {
     }
 
     /**
-     * 
      * Supprime tous les matches d'un tour spécifié dans un tournoi donné.
-     * 
      * @param idTournoi l'identifiant du tournoi concerné
-     * @param numTour   le numéro du tour à supprimer
+     * @param numTour : le numéro du tour à supprimer
      * @throws Exception si une erreur se produit lors de la suppression des matches
      */
     public void removeMatchDUnTour(int idTournoi, int numTour) throws Exception {
@@ -198,10 +182,8 @@ public class DialogMatch {
     }
 
     /**
-     * 
      * Supprime tous les matchs d'un tournoi donné en utilisant l'ID du tournoi.
-     * 
-     * @param idTournoi l'ID du tournoi dont les matchs doivent être supprimés.
+     * @param idTournoi : l'ID du tournoi dont les matchs doivent être supprimés.
      * @throws Exception si une erreur survient lors de la suppression des matchs.
      */
     public void removeMatchsDUnTournoi(int idTournoi) throws Exception {

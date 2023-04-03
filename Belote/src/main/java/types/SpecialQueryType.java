@@ -1,12 +1,9 @@
-/**
-
-Enumération représentant les types de requêtes spéciales possibles dans l'application.
-*/
-
-
 package types;
 
 
+/**
+ * Enumération représentant les types de requêtes spéciales possibles dans l'application.
+ */
 public enum SpecialQueryType {
 
     SetNumEquipesDUnTournoi,

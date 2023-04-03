@@ -1,11 +1,9 @@
-/**
-
-Enumération représentant les différents statuts possibles pour un tournoi.
-*/
-
 package types;
 
 
+/**
+ * Enumération représentant les différents statuts possibles pour un tournoi.
+ */
 public enum StatutTournoi {
 
     INCONNU(-1, "Inconnu"),
@@ -19,11 +17,9 @@ public enum StatutTournoi {
     private final Integer ordre;
 
     /**
-     * 
      * Constructeur privé de l'énumération.
-     * 
-     * @param pfOrdre   ordre du statut
-     * @param pfLibelle libellé du statut
+     * @param pfOrdre : ordre du statut
+     * @param pfLibelle : libellé du statut
      */
     StatutTournoi(int pfOrdre, String pfLibelle) {
         this.libelle = pfLibelle;
@@ -31,9 +27,7 @@ public enum StatutTournoi {
     }
 
     /**
-     * 
      * Retourne le libellé du statut.
-     * 
      * @return le libellé du statut
      */
     public String getLibelle() {
@@ -41,9 +35,7 @@ public enum StatutTournoi {
     }
 
     /**
-     * 
      * Retourne l'ordre du statut.
-     * 
      * @return l'ordre du statut
      */
     public Integer getOrdre() {
@@ -51,11 +43,9 @@ public enum StatutTournoi {
     }
 
     /**
-     * 
      * Retourne l'objet StatutTournoi correspondant à l'ordre donné.
      * Si aucun statut correspondant n'est trouvé, retourne le statut "Inconnu".
-     * 
-     * @param pfOrdre l'ordre du statut recherché
+     * @param pfOrdre : l'ordre du statut recherché
      * @return l'objet StatutTournoi correspondant à l'ordre donné
      */
     public static StatutTournoi getStatut(int pfOrdre) {

@@ -1,8 +1,5 @@
-/**
-Cette classe permet de gérer les dialogues relatifs à la table Equipe de la base de données.
-*/
-
 package control.dialogs;
+
 
 import control.actors.Actor;
 import control.actors.ActorFactory;
@@ -17,16 +14,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Cette classe permet de gérer les dialogues relatifs à la table Equipe de la base de données.
+ */
 public class DialogEquipe {
 
     /**
-     * 
      * Acteur pour la table Equipe
      */
     private Actor actorEquipe;
 
     /**
-     * 
      * Constructeur de la classe DialogEquipe.
      * Initialise l'acteur pour la table Equipe.
      */
@@ -40,10 +39,8 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Récupère les équipes d'un tournoi donné.
-     * 
-     * @param idTournoi ID du tournoi.
+     * @param idTournoi : ID du tournoi.
      * @return Résultat de la requête SQL.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
@@ -56,10 +53,8 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Récupère le numéro d'une équipe donnée.
-     * 
-     * @param idEquipe ID de l'équipe.
+     * @param idEquipe : ID de l'équipe.
      * @return Résultat de la requête SQL.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
@@ -72,18 +67,15 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Ajoute une nouvelle équipe dans la base de données.
-     * 
-     * @param idEquipe  ID de l'équipe.
-     * @param numEquipe Numéro de l'équipe.
-     * @param idTournoi ID du tournoi auquel appartient l'équipe.
-     * @param nomJ1     Nom du joueur 1 de l'équipe.
-     * @param nomJ2     Nom du joueur 2 de l'équipe.
+     * @param idEquipe : ID de l'équipe.
+     * @param numEquipe : numéro de l'équipe.
+     * @param idTournoi : ID du tournoi auquel appartient l'équipe.
+     * @param nomJ1 : nom du joueur 1 de l'équipe.
+     * @param nomJ2 : nom du joueur 2 de l'équipe.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
-    public void addEquipe(Integer idEquipe, Integer numEquipe, Integer idTournoi, String nomJ1, String nomJ2)
-            throws Exception {
+    public void addEquipe(Integer idEquipe, Integer numEquipe, Integer idTournoi, String nomJ1, String nomJ2) throws Exception {
         Map<TableAttributType, String> parametresValues = new HashMap<>();
         parametresValues.put(TableAttributType.ID_EQUIPE, idEquipe + "");
         parametresValues.put(TableAttributType.NUM_EQUIPE, numEquipe + "");
@@ -94,12 +86,10 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Met à jour les noms des joueurs d'une équipe donnée.
-     * 
      * @param idEquipe ID de l'équipe.
-     * @param nomJ1    Nouveau nom du joueur 1.
-     * @param nomJ2    Nouveau nom du joueur 2.
+     * @param nomJ1 : nouveau nom du joueur 1.
+     * @param nomJ2 : nouveau nom du joueur 2.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
     public void setNomsJoueursDUneEquipe(Integer idEquipe, String nomJ1, String nomJ2) throws Exception {
@@ -112,11 +102,9 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Met à jour le numéro des équipes d'un tournoi donné.
-     * 
-     * @param idTournoi ID du tournoi.
-     * @param numEquipe Nouveau numéro d'équipe.
+     * @param idTournoi : ID du tournoi.
+     * @param numEquipe : nouveau numéro d'équipe.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
     public void setNumEquipesDUnTournoi(Integer idTournoi, Integer numEquipe) throws Exception {
@@ -127,11 +115,9 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Supprime une équipe de la base de données.
-     * 
-     * @param idTournoi ID du tournoi auquel appartient l'équipe.
-     * @param idEquipe  ID de l'équipe à supprimer.
+     * @param idTournoi : ID du tournoi auquel appartient l'équipe.
+     * @param idEquipe : ID de l'équipe à supprimer.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
     public void removeUneEquipe(Integer idTournoi, Integer idEquipe) throws Exception {
@@ -142,10 +128,8 @@ public class DialogEquipe {
     }
 
     /**
-     * 
      * Supprime toutes les équipes d'un tournoi donné.
-     * 
-     * @param idTournoi ID du tournoi.
+     * @param idTournoi : ID du tournoi.
      * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
      */
     public void removeToutesEquipesDUnTournoi(Integer idTournoi) throws Exception {

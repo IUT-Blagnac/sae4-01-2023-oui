@@ -1,16 +1,3 @@
-/**
-
-Cette classe est une fenêtre principale de l'application de gestion de tournois. Elle affiche une interface
-graphique qui permet à l'utilisateur de créer un nouveau tournoi, de visualiser les équipes participantes, les
-matchs programmés et les résultats du tournoi.
-Elle est composée de plusieurs panels qui contiennent des éléments d'interface graphique comme des boutons, des
-tableaux, des labels, etc.
-Elle utilise les classes "DialogEquipe", "DialogMatch" et "DialogTournoi" pour dialoguer avec la base de données et
-récupérer ou insérer des données dans les tables.
-Elle contient les méthodes qui gèrent l'affichage de chaque panel et qui sont appelées en fonction de l'action de
-l'utilisateur.
-*/
-
 package view;
 
 
@@ -47,6 +34,17 @@ import types.StatutTournoi;
 import types.TableAttributType;
 
 
+/**
+ * Cette classe est une fenêtre principale de l'application de gestion de tournois. Elle affiche une interface
+ * graphique qui permet à l'utilisateur de créer un nouveau tournoi, de visualiser les équipes participantes, les
+ * matchs programmés et les résultats du tournoi.
+ * Elle est composée de plusieurs panels qui contiennent des éléments d'interface graphique comme des boutons, des
+ * tableaux, des labels, etc.
+ * Elle utilise les classes "DialogEquipe", "DialogMatch" et "DialogTournoi" pour dialoguer avec la base de données et
+ * récupérer ou insérer des données dans les tables.
+ * Elle contient les méthodes qui gèrent l'affichage de chaque panel et qui sont appelées en fonction de l'action de
+ * l'utilisateur.
+ */
 public class Fenetre extends JFrame {
 
 	private static final long serialVersionUID = 1L;
