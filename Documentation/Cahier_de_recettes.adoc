@@ -167,8 +167,9 @@ NOTE: CRUD : Fonctionnalités de gestion de base (Create, Read, Update, Delete)
 4+|
 
 ^|ID ^|Action ^|Comportement attendu ^|Résultat
-^|1 ^|Saisir un champ vide pour le nom d'un joueur  ^|Affichage d'un message d'erreur clair ^|*PAS OK*
-^|2 ^|Saisir un nouveau nom pour un joueur ^|Modification du nom du joueur ^|OK
+^|1 ^|Ne pas saisir de nouveaux noms pour des joueurs ^|Les noms saisis par défaut sont "Joueur 1" et "Joueur 2" ^|OK
+^|2 ^|Saisir un champ vide pour le nom d'un joueur  ^|Affichage d'un message d'erreur clair ^|*PAS OK* : le champ vide est quand même pris en compte
+^|3 ^|Saisir un nouveau nom pour un joueur ^|Modification du nom du joueur ^|OK
 
 |====
 
@@ -207,4 +208,117 @@ NOTE: CRUD : Fonctionnalités de gestion de base (Create, Read, Update, Delete)
 |====
 
 === 3. Gestion des tours d'une partie
-//TODO
+[underline]#Nécessite d'avoir validé les équipes d'un tournoi.#
+
+==== 3.1) Consultation des tours :
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Consultation des données des tours d'une partie
+>|Objectif 3+| Vérifier qu'il est possible d'accéder à une page permettant de consulter les données des tours d'une partie (numéro des tours, nombre de matchs, parties jouées, etc)
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Valider les équipes d'un tournoi et cliquer sur "Tours"  ^|Affichage d'une fenêtre avec les données correspondantes ^|OK
+
+|====
+
+==== 3.2) Ajout d'un tour :
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Ajout d'un tour
+>|Objectif 3+| Vérifier qu'il est possible d'ajouter un tour si les tous les matchs du tour précédent sont terminés
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Les données du match précédent n'ont pas été saisies  ^|Désactivation du bouton "Ajouter un tour" ^|OK
+^|1 ^|Saisir les données du match précédent et cliquer sur "Ajouter un tour"  ^|Ajout d'un nouveau tour et de nouveaux matchs à saisir ^|OK
+
+|====
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Ajout d'un tour
+>|Objectif 3+| Vérifier qu'il est possible d'ajouter un tour si le nombre de tour est inférieur au nombre d'équipes - 1
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Le nombre de tours est inférieur au nombre d'équipes - 1 ^|Activation du bouton "Ajouter un tour" ^|OK
+^|1 ^|Le nombre de tours est égal au nombre d'équipes - 1  ^|Désactivation du bouton "Ajouter un tour" ^|OK
+
+|====
+
+==== 3.3) Suppression du dernier tour :
+[underline]#Nécessite d'avoir au moins ajouté deux tours.#
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Ajout d'un tour
+>|Objectif 3+| Vérifier qu'il est possible de supprimer le dernier tour d'une partie
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Le nombre de tours est inférieur à 2 ^|Le bouton "Supprimer le dernier tour" est désactivé ^|OK
+^|1 ^|Ajouter au moins deux tours et cliquer sur le bouton "Supprimer le dernier tour"  ^|Suppression du dernier tour ^|OK
+
+|====
+
+=== 4. Consultation et saisie des données d'un match
+[underline]#Nécessite d'avoir validé les équipes d'un tournoi.#
+
+==== 4.1) Consultation des matchs :
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Consultation des données des matchs d'une partie
+>|Objectif 3+| Vérifier qu'il est possible d'accéder à une page permettant de saisir les données des derniers matchs d'un tour
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Valider les équipes d'un tournoi et cliquer sur "Matchs"  ^|Affichage d'une fenêtre avec les champs des scores à compléter pour les matchs correspondants ^|OK
+
+|====
+
+==== 4.2) Saisie des scores d'un match
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Ajout d'un tour
+>|Objectif 3+| Vérifier qu'il est possible de saisir les scores derniers matchs d'un tour
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Saisir les scores des derniers matchs d'un tour ^|Activation du bouton "Résultats" sur la gauche de l'interface ^|OK
+
+|====
+
+=== 5. Consultation des résultats d'une partie
+[underline]#Nécessite d'avoir saisie les scores des matchs d'au moins un tour.#
+
+==== 5.1) Consultation des résultats d'un tournoi :
+
+|====
+
+>|Cas de test 3+|Test-01-03-01
+>|Titre 3+|Consultation des résultats des matchs d'une partie
+>|Objectif 3+| Vérifier qu'il est possible d'accéder à une page permettant de visualiser les résultats des matchs d'un tournoi
+
+4+|
+
+^|ID ^|Action ^|Comportement attendu ^|Résultat
+^|1 ^|Saisir les scores des matchs d'au moins un tour et cliquer sur "Matchs"  ^|Affichage d'une fenêtre avec les résultats calculés pour chaque équipe ^|(en partie) OK : bug avec l'affichage des noms des joueurs des équipes
+
+|====
