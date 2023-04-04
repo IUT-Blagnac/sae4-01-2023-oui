@@ -1,0 +1,137 @@
+= Analyse de l'application
+:toc:
+:toc-title: Sommaire
+:toclevels: 4
+
+[underline]#Tilian HURÉ et Hugo WENDJANEH# *(2A)*
+
+{empty} +
+
+== I. Contexte
+[.text-justify]
+Dans le contexte de la SAE 4.01 nous avons eu à refactorer l’entièreté d’une application Java Swing permettant la gestion de tournois de Belote. Le code source mis à disposition était complet et fonctionnel mais présentait une très grosse quantité de défauts sur plusieurs aspects, que ce soit en termes de lisibilité, de simplicité, de maintenabilité ou d’optimisation.
+
+[.text-justify]
+Notre binôme est donc intervenu dans le but de refactorer l’application autant que possible. Ce document détaille l’ensemble des modifications qui ont été apportées au code source de cette dernière.
+
+== II. Refactoring
+=== 1) Conversion en projet Maven
+[.text-justify]
+Nous avons d’abord converti le projet en un projet https://maven.apache.org/[Maven]. Cela permet une meilleure gestion de l’application, que ce soit pour sa compilation son exécution, mais aussi pour l’exécution de tests et l’ajout de librairies externes, etc.
+
+==== 1.1) Scripts d’exécution du code source
+[.text-justify]
+Maven permet l’exécution de tâches (compilation, import des packages, nettoyage, etc) par l'intermédiaire de commandes utilisables dans un terminal. Nous avons donc réalisé deux scripts d’exécutions composés de ces dernières afin de compiler et lancer facilement et correctement le code source de l’application. Nous avons produit un script BAT et un script BASH afin de permettre l’exécution sous Windows ou sous Linux.
+
+[source, bash]
+----
+:: Nettoyage, installation des packages et compilation
+call mvn clean install compile package
+
+:: Exécution via le JAR généré par Maven
+java -jar ./target/belote-1.0-jar-with-dependencies.jar
+----
+
+*TODO (from ici)*
+
+{empty} +
+
+=== 2) Conversion avec l'utilisation du MVC pattern
+[.text-justify]
+Ancienne structure : seulement 5 fichiers .java, tous dans le même répertoire, classes multi-tâches (mauvaise utilisation de Java)
+
+==== 2.1) Nouvelle structure
+Nouvelle structure : 3 répertoires principaux du MVC :
+
+* view : fenêtre Java Swing (s’occupe de la globalité de l’affichage des données)
+* model : classes de gestion des données manipulées en Java (Match, Equipe et Tournoi)
+* control : liaison entre l’interface, les données et la base de données (s’occupe de gérer les requêtes avec la base de données)
+
+==== 2.2) Ajout d’une fabrique d’acteurs
+Pattern de conception Factory : permet d'instancier des objets dont le type est dérivé d'un type abstrait, la classe exacte de l'objet n'est donc pas connue par l'appelant
+Classe abstraite Actor :
+
+* Méthodes gérant des requêtes SQL classiques (get/select, add/insert, set/update et remove/delete)
+* Méthode gérant exécutant des requêtes complexes dites “spéciales” (requêtes imbriquées, prédicats complexes, etc)
+* Méthode pour formater en SQL les paramètres données pour une requête
+
+Héritage pour chaque acteur (ActorEquipe, ActorMatch et ActorTournoi)
+Classe ActorFactory renvoyant une instance de la classe d’un acteur en fonction d’un type d’acteur
+
+Acteurs utilisés par les dialogs
+
+==== 2.3) Ajout de dialogs pour les acteurs et la base de données
+Dialog pour la base de données : connexion avec la base de données en fonction d’un fichier de configuration, produit un objet Statement utilisé par les acteurs pour exécuter des requêtes à partir d’une même connexion (Pattern de conception Singleton : permet de s'assurer qu'une classe ne produise qu'une seule et unique instance)
+
+Dialog pour chaque acteur :
+
+* Liaison avec les classes view ou model
+* Fonctions spécifiques appelées par les classes view ou model et permettant la création de requêtes simples ou spéciales qui seront exécutées par les acteurs concernés avec des paramètres formatés
+
+==== 2.4) Redirection des messages d’erreur vers la fenêtre view
+Messages d’erreur rédigés pour chaque erreur relevées (et autre) et redirigé vers la view
+
+Fonction statique permettant l’affichage d’erreurs compréhensibles pour l’utilisateur dans la fenêtre d’affichage (en conservant les prints pour les développeurs)
+Fonction statique pour demander le nom d’un tournoi
+
+{empty} +
+
+=== 3) Ajout de classes
+==== 3.1) Ajout de classes Enum
+Dans le package “types”
+
+* Types d’acteur
+* Types de requête (lecture/QUERY ou modification/UPDATE)
+* Types de requête spéciale
+* Statuts d’un tournoi
+* Type des attributs des tables SQL
+
+==== 3.2) Ajout d’une fabrique à requêtes spéciales
+Pattern de conception Factory
+
+Classe abstraite SpecialQuery : requête SQL sous forme de String
+
+Héritage pour chaque requêtes spéciales nécessaires
+
+Classe SpeicalQueryFactory renvoyant une instance de la classe d’une requête spéciale en fonction d’un type de requête spéciale
+
+Requêtes spéciales fabriquées dans les dialogs correspondant et exécutées par les acteurs
+
+==== 3.4) Ajout d’une classe “Tools”
+Classe avec des méthodes statiques, utiles et générales pouvant être utilisées dans n’importe quelle classe
+
+{empty} +
+
+=== 4) Reformatage, homogénéisation et contrôle du code
+==== 4.1) Mise au propre des classes
+Indentation, espaces, etc
+
+Renommage variables, classes et méthodes (normes de nomenclature, camelCase, etc), plus d’hétérogénéité, plus lisible et en accord avec la fonctionnalité correspondante
+
+Suppression de bouts de code inutiles, du code redondant
+
+Simplification de bouts de code (condition, boucles, etc)
+
+Autres bonnes pratiques, utilisation de switch à la place de if si nécessaire, etc
+
+==== 4.2) Contrôle de la récupération des données de requêtes
+Méthodes de dialogs retournant le résultat de requêtes SQL (simple ou complexe), méthodes getInt ou getString pour récupérer les données correspondant aux noms/numéros de column dans la requête
+
+Utilisation du type TableAttributsType afin d’éviter de saisir les columns en dur et ainsi éviter les erreurs
+
+Utilisation également dans les dialogs pour fabriquer des requêtes avec les bons noms de columns pour les paramètres
+
+==== 4.3) Reformatage de la classes Belote/BeloteApp
+Utilisation seulement pour initialiser le dialog avec la base de données et lancer l’application
+
+==== 4.4) Fichier de configuration database.properties
+Fichier avec les données de connexion de la base de données utilisé par l’application
+
+{empty} +
+
+=== 5) Documentation
+==== 5.1) Rédaction de la Javadoc
+Rédaction Javadoc pour chaque fonctions et classes (en français) afin de rendre plus explicite leur principe, fonctionnement et utilisation
+
+==== 5.2) Cahier de recette de l’application
+Plans de tests pour attester du bon fonctionnement de l’application avec action à effectuer, résultats attendus et résultats obtenus pour chaque cas pour chaque fonctionnalités utilisateur
