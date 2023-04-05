@@ -1,8 +1,3 @@
-/**
-
-Cette classe représente un tournoi avec un nom, un statut, un identifiant, une liste d'équipes, une liste de matchs et une liste d'identifiants d'équipes.
-*/
-
 package model;
 
 
@@ -19,6 +14,10 @@ import java.util.Objects;
 import java.util.Vector;
 
 
+/**
+ * Cette classe représente un tournoi avec un nom, un statut, un identifiant,
+ *   une liste d'équipes, une liste de matchs et une liste d'identifiants d'équipes.
+ */
 public class Tournoi {
 
 	String nomTournoi;
@@ -35,8 +34,7 @@ public class Tournoi {
 
 	/**
 	 * Constructeur de la classe Tournoi.
-	 * 
-	 * @param nt Le nom du tournoi.
+	 * @param nt : le nom du tournoi.
 	 */
 	public Tournoi(String nt) {
 		try {
@@ -76,12 +74,10 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
-	 * Met à jour les matchs d'un tournoi en récupérant les données depuis la base
-	 * de données et en les stockant dans un vecteur.
+	 * Met à jour les matchs d'un tournoi en récupérant les données depuis la base de données et en les stockant dans un vecteur.
 	 * Les données stockées dans le vecteur datam sont des objets Match.
-	 * Si une exception est levée lors de la récupération des données depuis la base
-	 * de données, une erreur est affichée dans la fenêtre.
+	 * Si une exception est levée lors de la récupération des données depuis la base de données,
+	 *   une erreur est affichée dans la fenêtre.
 	 */
 	public void majMatch() {
 		datam = new Vector<>();
@@ -98,9 +94,7 @@ public class Tournoi {
 	// ----- Getters -----
 
 	/**
-	 * 
 	 * Renvoie l'identifiant du tournoi.
-	 * 
 	 * @return L'identifiant du tournoi.
 	 */
 	public int getIdTournoi() {
@@ -108,11 +102,9 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
-	 * Renvoie le match à l'index spécifié. Si les données des matchs n'ont pas été
-	 * mises à jour, la fonction met à jour les données avant de renvoyer le match.
-	 * 
-	 * @param index L'index du match.
+	 * Renvoie le match à l'index spécifié. Si les données des matchs n'ont pas été mises à jour,
+	 *   la fonction met à jour les données avant de renvoyer le match.
+	 * @param index : l'index du match.
 	 * @return Le match à l'index spécifié.
 	 */
 	public Match getMatch(int index) {
@@ -121,11 +113,8 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
-	 * Renvoie le nombre de matchs. Si les données des matchs n'ont pas été mises à
-	 * jour, la fonction met à jour les données avant de renvoyer le nombre de
-	 * matchs.
-	 * 
+	 * Renvoie le nombre de matchs. Si les données des matchs n'ont pas été mises à jour,
+	 *   la fonction met à jour les données avant de renvoyer le nombre de matchs.
 	 * @return Le nombre de matchs.
 	 */
 	public int getNbMatchs() {
@@ -134,12 +123,10 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Renvoie l'équipe à l'index spécifié. Si les données des équipes n'ont pas été
 	 * mises à jour, la fonction met à jour les données avant de renvoyer l'équipe.
-	 * 
-	 * @param index L'index de l'équipe.
-	 * @return L'équipe à l'index spécifié.
+	 * @param index : l'index de l'équipe.
+	 * @return l'équipe à l'index spécifié.
 	 */
 	public Equipe getEquipe(int index) {
 		if (dataeq == null) majEquipes();
@@ -147,11 +134,8 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
-	 * Renvoie le nombre d'équipes. Si les données des équipes n'ont pas été mises à
-	 * jour, la fonction met à jour les données avant de renvoyer le nombre
-	 * d'équipes.
-	 * 
+	 * Renvoie le nombre d'équipes. Si les données des équipes n'ont pas été mises à jour,
+	 *   la fonction met à jour les données avant de renvoyer le nombre d'équipes.
 	 * @return Le nombre d'équipes.
 	 */
 	public int getNbEquipes() {
@@ -160,9 +144,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Renvoie le statut du tournoi.
-	 * 
 	 * @return Le statut du tournoi.
 	 */
 	public StatutTournoi getStatut() {
@@ -170,9 +152,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Renvoie le nom du tournoi.
-	 * 
 	 * @return Le nom du tournoi.
 	 */
 	public String getNom() {
@@ -180,11 +160,9 @@ public class Tournoi {
 	}
 
 	/**
-	 * Cette fonction récupère le nombre de tours pour le tournoi courant à partir
-	 * de la base de données.
-	 * Elle retourne le nombre de tours si l'opération s'est bien déroulée, sinon
-	 * elle retourne -1 et affiche une erreur.
-	 * 
+	 * Cette fonction récupère le nombre de tours pour le tournoi courant à partir de la base de données.
+	 * Elle retourne le nombre de tours si l'opération s'est bien déroulée,
+	 *   sinon elle retourne -1 et affiche une erreur.
 	 * @return Le nombre de tours du tournoi courant ou -1 en cas d'erreur.
 	 */
 	public int getNbTours() {
@@ -223,8 +201,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * Cette fonction ajoute un tour de plus au tournoi courant en générant les
-	 * matchs à jouer pour ce tour.
+	 * Cette fonction ajoute un tour de plus au tournoi courant en générant les matchs à jouer pour ce tour.
 	 * Si le nombre maximum de tours a déjà été atteint, la fonction ne fait rien.
 	 * Si une erreur se produit lors de l'opération, une erreur s'affiche à l'écran.
 	 */
@@ -290,9 +267,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
-	 * Cette méthode permet de supprimer le dernier tour d'un tournoi ainsi que les
-	 * matchs associés.
+	 * Cette méthode permet de supprimer le dernier tour d'un tournoi ainsi que les matchs associés.
 	 */
 	public void supprimerTour() {
 		int nbtoursav;
@@ -315,9 +290,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Cette méthode permet d'ajouter une équipe dans le tournoi.
-	 * 
 	 * L'indice de l'équipe est déterminé automatiquement.
 	 */
 	public void ajouterEquipe() {
@@ -338,10 +311,8 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Cette méthode permet de mettre à jour les noms des joueurs d'une équipe.
-	 * 
-	 * @param index L'indice de l'équipe à mettre à jour.
+	 * @param index : l'indice de l'équipe à mettre à jour.
 	 */
 	public void majEquipe(int index) {
 		try {
@@ -356,9 +327,7 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Cette méthode permet de mettre à jour le score d'un match.
-	 * 
 	 * @param index L'indice du match à mettre à jour.
 	 */
 	public void majMatch(int index) {
@@ -373,12 +342,9 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
 	 * Supprime une équipe de ce tournoi.
-	 * 
-	 * @param ideq l'identifiant de l'équipe à supprimer
+	 * @param ideq : l'identifiant de l'équipe à supprimer
 	 */
-
 	public void supprimerEquipe(int ideq) {
 		try {
 			int numeq;
@@ -396,14 +362,10 @@ public class Tournoi {
 	}
 
 	/**
-	 * 
-	 * Récupère les matchs à faire pour un tournoi avec un nombre de joueurs et de
-	 * tours donnés.
-	 * 
-	 * @param nbJoueurs le nombre de joueurs ou d'équipes dans le tournoi
-	 * @param nbTours   le nombre de tours que le tournoi doit avoir
-	 * @return un vecteur de vecteurs de matchs à jouer, chaque vecteur de matchs
-	 *         correspondant à un tour
+	 * Récupère les matchs à faire pour un tournoi avec un nombre de joueurs et de tours donnés.
+	 * @param nbJoueurs : le nombre de joueurs ou d'équipes dans le tournoi
+	 * @param nbTours : le nombre de tours que le tournoi doit avoir
+	 * @return un vecteur de vecteurs de matchs à jouer, chaque vecteur de matchs correspondant à un tour
 	 */
 	public static Vector<Vector<Match>> getMatchsToDo(int nbJoueurs, int nbTours) {
 		if (nbTours >= nbJoueurs) {
