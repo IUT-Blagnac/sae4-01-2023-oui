@@ -17,11 +17,11 @@ Notre binôme est donc intervenu dans le but de refactorer l’application autan
 == II. Refactoring
 === 1) Conversion en projet Maven
 [.text-justify]
-Nous avons d’abord converti le projet en un projet https://maven.apache.org/[Maven]. Cela permet une meilleure gestion de l’application, que ce soit pour sa compilation son exécution, mais aussi pour l’exécution de tests et l’ajout de librairies externes, etc.
+Nous avons d’abord converti le projet en un projet https://maven.apache.org/[Maven]. Cela permet une meilleure gestion de l’application, que ce soit pour sa compilation son exécution, mais aussi pour l’exécution de tests et l’ajout de librairies externes, etc. Le code source du projet se trouve donc maintenant dans le package `Belote/src/main/java`.
 
 ==== 1.1) Scripts d’exécution du code source
 [.text-justify]
-Maven permet l’exécution de tâches (compilation, import des packages, nettoyage, etc) par l'intermédiaire de commandes utilisables dans un terminal. Nous avons donc réalisé deux scripts d’exécutions composés de ces dernières afin de compiler et lancer facilement et correctement le code source de l’application. Nous avons produit un script BAT et un script BASH afin de permettre l’exécution sous Windows ou sous Linux.
+Maven permet l’exécution de tâches (compilation, import des packages, nettoyage, etc) par l'intermédiaire de commandes utilisables dans un terminal. Nous avons donc réalisé deux scripts d’exécutions composés de ces dernières afin de compiler et lancer facilement et correctement le code source de l’application. Nous avons produit un script BAT et un script BASH afin de permettre l’exécution sous Windows ou sous Linux dans le répertoire `Belote`.
 [source, bash]
 ----
 :: Nettoyage, installation des packages et compilation
@@ -136,7 +136,8 @@ public void remove(Map<TableAttributType, String> parametresWhere) throws Except
  *   ou null (si le type de requête est UPDATE).
  * @throws Exception si une erreur se produit lors de l'exécution de la requête.
  */
-public ResultSet specialQuery(SpecialQueryType sqt, QueryType qt, List<String> parametres) throws Exception
+public ResultSet specialQuery(SpecialQueryType sqt, QueryType qt,
+    List<String> parametres) throws Exception
 ----
 
 * le formatage des paramètres des méthodes pour les adapter à des requêtes SQL
@@ -182,8 +183,8 @@ public Actor(String tableName) {
         this.ddbStatement = DialogDataBase.getStatement();
         this.tableName = tableName;
     } catch (Exception e) {
-        Fenetre.afficherErreur("Erreur lors de la création d'un acteur pour le type " + tableName +
-                ", un acteur ne peut pas être créé sans une connexion à la base de données.");
+        Fenetre.afficherErreur("Erreur lors de la création d'un acteur pour le type "
+            + tableName + ", un acteur ne peut pas être créé sans une connexion à la base de données.");
     }
 }
 ----
@@ -225,20 +226,21 @@ public static Actor getActor(ActorType at) throws Exception {
         case TOURNOI:
             return new ActorTournoi();
         default:
-            throw new Exception("Le type d'acteur " + at + " n'a pas été trouvé.");
+            throw new Exception("Le type d'acteur " + at
+                + " n'a pas été trouvé.");
     }
 }
 ----
 
 [.text-justify]
-Les acteurs sont utilisés par des classes dialogs construisant des requêtes à partir des données récupérées depuis les classes model et view.
+Les classes des acteurs se trouvent dans le package `control/actors` et sont utilisées par des classes dialogs construisant des requêtes à partir des données récupérées depuis les classes model et view.
 
 ==== 2.3) Ajout de dialogs pour les acteurs et la base de données
 [.text-justify]
-Nous avons d'abord créé une classe dialog `DialogDataBase.java` permettant la connexion avec la base de données de l'application en fonction d'un fichier de configuration, et produisant un objet `Statement` utilisé par les acteurs pour exécuter des requêtes SQl. Pour assurer que ces dernières sont exécutées depuis une même connexion avec un même statement, nous avons utilisé le pattern *Singleton*. Ce dernier permet de s'assurer qu'une classe ne produise qu'une seule et unique instance. Le dialog de la base de données doit d'abord être initialisé avec certaines données, et une méthode `getStatement` permet de récupérer le statement généré.
+Nous avons d'abord créé une classe dialog `DialogDataBase.java` dans le package `control/dialogs` permettant la connexion avec la base de données de l'application en fonction d'un fichier de configuration, et produisant un objet `Statement` utilisé par les acteurs pour exécuter des requêtes SQl. Pour assurer que ces dernières sont exécutées depuis une même connexion avec un même statement, nous avons utilisé le pattern *Singleton*. Ce dernier permet de s'assurer qu'une classe ne produise qu'une seule et unique instance. Le dialog de la base de données doit d'abord être initialisé avec certaines données, et une méthode `getStatement` permet de récupérer le statement généré.
 
 [.text-justify]
-Nous avons ensuite créé un dialog pour chaque type d'acteur, soient les classes `DialogEquipe`, `DialogMatch` et `ActorTournoi`. Ces dernières permettent la liaison des données entre les classes view et model en implémentant des méthodes spécifiques construisant des requêtes simple et spéciales en utilisant la fabrique d'acteurs pour les exécuter. Exemple de méthode construisant et exécutant une requête :
+Nous avons ensuite créé un dialog pour chaque type d'acteur dans le même package, soient les classes `DialogEquipe`, `DialogMatch` et `ActorTournoi`. Ces dernières permettent la liaison des données entre les classes view et model en implémentant des méthodes spécifiques construisant des requêtes simple et spéciales en utilisant la fabrique d'acteurs pour les exécuter. Exemple de méthode construisant et exécutant une requête :
 
 [source, java]
 ----
@@ -259,39 +261,123 @@ public ResultSet getNumDUneEquipe(Integer idEquipe) throws Exception {
 
 Les paramètres sont principalement formatés avec des Map, la clé étant le nom de la colonne de la table correspondante et la valeur étant celle à insérer ou modifier. Le type `TableAttributType` (enum) permet de désigner un nom de colonne précis en éviter les risques d'erreur.
 
-*TODO (from ici)*
-
 ==== 2.4) Redirection des messages d’erreur vers la fenêtre view
-Messages d’erreur rédigés pour chaque erreur relevées (et autre) et redirigé vers la view
+[.text-jusitfy]
+Afin de respecter la séparation des classes du pattern MVC, nous avons déplacé tous les affichages de fenêtres et dialogues dans la classe `Fenetre.java`. Nous avons également rédigé des messages pour chaque type d'erreur relevé et redirigé ces derniers vers la view. Pour cela nous avons ajouté des méthodes statiques permettant d'afficher une boîte de dialogue d'erreur.
 
-Fonction statique permettant l’affichage d’erreurs compréhensibles pour l’utilisateur dans la fenêtre d’affichage (en conservant les prints pour les développeurs)
-Fonction statique pour demander le nom d’un tournoi
+[source, java]
+----
+/**
+ * Affiche une boîte de dialogue d'erreur avec le message spécifié.
+ * @param message : le message d'erreur à afficher
+ */
+public static void afficherErreur(String message) {
+    JOptionPane.showMessageDialog(null, message, "ERREUR", JOptionPane.ERROR_MESSAGE);
+}
+----
+
+image::/images/[Affichage dialogue d'erreur]
+
+[.text-jusitfy]
+Nous avons également défini une méthode gérant le dialogue de saisie du nom d'un nouveau tournoi.
+
+[source, java]
+----
+/**
+ * Affiche une boîte de dialogue demandant à l'utilisateur d'entrer le nom du tournoi.
+ * @return le nom du tournoi saisi par l'utilisateur
+ */
+public static String saisieNomTournoi() {
+    return JOptionPane.showInputDialog(null, "Entrez le nom du tournoi",
+        "Nom du tournoi", JOptionPane.PLAIN_MESSAGE);
+}
+----
+
+image::/images/[Affichage dialogue saisie nom tournoi]
 
 {empty} +
 
 === 3) Ajout de classes
 ==== 3.1) Ajout de classes Enum
-Dans le package “types”
+[.text-jusitfy]
+Pour éviter l'utilisation de String ou d'autres types en dur utilisés pour renseigner certains états ou des valeurs redondantes, nous avons créé plusieurs classes enum dans le package `types`.
 
-* Types d’acteur
-* Types de requête (lecture/QUERY ou modification/UPDATE)
-* Types de requête spéciale
-* Statuts d’un tournoi
-* Type des attributs des tables SQL
+* `ActorType.java` : types d'acteurs (Match, Equipe et Tournoi), utilisés principalement par la fabrique à acteurs
+* `QueryType.java` : types de requête exécutable, en lecture (QUERY) ou en modification (UPDATE), utilisés pour le traitement de requêtes spéciales
+* `SpecialQueryType.java` : types de requêtes spéciales, utilisés pour le traitement de requêtes spéciales
+* `StatutTournoi.java` : statuts d'un tournoi par ordre ou par libellé, utilisés pour contrôler les différents états d'un tournoi
+* `TableAttributType.java` : noms de colonne des attributs des tables SQL de la base de données de l'application, utilisés principalement pour la construction de requêtes dans les dialogs et pour la récupération des données d'une requête
 
 ==== 3.2) Ajout d’une fabrique à requêtes spéciales
-Pattern de conception Factory
+[.text-jusitfy]
+Pour le traitement de requêtes plus complexes dites "spéciales" nous avons également repris le pattern de conception *Factory*. Nous avons d'abord implémenté la classe abstraite `SpecialQuery.java` ayant simplement pour attribut un String qui contiendra la requête spéciale à exécuter, puis des classes héritières pour chacun d'entre elles. Exemple de classe implémentant une requête spéciale (constructeur) :
 
-Classe abstraite SpecialQuery : requête SQL sous forme de String
+[source, java]
+----
+/**
+ * Constructeur qui prend une liste de paramètres pour créer la requête SQL correspondante.
+ * La requête récupère le nombre total de matchs disputés dans un tournoi spécifié par le premier paramètre, ainsi que le nombre de matchs terminés.
+ * @param parametres une liste de paramètres pour créer la requête SQL.
+ *   Le premier paramètre est l'ID du tournoi.
+ */
+public GetNbMatchsTermines(List<String> parametres) {
+    this.strSQL = "Select count(*) as total, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.termine='oui' ) as termine from matchs m  WHERE m.id_tournoi=" + parametres.get(0) + " GROUP by id_tournoi";
+}
+----
 
-Héritage pour chaque requêtes spéciales nécessaires
+La classe `SpecialQueryFactory.java` possède une méthode renvoyant une instance de la classe d'une requête spéciale en fonction d'un type et d'une liste de paramètres étant les valeurs à insérer à certains endroits dans la requête.
 
-Classe SpeicalQueryFactory renvoyant une instance de la classe d’une requête spéciale en fonction d’un type de requête spéciale
+[source, java]
+----
+/**
+ * Obtient une instance de la classe SpecialQuery en fonction du type de requête spéciale et des paramètres fournis.
+ * @param sqt : le type de requête spéciale à exécuter.
+ * @param parametres : une liste de chaînes de caractères contenant les paramètres de la requête spéciale.
+ * @return une instance de la classe SpecialQuery correspondant au type de requête spéciale et aux paramètres fournis.
+ * @throws Exception si le type de requête spéciale n'est pas trouvé.
+ */
+public static SpecialQuery getSpecialQuery(SpecialQueryType sqt,
+    List<String> parametres) throws Exception {
+    switch (sqt) {
+        case SetNumEquipesDUnTournoi:
+            return new SetNumEquipesDUnTournoi(parametres);
+        case GetResultatsMatch:
+            return new GetResultatsMatch(parametres);
+        case GetDonneesTours:
+            return new GetDonneesTours(parametres);
+        case GetNbMatchsParEquipes:
+            return new GetNbMatchsParEquipes(parametres);
+        case GetNbMatchsTermines:
+            return new GetNbMatchsTermines(parametres);
+        case GetNbToursMaxMatch:
+            return new GetNbToursMaxMatch(parametres);
+        case GetNbToursParMatchParTournoi:
+            return new GetNbToursParMatch(parametres);
+        default:
+            throw new Exception("Le type de requête spéciale " + sqt
+                + " n'a pas été trouvé.");
+    }
+}
+----
 
-Requêtes spéciales fabriquées dans les dialogs correspondant et exécutées par les acteurs
+[.text-justify]
+Les classes associées à l'implémentation des requêtes spéciales se trouvent dans le package `control/actors/specialQueries`. Comme les requêtes classiques, les requêtes spéciales sont construites dans les dialogs correspondants.
 
 ==== 3.4) Ajout d’une classe “Tools”
-Classe avec des méthodes statiques, utiles et générales pouvant être utilisées dans n’importe quelle classe
+[.text-justify]
+Nous avons aussi ajouté une classe `Tools.java` dans le package `resources` proposant des méthodes statiques utiles et générales pouvant être utilisées dans n'importe quelle classe. Par exemple, la fonction `mysql_real_escape_string` a été déplacée dans cette classe depuis la view `Fenetre.java` car elle était utilisée de manière générale par d'autres classes.
+
+[source, java]
+----
+/**
+ * Échappe les caractères spéciaux dans une chaîne de caractères pour éviter les injections SQL.
+ * @param str : la chaîne de caractères à échapper
+ * @return la chaîne de caractères échappée
+ */
+public static String mysql_real_escape_string(String str)
+----
+
+*TODO (from ici)*
 
 {empty} +
 
