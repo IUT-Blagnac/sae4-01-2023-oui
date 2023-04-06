@@ -176,6 +176,11 @@ Deux scripts ont été fournis pour compiler et exécuter le code source de l'ap
 * Sous Windows, lancer le script https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Belote/RUNAPP.bat[RUNAPP.bat]
 * Sous Linux, lancer le script https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Belote/RUNAPP.sh[RUNAPP.sh]
 
+=== Compte-rendu du Refactoring de l'application
+[.text-justify]
+Un https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Compte-rendu_du_Refactoring.adoc[document rendant compte de l'entièreté du Refactoring] a été rédigé en détaillant les changements et évolutions apportés pour chaque fonctionnalités et composants de l'application. 
+
+
 // Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`). Pour l'instant ce document est libre d'utilisation et géré par la 'Licence Creative Commons'. image:88x31.png["Licence Creative
 // Commons",style="border-width:0",link="http://creativecommons.org/licenses/by-sa/3.0/"]
 // http://creativecommons.org/licenses/by-sa/3.0/[licence Creative Commons Paternité - Partage à l&#39;Identique 3.0 non transposé].
