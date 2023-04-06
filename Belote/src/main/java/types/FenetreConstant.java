@@ -1,6 +1,11 @@
 package types;
 
-public enum FenetreType {
+
+/**
+ * Constantes utilisées pour la classe view Fenetre
+ */
+public enum FenetreConstant {
+
     TOURNOIS("Tournois"),
     DETAIL("Paramètres du tournoi"),
     EQUIPES("Equipes"),
@@ -8,9 +13,10 @@ public enum FenetreType {
     MATCHS("Matchs"),
     RESULTATS("Resultats");
 
+
     private String name;
 
-    FenetreType(String name) {
+    FenetreConstant(String name) {
         this.name = name;
     }
 
