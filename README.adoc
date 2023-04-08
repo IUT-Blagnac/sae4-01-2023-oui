@@ -35,7 +35,7 @@ ifdef::env-github[]
 endif::[]
 
 // /!\ A MODIFIER !!!
-:baseURL: https://github.com/IUT-Blagnac/sae4-01-template
+:baseURL: https://github.com/IUT-Blagnac/sae4-01-oui
 
 // Tags
 image:{baseURL}/actions/workflows/build.yml/badge.svg[Build] 
@@ -44,6 +44,8 @@ image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg[License: MP
 //---------------------------------------------------------------
 
 TIP: Pensez à mettre à jour les infos dans ce fichier pour que les badges pointent sur les résultats effectifs de vos intégrations continue ou sur la bonne licence logicielle.
+
+<<livrables, *LISTE ET DÉTAILS DES LIVRABLES*>>
 
 == _Refactoring_ d'un code existant
 
@@ -54,14 +56,29 @@ WARNING: Ce dépôt présente le projet à développer dans le cadre de la SAÉ 
 Ce fichier `README.adoc` (dont vous lisez sûrement le rendu HTML automatiquement effectué par GitHUb), fait partie du dépôt initial cloné à partir du lien GitHub classroom qui vous a été donné par ailleurs.
 Vous trouverez le dépôt "template" qui a servi de base ici : https://github.com/IUT-Blagnac/sae4-01-template. 
 
-== Équipe
+== Équipe et répartition
 
+=== Équipe
 Projet est réalisé par::
 
-- https://github.com/janeDoe[Jane Doe]
-- https://github.com/johnSmith[John Smith]
-...
+- https://github.com/Furiza31[Hugo WENDJANEH]
+- https://github.com/Tilian-HURE[Tilian HURÉ]
 
+=== Répartition du code à refactorer
+La répartition suivante attribue les parties du code à tester et à refactorer pour chaque membre.
+
+Hugo :
+
+* Classe `Equipe.java`
+* Classe `MatchM.java`
+* Classe `Tournoi.java` (première partie)
+
+Tilian :
+
+* Classe `Belote.java`
+* Classe `Tournoi.java` (deuxième partie)
+
+*_Nous avons utilisé des issues et des branches pour décomposer et faciliter le déroulement du projet._*
 
 == Contexte général
 
@@ -144,10 +161,27 @@ Les principaux critères qui guideront la notation seront :
 
 TIP: En cas de besoin, n'hésitez pas à me contacter (jean-michel.bruel@univ-tlse2.fr) ou à poser des questions sur le channel `#sae-s4-fi-refactoring` du Discord de l'IUT.
 
-**********************************************************************
-Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`).
-Pour l'instant ce document est libre d'utilisation et géré par la 'Licence Creative Commons'.
-image:88x31.png["Licence Creative
-Commons",style="border-width:0",link="http://creativecommons.org/licenses/by-sa/3.0/"]
-http://creativecommons.org/licenses/by-sa/3.0/[licence Creative Commons Paternité - Partage à l&#39;Identique 3.0 non transposé].
-**********************************************************************
+== Livrables [[livrables]]
+=== Analyse de l'application
+[.text-justify]
+L'https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Analyse_application.adoc[analyse du code source] existant de l'application liste les principales défauts constatés et les possibles tâches de refactoring à appliquer.
+
+=== Cahier de recette
+[.text-jusitfy]
+Le https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Cahier_de_recette.adoc[cahier de recette] de l'application atteste du bon fonctionnement de cette dernière en détaillant des plans de tests pour chaque fonctionnalité avec les actions à réaliser, les résultats attendus et ceux obtenus. Ce document explique également comment lancer l'application simplement avec Maven à partir de fichiers exécutables fournis avec le code source
+
+=== Scripts d'exécution de l'application
+[.text-justify]
+Deux scripts ont été fournis pour compiler et exécuter le code source de l'application avec module sous Windows ou sous Linux. Voir le cahier de recette pour plus de détails sur le lancement de l'application.
+
+* Sous Windows, lancer le script https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Belote/RUNAPP.bat[RUNAPP.bat]
+* Sous Linux, lancer le script https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Belote/RUNAPP.sh[RUNAPP.sh]
+
+=== Compte-rendu du Refactoring de l'application
+[.text-justify]
+Un https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Compte-rendu_du_Refactoring.adoc[document rendant compte de l'entièreté du Refactoring] a été rédigé en détaillant les changements et évolutions apportés pour chaque fonctionnalités et composants de l'application. 
+
+
+// Document généré par mailto:{email}[{author}] via {asciidoctorlink} (version `{asciidoctor-version}`). Pour l'instant ce document est libre d'utilisation et géré par la 'Licence Creative Commons'. image:88x31.png["Licence Creative
+// Commons",style="border-width:0",link="http://creativecommons.org/licenses/by-sa/3.0/"]
+// http://creativecommons.org/licenses/by-sa/3.0/[licence Creative Commons Paternité - Partage à l&#39;Identique 3.0 non transposé].

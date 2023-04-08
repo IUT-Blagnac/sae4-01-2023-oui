@@ -1,0 +1,522 @@
+= Compte-rendu du Refactoring de l'application Belote
+:toc:
+:toc-title: Sommaire
+:toclevels: 4
+
+[underline]#Tilian HURÉ et Hugo WENDJANEH# *(2A)*
+
+{empty} +
+
+== I. Contexte
+[.text-justify]
+Dans le contexte de la SAE 4.01 nous avons eu à refactorer l’entièreté d’une application Java Swing permettant la gestion de tournois de Belote. Le code source mis à disposition était complet et fonctionnel, mais présentait une très grosse quantité de défauts sur plusieurs aspects, que ce soit en termes de lisibilité, de simplicité, de maintenabilité ou d’optimisation.
+
+[.text-justify]
+Notre binôme est donc intervenu dans le but de refactorer l’application autant que possible. Ce document détaille l’ensemble des modifications qui ont été apportées au code source de cette dernière.
+
+== II. Refactoring
+=== 1) Conversion en projet Maven
+[.text-justify]
+Nous avons d’abord converti le projet en un projet https://maven.apache.org/[Maven]. Cela permet une meilleure gestion de l’application, que ce soit pour sa compilation son exécution, mais aussi pour l’exécution de tests et l’ajout de librairies externes, etc. Le code source du projet se trouve donc maintenant dans le package `Belote/src/main/java`.
+
+==== 1.1) Scripts d’exécution du code source
+[.text-justify]
+Maven permet l’exécution de tâches (compilation, import des packages, nettoyage, etc) par l'intermédiaire de commandes utilisables dans un terminal. Nous avons donc réalisé deux scripts d’exécutions composés de ces dernières afin de compiler et lancer facilement et correctement le code source de l’application. Nous avons produit un script BAT et un script BASH afin de permettre l’exécution sous Windows ou sous Linux dans le répertoire `Belote`.
+[source, bash]
+----
+:: Nettoyage, installation des packages et compilation
+call mvn clean install compile package
+
+:: Exécution via le JAR généré par Maven
+java -jar ./target/belote-1.0-jar-with-dependencies.jar
+----
+
+{empty} +
+
+=== 2) Conversion du projet avec l'utilisation du MVC pattern
+[.text-justify]
+L'ancienne structure de l'application ne comprenait que 5 classes Java toutes dans un même répertoire. Les classes de type view et model étaient mélangées et s'occupaient de plusieurs tâches alors que l'utilisation de Java est destinée à créer des classes s'occupant de tâches précises.
+
+_Ancienne arborescence :_
+[source]
+----
+src
+├───Belote.java
+├───Equipe.java
+├───Fenetre.java
+├───MatchM.java
+└───Tournoi.java
+----
+
+==== 2.1) Nouvelle structure
+[.text-justify]
+Nous avons restructuré l'application afin qu'elle respecte le principe du *MVC* pattern. Le Model-View-Controller pattern permet de décomposer une application en 3 parties :
+
+* model : manipulation et représentation des données de l'application
+* view : composants et interfaces graphiques
+* controller/control : liaisons et contrôle des données entre les view et les model
+
+[.text-justify]
+La nouvelle structure comprend les 3 répertoires principaux du MVC :
+
+* `view` : composant et fenêtre Java Swing s'occupant uniquement de l'interface graphique
+* `model` : classes de manipulation et de représentation des données (pour les matchs, les équipes, tournois)
+* `control` : classes s'occupant des liaisons entre l'interface, les données et la base de données (requêtes SQL)
+
+_Nouvelle arborescence complète :_
+[source]
+----
+java
+├───control
+│   ├───actors
+│   │   ├───actors
+│   │   └───specialQueries
+│   │       └───specialQueries
+│   └───dialogs
+├───model
+├───resources
+├───types
+└───view
+----
+
+==== 2.2) Ajout d’une fabrique d’acteurs
+[.text-justify]
+Nous avons utilisé le pattern de conception *Factory* permettant d'instancier des objets dont le type est dérivé d'un type abstrait, la classe exacte de l'objet n'étant donc pas connue par l'appelant.
+
+[.text-justify]
+Ce pattern a été utilisé pour implémenter des acteurs pour la partie control de l'application. Nous avons d'abord développé une classe abstraite `Actor.java` définissant des méthodes permettant :
+
+* l'exécution de requêtes SQL classiques (méthodes get pour SELECT, add pour INSERT, set pour UPDATE et remove pour DELETE)
+
+_Signatures et Javadoc des méthodes de la classe `Actor.java` permettant l'exécution de requêtes classiques :_
+[source, java]
+----
+/**
+ * Exécute une requête SELECT sur la table correspondante avec les filtres,
+ *   les paramètres de la clause WHERE et les colonnes d'ordonnancement fournis en paramètres.
+ * @param filtres : la liste des colonnes à sélectionner
+ * @param parametresWhere : la map des paramètres de la clause WHERE
+ * @param orderingColumns : la liste des colonnes d'ordonnancement
+ * @return le résultat de la requête sous forme de ResultSet
+ * @throws Exception si une erreur se produit lors de l'exécution de la requête
+ */
+public ResultSet get(List<TableAttributType> filtres, Map<TableAttributType, String> parametresWhere, List<TableAttributType> orderingColumns) throws Exception
+
+/**
+ * Ajoute un enregistrement dans la table avec les paramètres donnés.
+ * @param parametresValues Une map contenant les paramètres et leur valeur associée.
+ * @throws Exception si parametresValues est null ou vide
+ */
+public void add(Map<TableAttributType, String> parametresValues) throws Exception
+
+/**
+ * Modifie un ou plusieurs enregistrements de la table avec les valeurs passées en paramètre.
+ * Si le paramètre parametresValues est nul ou vide, une exception est levée.
+ * Si le paramètre parametresWhere est non nul et non vide, la modification se fait seulement sur
+ *   les enregistrements qui correspondent aux conditions spécifiées dans parametresWhere.
+ * Les paramètres passés en argument doivent être valides selon les attributs de la table correspondante.
+ * @param parametresValues : un Map de TableAttributType et String contenant les valeurs à modifier pour chaque attribut de la table.
+ * @param parametresWhere : un Map de TableAttributType et String contenant les conditions pour la sélection des enregistrements à modifier.
+ * @throws Exception si le paramètre parametresValues est nul ou vide.
+ * @throws Exception si une erreur SQL survient lors de l'exécution de la requête de modification.
+ */
+public void set(Map<TableAttributType, String> parametresValues, Map<TableAttributType, String> parametresWhere) throws Exception
+
+/**
+ * Supprime un ou plusieurs enregistrements dans la table correspondante en fonction des paramètres de filtrage fournis.
+ * @param parametresWhere un Map contenant les colonnes de la table à utiliser comme filtres et leur valeur correspondante
+ * @throws Exception si aucun paramètre de filtrage n'est fourni, ou si une erreur survient lors de l'exécution de la requête SQL
+ */
+public void remove(Map<TableAttributType, String> parametresWhere) throws Exception
+----
+
+* l'exécution de requêtes SQL plus complexes dites "spéciales" (requêtes imbriquées, prédicats complexes, etc)
+
+_Signatures et Javadoc de la méthode de la classe `Actor.java` permettant l'exécution de requêtes spéciales :_
+[source, java]
+----
+/**
+ * Exécute une requête spéciale en fonction du type de requête spéciale et du type de requête spécifié.
+ * Les paramètres de requête sont optionnels et dépendent du type de requête spéciale.
+ * @param sqt : le type de requête spéciale à exécuter.
+ * @param qt : le type de requête à exécuter (QUERY ou UPDATE).
+ * @param parametres : les paramètres de requête pour la requête spéciale (optionnels).
+ * @return Le résultat de la requête sous forme de ResultSet (si le type de requête est QUERY)
+ *   ou null (si le type de requête est UPDATE).
+ * @throws Exception si une erreur se produit lors de l'exécution de la requête.
+ */
+public ResultSet specialQuery(SpecialQueryType sqt, QueryType qt, List<String> parametres) throws Exception
+----
+
+* le formatage des paramètres des méthodes pour les adapter à des requêtes SQL
+
+_Signatures et Javadoc des méthodes de la classe `Actor.java` permettant le formatage en SQL de paramètres :_
+[source, java]
+----
+/**
+* Formate les valeurs d'un map de paramètres en appelant la méthode "formateParametresValue" pour chaque valeur.
+ * Les clés du map sont de type "TableAttributType" et les valeurs sont de type "String".
+ * @param parametres : Map de paramètres à formater.
+ * @return Map de paramètres formatés.
+ */
+private Map<TableAttributType, String> formateParametresMap(Map<TableAttributType, String> parametres)
+
+/**
+ * Cette méthode prend une liste de paramètres et renvoie une nouvelle liste où chaque paramètre est formaté pour être utilisé dans une requête SQL.
+ * @param parametres : la liste de paramètres à formater.
+ * @return La liste de paramètres formatée pour une utilisation dans une requête SQL.
+ */
+private List<String> formateParametresList(List<String> parametres)
+
+/**
+ * Formate une valeur de paramètre selon le type de données attendu dans la base de données.
+ * Si la valeur est un entier, elle est convertie en chaîne de caractères. Si la valeur est "null",
+ *   elle est remplacée par le mot-clé SQL "NULL".
+ *   Sinon, la valeur est entourée de guillemets simples pour être considérée comme une chaîne de caractères en SQL.
+ * @param value : la valeur à formater
+ * @return la valeur formatée
+ */
+private String formateParametresValue(String value)
+----
+
+avec le constructeur suivant :
+
+_Constructeur et Javadoc de la classe `Actor.java` :_
+[source, java]
+----
+/**
+ * Constructeur de la classe Actor. Initialise une connexion à la base de données et définit le nom de table pour l'acteur.
+ * @param tableName : le nom de la table correspondante dans la base de données
+ */
+public Actor(String tableName) {
+    try {
+        this.ddbStatement = DialogDataBase.getStatement();
+        this.tableName = tableName;
+    } catch (Exception e) {
+        Fenetre.afficherErreur("Erreur lors de la création d'un acteur pour le type " + tableName + ", un acteur ne peut pas être créé sans une connexion à la base de données.");
+    }
+}
+----
+
+[.text-justify]
+D'autres classes héritent de la classe abstraite pour chaque type d'acteur, il y a donc principalement `ActorEquipe.java`, `ActorMatch.java` et `ActorTournoi.java`. Exemple d'une classe acteur :
+
+_Exemple de classe héritière de la classe `Actor.java` :_
+[source, java]
+----
+public class ActorEquipe extends Actor {
+
+    /**
+     * Constructeur par défaut qui appelle le constructeur de la classe mère avec le nom "Equipes".
+     */
+    public ActorEquipe() {
+        super("Equipes");
+    }
+
+}
+----
+
+[.text-justify]
+Une méthode de la classe `ActorFactory.java`, renvoie une instance de la classe d'un en fonction d'un type d'acteur donné.
+
+_Méthode `getActor` et Javadoc de la classe `ActorFactory.java` :_
+[source, java]
+----
+/**
+ * Retourne une instance de la classe Actor correspondante au type d'acteur spécifié.
+ * @param at : le type d'acteur
+ * @return une instance de la classe Actor correspondante
+ * @throws Exception si le type d'acteur n'est pas trouvé
+ */
+public static Actor getActor(ActorType at) throws Exception {
+    switch (at) {
+        case EQUIPE:
+            return new ActorEquipe();
+        case MATCH:
+            return new ActorMatch();
+        case TOURNOI:
+            return new ActorTournoi();
+        default:
+            throw new Exception("Le type d'acteur " + at + " n'a pas été trouvé.");
+    }
+}
+----
+
+[.text-justify]
+Les classes des acteurs se trouvent dans le package `control/actors` et sont utilisées par des classes dialogs construisant des requêtes à partir des données récupérées depuis les classes model et view.
+
+==== 2.3) Ajout de dialogs pour les acteurs et la base de données
+[.text-justify]
+Nous avons d'abord créé une classe dialog `DialogDataBase.java` dans le package `control/dialogs` permettant la connexion avec la base de données de l'application en fonction d'un fichier de configuration et produisant un objet `Statement` utilisé par les acteurs pour exécuter des requêtes SQl. Pour assurer que ces dernières sont exécutées depuis une même connexion avec un même statement, nous avons utilisé le pattern *Singleton*. Ce dernier permet de s'assurer qu'une classe ne produise qu'une seule et unique instance. Le dialog de la base de données doit d'abord être initialisé avec certaines données et une méthode `getStatement` permet de récupérer le statement généré.
+
+[.text-justify]
+Nous avons ensuite créé un dialog pour chaque type d'acteur dans le même package, soient les classes `DialogEquipe`, `DialogMatch` et `ActorTournoi`. Ces dernières permettent la liaison des données entre les classes view et model en implémentant des méthodes spécifiques construisant des requêtes simple et spéciales en utilisant la fabrique d'acteurs pour les exécuter. Exemple de méthode construisant et exécutant une requête :
+
+_Méthode `getNumDUneEquipe` et Javadoc de la classe `DialogEquipe.java` construisant une requête pour la classe `ActorEquipe.java` :_
+[source, java]
+----
+/**
+ * Récupère le numéro d'une équipe donnée.
+ * @param idEquipe : ID de l'équipe.
+ * @return Résultat de la requête SQL.
+ * @throws Exception Si une erreur se produit lors de l'exécution de la requête.
+ */
+public ResultSet getNumDUneEquipe(Integer idEquipe) throws Exception {
+    List<TableAttributType> filtres = new ArrayList<>();
+    filtres.add(TableAttributType.NUM_EQUIPE);
+    Map<TableAttributType, String> parametresWhere = new HashMap<>();
+    parametresWhere.put(TableAttributType.ID_EQUIPE, idEquipe + "");
+    return this.actorEquipe.get(filtres, parametresWhere, null);
+}
+----
+
+Les paramètres sont principalement formatés avec des Map, la clé étant le nom de la colonne de la table correspondante et la valeur étant celle à insérer ou modifier. Le type `TableAttributType` (enum) permet de désigner un nom de colonne précis en éviter les risques d'erreur.
+
+==== 2.4) Déplacement des classes dans le package Model
+[.text-justify]
+Les classes de type model implémentant des objets permettant de traiter les données de l'application ont été déplacées dans le package `model` en accord avec le MVC pattern.
+
+==== 2.5) Redirection des messages d’erreur vers la fenêtre view
+[.text-jusitfy]
+Afin de respecter la séparation des classes du pattern MVC, nous avons déplacé tous les affichages de fenêtres et dialogues dans la classe `Fenetre.java`. Nous avons également rédigé des messages pour chaque type d'erreur relevé et redirigé ces derniers vers la view. Pour cela nous avons ajouté des méthodes statiques permettant d'afficher une boîte de dialogue d'erreur.
+
+_Méthode `afficherErreur` et Javadoc permettant l'affichage d'une fenêtre avec une erreur :_
+[source, java]
+----
+/**
+ * Affiche une boîte de dialogue d'erreur avec le message spécifié.
+ * @param message : le message d'erreur à afficher
+ */
+public static void afficherErreur(String message) {
+    JOptionPane.showMessageDialog(null, message, "ERREUR", JOptionPane.ERROR_MESSAGE);
+}
+----
+
+_Exemple de fenêtre avec un message d'erreur, ici lorsqu'on saisit un nom de tournoi déjà existant :_
+
+image::images/messageErreur.png[Affichage dialogue d'erreur, 550]
+
+[.text-jusitfy]
+Nous avons également défini une méthode gérant le dialogue de saisie du nom d'un nouveau tournoi.
+
+_Méthode `saisieNomTournoi` et Javadoc permettant l'affichage d'une fenêtre demandant la saisie du nom d'un nouveau tournoi :_
+[source, java]
+----
+/**
+ * Affiche une boîte de dialogue demandant à l'utilisateur d'entrer le nom du tournoi.
+ * @return le nom du tournoi saisi par l'utilisateur
+ */
+public static String saisieNomTournoi() {
+    return JOptionPane.showInputDialog(null, "Entrez le nom du tournoi", "Nom du tournoi", JOptionPane.PLAIN_MESSAGE);
+}
+----
+
+_Affichage de la fenêtre de saisie d'un nom de tournoi :_
+
+image::images/saisieNomTournoi.png[Affichage dialogue saisie nom tournoi, 350]
+
+{empty} +
+
+=== 3) Ajout de classes
+==== 3.1) Ajout de classes Enum
+[.text-jusitfy]
+Pour éviter l'utilisation de String ou d'autres types en dur utilisés pour renseigner certains états ou des valeurs redondantes, nous avons créé plusieurs classes enum dans le package `types`.
+
+* `ActorType.java` : types d'acteurs (Match, Equipe et Tournoi), utilisés principalement par la fabrique à acteurs
+* `QueryType.java` : types de requête exécutable, en lecture (QUERY) ou en modification (UPDATE), utilisés pour le traitement de requêtes spéciales
+* `SpecialQueryType.java` : types de requêtes spéciales, utilisés pour le traitement de requêtes spéciales
+* `StatutTournoi.java` : statuts d'un tournoi par ordre ou par libellé, utilisés pour contrôler les différents états d'un tournoi
+* `TableAttributType.java` : noms de colonne des attributs des tables SQL de la base de données de l'application, utilisés principalement pour la construction de requêtes dans les dialogs et pour la récupération des données d'une requête
+* `FenetreConstant.java` : constantes de type String, utilisés dans la classe `Fenetre` pour éviter les redondances lors de la manipulation de certains composants de l'interface
+
+==== 3.2) Ajout d’une fabrique à requêtes spéciales
+[.text-jusitfy]
+Pour le traitement de requêtes plus complexes dites "spéciales" nous avons également repris le pattern de conception *Factory*. Nous avons d'abord implémenté la classe abstraite `SpecialQuery.java` ayant simplement pour attribut un String qui contiendra la requête spéciale à exécuter, puis des classes héritières pour chacun d'entre elles. Exemple de classe implémentant une requête spéciale (constructeur) :
+
+_Constructeur et Javadoc de la classe `GetNbMatchsTermines` héritant de `SpecialQuery.java` :_
+[source, java]
+----
+/**
+ * Constructeur qui prend une liste de paramètres pour créer la requête SQL correspondante.
+ * La requête récupère le nombre total de matchs disputés dans un tournoi spécifié par le premier paramètre, ainsi que le nombre de matchs terminés.
+ * @param parametres une liste de paramètres pour créer la requête SQL.
+ *   Le premier paramètre est l'ID du tournoi.
+ */
+public GetNbMatchsTermines(List<String> parametres) {
+    this.strSQL = "Select count(*) as total, (Select count(*) from matchs m2  WHERE m2.id_tournoi = m.id_tournoi  AND m2.termine='oui' ) as termine from matchs m  WHERE m.id_tournoi=" + parametres.get(0) + " GROUP by id_tournoi";
+}
+----
+
+La classe `SpecialQueryFactory.java` possède une méthode renvoyant une instance de la classe d'une requête spéciale en fonction d'un type et d'une liste de paramètres étant les valeurs à insérer à certains endroits dans la requête.
+
+_Méthode `getSpecialQuery` et Javadoc de la classe `SpecialQueryFactory.java` :_
+[source, java]
+----
+/**
+ * Obtient une instance de la classe SpecialQuery en fonction du type de requête spéciale et des paramètres fournis.
+ * @param sqt : le type de requête spéciale à exécuter.
+ * @param parametres : une liste de chaînes de caractères contenant les paramètres de la requête spéciale.
+ * @return une instance de la classe SpecialQuery correspondant au type de requête spéciale et aux paramètres fournis.
+ * @throws Exception si le type de requête spéciale n'est pas trouvé.
+ */
+public static SpecialQuery getSpecialQuery(SpecialQueryType sqt,
+    List<String> parametres) throws Exception {
+    switch (sqt) {
+        case SetNumEquipesDUnTournoi:
+            return new SetNumEquipesDUnTournoi(parametres);
+        case GetResultatsMatch:
+            return new GetResultatsMatch(parametres);
+        case GetDonneesTours:
+            return new GetDonneesTours(parametres);
+        case GetNbMatchsParEquipes:
+            return new GetNbMatchsParEquipes(parametres);
+        case GetNbMatchsTermines:
+            return new GetNbMatchsTermines(parametres);
+        case GetNbToursMaxMatch:
+            return new GetNbToursMaxMatch(parametres);
+        case GetNbToursParMatchParTournoi:
+            return new GetNbToursParMatch(parametres);
+        default:
+            throw new Exception("Le type de requête spéciale " + sqt + " n'a pas été trouvé.");
+    }
+}
+----
+
+[.text-justify]
+Les classes associées à l'implémentation des requêtes spéciales se trouvent dans le package `control/actors/specialQueries`. Comme les requêtes classiques, les requêtes spéciales sont construites dans les dialogs correspondants.
+
+==== 3.4) Décomposition de la classe "Fenetre"
+[.text-justify]
+Des classes anonymes étaient utilisées dans la classe `Fenetre.java` afin d'implémenter des `TableModel` permettant l'affichage de tableaux. Nous avons donc extériorisé ces classes dans le package `model/tables` en créant `EquiteTable.java` pour le tableau d'affichage et de saisies des joueurs des équipes d'un tournoi, et `MatchTable.java` pour les scores des matchs.
+
+==== 3.5) Ajout d’une classe “Tools”
+[.text-justify]
+Nous avons aussi ajouté une classe `Tools.java` dans le package `resources` proposant des méthodes statiques utiles et générales pouvant être utilisées dans n'importe quelle classe. Par exemple, la fonction `mysql_real_escape_string` a été déplacée dans cette classe depuis la view `Fenetre.java` car elle était utilisée de manière générale par d'autres classes.
+
+_Méthode `mysql_real_escape_string` et Javadoc de la classe `Tools` :_
+[source, java]
+----
+/**
+ * Échappe les caractères spéciaux dans une chaîne de caractères pour éviter les injections SQL.
+ * @param str : la chaîne de caractères à échapper
+ * @return la chaîne de caractères échappée
+ */
+public static String mysql_real_escape_string(String str)
+----
+
+{empty} +
+
+=== 4) Reformatage, homogénéisation et contrôle du code
+==== 4.1) Mise au propre des classes
+[.text-justify]
+Avant de refactorer l'application, nous avons commencé par reformater et homogénéiser l'intégrité de son code source. Nous avons donc indenté et désindenté certaines parties, ajouté et enlevé des espaces, des retours à la ligne, etc. Nous avons aussi appliqué plusieurs bonnes pratiques de développement comme la nomenclature. Nous avons renommé la majorité des classes, des méthodes, mais aussi des variables en respectant certaines normes (camel-case). Nous avons aussi placé les attributs de chaque classe en haut de ces dernières et supprimé les mauvaises utilisations du caractère `-` pour certains attributs et paramètres. Tout cela dans le but de rendre le code plus homogène, lisible et en accord avec les fonctionnalités correspondantes.
+
+[.text-justify]
+Nous avons également supprimé certaines parties inutiles ou redondantes du code et simplifié d'autres (conditions, `if`, boucles, etc). Toujours dans le but de respecter les bonnes pratiques de développement, nous avons remplacé l'utilisation de `if` par celle de `switch` lorsque c'était nécessaire.
+
+_Exemple de refactoring d'un `if` en `switch`, ici car plusieurs conditions testent des valeurs pour une même variable :_
+[source, java]
+----
+// Mauvaise utilisation d'un if
+public String getColumnName(int col) {
+    if (col == 0) {
+        return "Tour";
+    } else if (col == 1) {
+        return "Équipe 1";
+    } else if (col == 2) {
+        return "Équipe 2";
+    } else if (col == 3) {
+        return "Score équipe 1";
+    } else  if (col == 4) {
+        return "Score équipe 2";
+    } else {
+        return "??";
+    }
+}
+
+// Utilisation d'un switch appropriée
+public String getColumnName(int col) {
+    switch (col) {
+        case 0:
+            return "Tour";
+        case 1:
+            return "Équipe 1";
+        case 2:
+            return "Équipe 2";
+        case 3:
+            return "Score équipe 1";
+        case 4:
+            return "Score équipe 2";
+        default:
+            return "??";
+    }
+}
+----
+
+==== 4.2) Contrôle de la récupération des données de requêtes
+[.text-justify]
+Les méthodes des dialogs de type Query retournent le résultat des requêtes (simples ou spéciales) correspondantes. Les valeurs peuvent ensuite être récupérés et traitées avec les méthodes `getInt` ou `getString`. Cependant, ces dernières attendent en paramètre la position (entier) ou le libellé (String) de la colonne de la table SQL concernée par la requête. Ces redondances peuvent donner lieux à des exceptions lorsque la position ou le libellé sont incorrects. Pour éviter de générer des erreurs, nous avons utilisé des variables constantes déclarées dans la classe enum `TableAttributType.java` dans le package `types`.
+
+_Exemple de déclaration et d'utilisation du type `TableAttributType` :_
+[source, java]
+----
+// Déclaration dans l'enum
+MAX_NUM_TOUR("max_num_tour");
+
+// Utilisation avec un getInt
+ResultSet rs = dialogMatch.getNbToursMaxMatch(id_tournoi);
+rs.next();
+return rs.getInt(TableAttributType.MAX_NUM_TOUR.getColumnName());
+----
+
+[.text-justify]
+Ce procédé est également utilisé dans les dialogs pour la construction de requêtes.
+
+_Méthode `removeMatchDUnTour` et Javadoc de la classe `Match.java`, dans laquelle on voit que les Map de paramètres sont construits avec des types `TableAttributType` :_
+[source, java]
+----
+/**
+ * Supprime tous les matches d'un tour spécifié dans un tournoi donné.
+ * @param idTournoi l'identifiant du tournoi concerné
+ * @param numTour : le numéro du tour à supprimer
+ * @throws Exception si une erreur se produit lors de la suppression des matches
+ */
+public void removeMatchDUnTour(int idTournoi, int numTour) throws Exception {
+    Map<TableAttributType, String> parametresWhere = new HashMap<>();
+    parametresWhere.put(TableAttributType.ID_TOURNOI, idTournoi + "");
+    parametresWhere.put(TableAttributType.NUM_TOUR, numTour + "");
+    this.actorMatch.remove(parametresWhere);
+}
+----
+
+==== 4.3) Reformatage de la classes Belote/BeloteApp
+[.text-justify]
+La classe `Belote.java` a été renommée `BeloteApp.java` et s'occupe maintenant uniquement d'initialiser le dialog de la base de données avec les chemins du répertoire de stockage des données, du script SQL de création de la base de données (par défaut) et du fichier de configuration `.properties` pour la connexion avec cette dernière ; ainsi que de lancer l'application. C'est la classe `DialogDataBase` qui, à partir de ces paramètres, va établir une connexion avec la base de données et préparer cette dernière pour l'application.
+
+==== 4.4) Fichier de configuration database.properties
+[.text-justify]
+Pour permettre aux développeurs de choisir une autre source de base de données et pour décomposer davantage l'application, nous avons réalisé un fichier de configuration `database.properties`.
+
+_Contenu du fichier `database.properties` paramétré pour l'application actuelle :_
+[source, properties]
+----
+# URL de la base de données
+DBURL=jdbc:hsqldb:file:
+# Nom de la base de données
+DBName=belote
+# Identifiant (utilisateur)
+DBUser=sa
+# Mot-de-passe
+DBPassword=
+----
+
+{empty} +
+
+=== 5) Documentation
+==== 5.1) Rédaction de la Javadoc
+[.text-justify]
+Durant le refactoring de l'application, nous avons passé un certain temps à comprendre le fonctionnement d'une grande partie des éléments du code source. Pour éviter que ce problème à l'avenir, nous avons rédigé la Javadoc (en français) pour chaque classe et méthodes afin de rendre plus explicite leur fonctionnement et surtout leur utilisation.
+
+==== 5.2) Cahier de recette de l’application
+[.text-justify]
+Nous avons rédigé un https://github.com/IUT-Blagnac/sae4-01-2023-oui/blob/master/Documentation/Cahier_de_recettes.adoc[cahier de recette] afin d'attester du bon fonctionnement de l'application après son Refactoring. Ce dernier regroupe des plans de tests pour chaque fonctionnalité utilisateur avec les actions à effectuer, le résultat attendu et le résultat obtenu.
