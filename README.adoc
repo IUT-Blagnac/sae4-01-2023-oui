@@ -78,6 +78,7 @@ Tilian :
 * Classe `Belote.java`
 * Classe `Tournoi.java` (deuxième partie)
 
+*_Nous avons utilisé des issues et des branches pour décomposer et faciliter le déroulement du projet._*
 
 == Contexte général
 
